@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
+//Outdated, but you can use it for testing
+
 public class CombatHandler {
 
     public CombatHandler() {
@@ -84,3 +86,4 @@ public class CombatHandler {
 
 
 }
+
