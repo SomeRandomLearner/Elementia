@@ -9,7 +9,7 @@ public class Assassin extends Person {
         super("Assassin",80, 20,0,60,10);
     }
 
-    // Assassin default stats
+    // Assassin.java
 
     @Override
     public String getSkill1Name() { return "Strike";}
