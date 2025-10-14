@@ -9,9 +9,17 @@ public abstract class Person {
     private int maxMana;
     private int currentMana;
     private int manaRecoveryRate;
-    private boolean isTurn;
+
+    public abstract void skill1(Person target);
+    public abstract int getSkill1ManaCost();
     public abstract String getSkill1Name();
+
+    public abstract void skill2(Person target);
+    public abstract int getSkill2ManaCost();
     public abstract String getSkill2Name();
+
+    public abstract void skill3(Person target);
+    public abstract int getSkill3ManaCost();
     public abstract String getSkill3Name();
 
 
@@ -81,20 +89,4 @@ public abstract class Person {
         this.currentMana += this.manaRecoveryRate;
         if(this.currentMana > this.maxMana) this.currentMana = this.maxMana;
     }
-
-
-    public String skill1Name;
-    public int skill1ManaCost;
-    public abstract void skill1(Person target);
-    public abstract int getSkill1ManaCost();
-
-    public String skill2Name;
-    public int skill2ManaCost;
-    public abstract void skill2(Person target);
-    public abstract int getSkill2ManaCost();
-
-    public String skill3Name;
-    public int skill3ManaCost;
-    public abstract void skill3(Person target);
-    public abstract int getSkill3ManaCost();
 }
