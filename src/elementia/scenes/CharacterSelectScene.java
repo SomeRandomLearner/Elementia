@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
+import java.net.URL;
 import java.util.List;
 
 public class CharacterSelectScene extends JPanel{
@@ -26,26 +27,32 @@ public class CharacterSelectScene extends JPanel{
         cardLayout = new CardLayout();
         characterScreens = new JPanel(cardLayout);
 
+        // For individual character scenes
         JPanel aeroScreen = Utility.createScene("Aero", Color.LIGHT_GRAY);
         JPanel kaydenScreen = Utility.createScene("Kayden", Color.CYAN);
         JPanel psalmScreen = Utility.createScene("Psalm", Color.RED);
         JPanel ripperScreen = Utility.createScene("Ripper", Color.DARK_GRAY);
         JPanel znStreamScreen = Utility.createScene("ZnStream", Color.BLUE);
 
-        var aeroImg = new ImageIcon("src/images/Aero.png");
-        var aeroImgHolder = new JLabel(aeroImg);
+        // Places an image for each character on their individual scenes
+        URL aeroPath = getClass().getResource("/images/Aero.png");
+        assert aeroPath != null : "Aero image not found";
+        var aeroImgHolder = new JLabel(new ImageIcon(aeroPath));
         aeroScreen.add(aeroImgHolder);
 
-        var psalmImg = new ImageIcon("src/images/PsalmFire.png");
-        var psalmImgHolder = new JLabel(psalmImg);
+        URL psalmPath = getClass().getResource("/images/PsalmFire.png");
+        assert psalmPath != null : "PsalmFire image not found";
+        var psalmImgHolder = new JLabel(new ImageIcon(psalmPath));
         psalmScreen.add(psalmImgHolder);
 
-        var kaydenImg = new ImageIcon("src/images/Kayden Break Temp.png");
-        var kaydenImgHolder = new JLabel(kaydenImg);
+        URL kaydenPath = getClass().getResource("/images/Kayden Break Temp.png");
+        assert kaydenPath != null : "Kayden Break Temp image not found";
+        var kaydenImgHolder = new JLabel(new ImageIcon(kaydenPath));
         kaydenScreen.add(kaydenImgHolder);
 
-        var znStreamImg = new ImageIcon("src/images/ZnStream.png");
-        var znStreamImgHolder = new JLabel(znStreamImg);
+        URL znStreamPath = getClass().getResource("/images/ZnStream.png");
+        assert znStreamPath != null : "ZnStream image not found";
+        var znStreamImgHolder = new JLabel(new ImageIcon(znStreamPath));
         znStreamScreen.add(znStreamImgHolder);
 
         characterScreens.add(aeroScreen, "Aero");
@@ -96,3 +103,4 @@ public class CharacterSelectScene extends JPanel{
 
 
 }
+
