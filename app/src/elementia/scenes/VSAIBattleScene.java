@@ -13,7 +13,7 @@ public class VSAIBattleScene extends JPanel {
     private boolean hasOnlyOneDeath = false; //For 2-star clears
 
     public VSAIBattleScene(Elementia frame){
-        setLayout(new GridBagLayout());
+        setLayout(new BorderLayout());
         setBackground(Color.BLACK);
 
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
@@ -22,25 +22,26 @@ public class VSAIBattleScene extends JPanel {
         JButton skill2btn = Utility.createButton("Skill 2");
         JButton skill3btn = Utility.createButton("Skill 3");
 
+        JPanel buttonPanel = new JPanel(new GridBagLayout());
+
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        add(skill1btn, gridBagConstraints);
+        buttonPanel.add(skill1btn, gridBagConstraints);
 
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        add(skill2btn, gridBagConstraints);
+        buttonPanel.add(skill2btn, gridBagConstraints);
 
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = gridBagConstraints.HORIZONTAL;
-        add(skill3btn, gridBagConstraints);
-        //Not really sure how this works
-        //Work in progress
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        buttonPanel.add(skill3btn, gridBagConstraints);
+
 
         JPanel battlePanel = new JPanel();
         battlePanel.setBackground(Color.RED);
 
-        add(battlePanel);
+
+
+        add(buttonPanel, BorderLayout.SOUTH);
     }
 }

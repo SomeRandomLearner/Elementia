@@ -1,7 +1,7 @@
 package characters;
 
 public abstract class Person {
-    public String name;
+    private String name;
     private int maxHealth;
     protected int currentHealth;
     private int attack;
@@ -9,6 +9,7 @@ public abstract class Person {
     private int maxMana;
     private int currentMana;
     private int manaRecoveryRate;
+
 
     public abstract void skill1(Person target);
     public abstract int getSkill1ManaCost();
@@ -23,8 +24,7 @@ public abstract class Person {
     public abstract String getSkill3Name();
 
 
-
-
+    // --- Constructor ---
     public Person(String name, int maxHealth, int attack, int defense, int maxMana, int manaRecoveryRate) {
         this.name = name;
         this.maxHealth = maxHealth;
@@ -36,57 +36,87 @@ public abstract class Person {
         this.manaRecoveryRate = manaRecoveryRate;
     }
 
-//    public void setTurnOrder(byte turnOrder){
-//        this.turnOrder = turnOrder;
-//    }
-//    public byte getTurnOrder(){
-//        return this.turnOrder;
-//    }
 
-    public void setMaxHealth(int newHealth){
-        this.maxHealth = newHealth;
-        if(currentHealth > newHealth) currentHealth = newHealth;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getMaxHealth() {
-        return this.maxHealth;
+        return maxHealth;
     }
 
-    public void setCurrentHealth(int newHealth){
-        this.currentHealth = newHealth;
+    public void setMaxHealth(int newHealth) {
+        this.maxHealth = newHealth;
+        if (currentHealth > newHealth) currentHealth = newHealth;
     }
 
-    public int getCurrentHealth(){
-        return this.currentHealth;
+    public int getCurrentHealth() {
+        return currentHealth;
     }
 
-    public void setAttack(int newAttack){
-        this.attack = newAttack;
+    public void setCurrentHealth(int newHealth) {
+        this.currentHealth = Math.min(newHealth, maxHealth);
     }
 
-    public int getAttack(){
+    public int getAttack() {
         return attack;
     }
 
-    public void setMaxMana(int newMana){
-        this.maxMana = newMana;
-        if(currentMana > newMana) currentMana = newMana;
+    public void setAttack(int newAttack) {
+        this.attack = newAttack;
+    }
+
+    public int getDefense() {
+        return defense;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
     }
 
     public int getMaxMana() {
-        return this.maxMana;
+        return maxMana;
     }
 
-    public void setCurrentMana(int newMana){
-        this.currentMana = newMana;
+    public void setMaxMana(int newMana) {
+        this.maxMana = newMana;
+        if (currentMana > newMana) currentMana = newMana;
     }
 
-    public int getCurrentMana(){
-        return this.currentMana;
+    public int getCurrentMana() {
+        return currentMana;
     }
 
-    public void recoverMana(){
+    public void setCurrentMana(int newMana) {
+        this.currentMana = Math.min(newMana, maxMana);
+    }
+
+    public void recoverMana() {
         this.currentMana += this.manaRecoveryRate;
-        if(this.currentMana > this.maxMana) this.currentMana = this.maxMana;
+        if (this.currentMana > this.maxMana) this.currentMana = this.maxMana;
+    }
+
+    // --- Utility combat methods ---
+    public void takeDamage(int damage) {
+        int reducedDamage = Math.max(damage - defense, 0);
+        currentHealth -= reducedDamage;
+        if (currentHealth < 0) currentHealth = 0;
+        System.out.println(name + " took " + reducedDamage + " damage! (HP: " + currentHealth + "/" + maxHealth + ")");
+    }
+
+    public void heal(int amount) {
+        currentHealth += amount;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
+        System.out.println(name + " healed for " + amount + " HP! (HP: " + currentHealth + "/" + maxHealth + ")");
+    }
+
+    public void useMana(int amount) {
+        currentMana -= amount;
+        if (currentMana < 0) currentMana = 0;
+        System.out.println(name + " used " + amount + " mana. (MP: " + currentMana + "/" + maxMana + ")");
     }
 }

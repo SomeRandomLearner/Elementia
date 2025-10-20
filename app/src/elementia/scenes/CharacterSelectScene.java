@@ -72,6 +72,7 @@ public class CharacterSelectScene extends JPanel{
             cardLayout.next(characterScreens);
             currentIndex = (currentIndex + 1) % heroes.size();
             currentCard = heroes.get(currentIndex);
+
         });
         backBtn.addActionListener(e -> {
             cardLayout.previous(characterScreens);
