@@ -1,11 +1,14 @@
 package scenes;
 import characters.GameCharacter;
+import characters.Teams;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 import java.net.URL;
 import java.util.List;
+
 
 public class CharacterSelectScene extends JPanel{
     private final CardLayout cardLayout;
@@ -82,12 +85,12 @@ public class CharacterSelectScene extends JPanel{
         selectBtn.addActionListener(e -> {
             try {  //  public GameCharacter(String name, int maxHealth, int maxMana, int attack, int defense, String imagePath);
                 switch (currentCard) {
-//                    case "Aero" -> UserData.alliedTeam.add(new GameCharacter("Aero", 100, 100, 30, 10, "/images/Aero.png")); //, 100, 100, 30, 10, "/images/Aero.png" temporary
-//                    case "Kayden" -> UserData.alliedTeam.add(new GameCharacter("Kayden", 100, 100, 30, 10, "/images/Aero.png"));
-//                    case "Psalm" -> UserData.alliedTeam.add(new GameCharacter("Psalm", 100, 100, 30, 10, "/images/Aero.png"));
-//                    case "Ripper" -> UserData.alliedTeam.add(new GameCharacter("Ripper", 100, 100, 30, 10, "/images/Aero.png"));
-//                    case "ZnStream" -> UserData.alliedTeam.add(new GameCharacter("ZnStream", 100, 100, 30, 10, "/images/Aero.png"));
-//                    default -> throw new RuntimeException();
+                    case "Aero" -> Teams.addToAlliedTeam(new GameCharacter("Aero", 100, 100, 30, 10, "/images/Aero.png")); //, 100, 100, 30, 10, "/images/Aero.png" temporary
+                    case "Kayden" -> Teams.addToAlliedTeam(new GameCharacter("Kayden", 100, 100, 30, 10, "/images/Kayden Break Temp.png"));
+                    case "Psalm" -> Teams.addToAlliedTeam(new GameCharacter("Psalm", 100, 100, 30, 10, "/images/PsalmFire.png"));
+                    case "Ripper" -> Teams.addToAlliedTeam(new GameCharacter("Ripper", 100, 100, 30, 10, "/images/Aero.png"));
+                    case "ZnStream" -> Teams.addToAlliedTeam(new GameCharacter("ZnStream", 100, 100, 30, 10, "/images/ZnStream.png"));
+                    default -> throw new RuntimeException();
                 }
             } catch (RuntimeException ex) {
                 throw new RuntimeException(ex);
