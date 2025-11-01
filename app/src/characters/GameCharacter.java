@@ -15,7 +15,7 @@ public class GameCharacter{
     int defense;
     BufferedImage characterImage;
 
-    Skill[] skills = new Skill[3];
+    public Skill[] skills = new Skill[3];
     int skillCount = 0;
     public GameCharacter(String name, int maxHealth, int maxMana, int attack, int defense, String imagePath){
         this.name = name;
@@ -42,7 +42,16 @@ public class GameCharacter{
         }
     }
 
-    
+    public boolean useSkill(Skill skill, GameCharacter target){
+        if(this.currentMana - skill.getManaCost() < 0){
+            return false;
+        }
+        else{
+            this.currentMana -= skill.getManaCost();
+            target.takeDamage((int)((this.attack + skill.getAttackUp()) * skill.getMultiplier()));
+            return true;
+        }
+    }
 
     public void addNewSkill(String name, int manaCost, int attackUp, float multiplier){
         if(this.skillCount < 3){
@@ -50,6 +59,14 @@ public class GameCharacter{
             this.skillCount++;
         }
     }
+
+//    public void addSelfTargetingSkill(String name, int manaCost, int healthUp, int defenseUp){
+//        if(this.skillCount < 3) {
+//            this.currentHealth += healthUp;
+//            if (this.currentHealth > this.maxHealth) this.currentHealth = this.maxHealth;
+//            this.defense += defenseUp;
+//        }
+//    }
 
     public void removeSkill(){
         if(skillCount == 0){
@@ -59,7 +76,7 @@ public class GameCharacter{
         this.skills[--this.skillCount] = null;
     }
 
-    public void removeAllSkill(){
+    public void removeAllSkills(){
         for(int i = 0; i < skillCount; i++)
             this.skills[i] = null;
         skillCount = 0;
@@ -77,5 +94,61 @@ public class GameCharacter{
     
     public BufferedImage getImage() {
         return this.characterImage;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
+
+    public void setCurrentHealth(int currentHealth) {
+        this.currentHealth = currentHealth;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public void setMaxHealth(int maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    public int getCurrentMana() {
+        return currentMana;
+    }
+
+    public void setCurrentMana(int currentMana) {
+        this.currentMana = currentMana;
+    }
+
+    public int getMaxMana() {
+        return maxMana;
+    }
+
+    public void setMaxMana(int maxMana) {
+        this.maxMana = maxMana;
+    }
+
+    public int getAttack() {
+        return attack;
+    }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    public int getDefense() {
+        return defense;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
     }
 }

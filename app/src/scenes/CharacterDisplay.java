@@ -62,7 +62,13 @@ public class CharacterDisplay extends JPanel {
 
         JPanel rightPanel = new JPanel(new BorderLayout(10, 10));
 
-
+        //Kaizen is editing here
+        JButton nextBtn = Utility.createButton("Next");
+        JButton backBtn = Utility.createButton("Back");
+        JButton selectBtn = Utility.createButton("Select");
+        selectBtn.addActionListener(e -> {
+            frame.showScreen("LevelSelect");
+        });
         storylineArea = new JTextArea(storyline);
         storylineArea.setWrapStyleWord(true);
         storylineArea.setLineWrap(true);
@@ -124,6 +130,10 @@ public class CharacterDisplay extends JPanel {
         mainPanel.add(rightPanel);
         add(mainPanel, BorderLayout.CENTER);
 
+
+        add(nextBtn, BorderLayout.EAST);
+        add(backBtn, BorderLayout.WEST);
+        add(selectBtn, BorderLayout.SOUTH);
         setVisible(true);
     }
 }
