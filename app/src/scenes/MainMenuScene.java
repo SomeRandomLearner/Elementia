@@ -16,8 +16,8 @@ public class MainMenuScene extends JPanel {
     Image originalBackground;
 
     public MainMenuScene(Elementia frame) {
-        URL bgPath = getClass().getResource("/images/ElementiaBG1.png");
-        assert bgPath != null : "PsalmFire image not found";
+        URL bgPath = getClass().getResource("/resources/Menu Bar.png");
+        assert bgPath != null : "Menu Bar not found";
         ImageIcon bgIcon = new ImageIcon(bgPath);
         originalBackground = bgIcon.getImage();
         backgroundLabel = new JLabel(new ImageIcon(originalBackground.getScaledInstance(1000, 600, Image.SCALE_SMOOTH)));

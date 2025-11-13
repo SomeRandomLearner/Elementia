@@ -15,7 +15,7 @@ public class CharacterSelectScene extends JPanel{
     private final JPanel characterScreens;
     private final List<String> heroes = List.of("Aero", "Kayden", "Psalm", "Ripper", "ZnStream");
     private int currentIndex = 0;
-    private String currentCard = heroes.getFirst(); //gets the name of the character in focus
+    private String currentCard = heroes.getFirst(); // Gets the name of the character in focus
 
     public CharacterSelectScene(Elementia frame) throws RuntimeException{
         setLayout(new BorderLayout());
@@ -28,31 +28,29 @@ public class CharacterSelectScene extends JPanel{
 
         cardLayout = new CardLayout();
         characterScreens = new JPanel(cardLayout);
-
-        // For individual character scenes
         JPanel aeroScreen = Utility.createScene("Aero", Color.LIGHT_GRAY);
         JPanel kaydenScreen = Utility.createScene("Kayden", Color.CYAN);
         JPanel psalmScreen = Utility.createScene("Psalm", Color.RED);
         JPanel ripperScreen = Utility.createScene("Ripper", Color.DARK_GRAY);
         JPanel znStreamScreen = Utility.createScene("ZnStream", Color.BLUE);
 
-        // Places an image for each character on their individual scenes
-        URL aeroPath = getClass().getResource("/images/Aero.png");
+        // Places an image for each character
+        URL aeroPath = getClass().getResource("/resources/Aero.png");
         assert aeroPath != null : "Aero image not found";
         var aeroImgHolder = new JLabel(new ImageIcon(aeroPath));
         aeroScreen.add(aeroImgHolder);
 
-        URL psalmPath = getClass().getResource("/images/PsalmFire.png");
+        URL psalmPath = getClass().getResource("/resources/PsalmFire.png");
         assert psalmPath != null : "PsalmFire image not found";
         var psalmImgHolder = new JLabel(new ImageIcon(psalmPath));
         psalmScreen.add(psalmImgHolder);
 
-        URL kaydenPath = getClass().getResource("/images/Kayden Break Temp.png");
+        URL kaydenPath = getClass().getResource("/resources/Kayden Break Temp.png");
         assert kaydenPath != null : "Kayden Break Temp image not found";
         var kaydenImgHolder = new JLabel(new ImageIcon(kaydenPath));
         kaydenScreen.add(kaydenImgHolder);
 
-        URL znStreamPath = getClass().getResource("/images/ZnStream.png");
+        URL znStreamPath = getClass().getResource("/resources/ZnStream.png");
         assert znStreamPath != null : "ZnStream image not found";
         var znStreamImgHolder = new JLabel(new ImageIcon(znStreamPath));
         znStreamScreen.add(znStreamImgHolder);
@@ -83,13 +81,14 @@ public class CharacterSelectScene extends JPanel{
 
         });
         selectBtn.addActionListener(e -> {
-            try {  //  public GameCharacter(String name, int maxHealth, int maxMana, int attack, int defense, String imagePath);
+            try { //  public GameCharacter(String name, int maxHealth, int maxMana, int attack, int defense, int manaRecovery, String imagePath);
+                if(Teams.getAlliedTeamCount() > 0) Teams.clearAlliedTeam(); // Prevents unintended events
                 switch (currentCard) {
-                    case "Aero" -> Teams.addToAlliedTeam(new GameCharacter("Aero", 100, 100, 30, 10, "/images/Aero.png")); //, 100, 100, 30, 10, "/images/Aero.png" temporary
-                    case "Kayden" -> Teams.addToAlliedTeam(new GameCharacter("Kayden", 100, 100, 30, 10, "/images/Kayden Break Temp.png"));
-                    case "Psalm" -> Teams.addToAlliedTeam(new GameCharacter("Psalm", 100, 100, 30, 10, "/images/PsalmFire.png"));
-                    case "Ripper" -> Teams.addToAlliedTeam(new GameCharacter("Ripper", 100, 100, 30, 10, "/images/Aero.png"));
-                    case "ZnStream" -> Teams.addToAlliedTeam(new GameCharacter("ZnStream", 100, 100, 30, 10, "/images/ZnStream.png"));
+                    case "Aero" -> Teams.addToAlliedTeam(new GameCharacter("Aero", 100, 100, 30, 10, 10,"/resources/Aero.png")); //, 100, 100, 30, 10, "/resources/Aero.png" temporary
+                    case "Kayden" -> Teams.addToAlliedTeam(new GameCharacter("Kayden", 100, 100, 30, 10, 10,"/resources/Kayden Break Temp.png"));
+                    case "Psalm" -> Teams.addToAlliedTeam(new GameCharacter("Psalm", 100, 100, 30, 10, 10,"/resources/PsalmFire.png"));
+                    case "Ripper" -> Teams.addToAlliedTeam(new GameCharacter("Ripper", 100, 100, 30, 10, 10,"/resources/Aero.png"));
+                    case "ZnStream" -> Teams.addToAlliedTeam(new GameCharacter("ZnStream", 100, 100, 30, 10, 10, "/resources/ZnStream.png"));
                     default -> throw new RuntimeException();
                 }
             } catch (RuntimeException ex) {

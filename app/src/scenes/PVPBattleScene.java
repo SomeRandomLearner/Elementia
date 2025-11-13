@@ -1,158 +1,226 @@
 package scenes;
 
-import characters.GameCharacter;
+import characters.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class PVPBattleScene extends JPanel {
-    private GameCharacter player1;
-    private GameCharacter player2;
-    private GameCharacter selectedTarget;
-    private JButton[] player1Skills = new JButton[3];
-    private JButton[] player2Skills = new JButton[3];
-    private JLabel player1Status;
-    private JLabel player2Status;
+    private Image leftBgImage;
+    private Image rightBgImage;
+    private GameCharacter currentActor;
+    private Skill selectedSkill = null;
 
-    public PVPBattleScene(JFrame frame) {
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    private JPanel alliesPanel, enemiesPanel, leftSkillPanel, rightSkillPanel;
+    private JLabel resultLabel;
 
-        JLabel title = new JLabel("PVP Battle", SwingConstants.CENTER);
-        title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
-        add(title, BorderLayout.NORTH);
+    private int currentAllyIndex = 0;
+    private int currentEnemyIndex = 0;
+    private boolean allyTurn = true;
+    private boolean battleEnded = false;
 
-        JPanel battleArea = new JPanel(new BorderLayout(20, 10));
+    public PVPBattleScene(Elementia frame) {
+        setLayout(new GridLayout(1, 2));
 
-        JPanel charactersPanel = new JPanel(new GridLayout(1, 2, 20, 0));
-        charactersPanel.add(createCharacterPanel(true));
-        charactersPanel.add(createCharacterPanel(false));
-        battleArea.add(charactersPanel, BorderLayout.CENTER);
+        try {
+            leftBgImage = ImageIO.read(getClass().getResource("/resources/LevelBackgrounds/Level5Background.png"));
+            rightBgImage = ImageIO.read(getClass().getResource("/resources/LevelBackgrounds/Level5Backgroundmirror.png"));
+        } catch (IOException e) {
+            System.err.println("Background images not found!");
+        }
 
-        JPanel skillsPanel = new JPanel(new GridLayout(1, 2, 20, 0));
-        skillsPanel.add(createSkillsPanel(true));
-        skillsPanel.add(createSkillsPanel(false));
-        battleArea.add(skillsPanel, BorderLayout.SOUTH);
+        JPanel leftSide = new JPanel(new BorderLayout());
+        leftSide.setOpaque(false);
 
-        add(battleArea, BorderLayout.CENTER);
+        JButton backBtn = Utility.createButton("Back");
+        backBtn.addActionListener(e -> frame.showScreen("PVPCharacterSelect"));
+        leftSide.add(backBtn, BorderLayout.NORTH);
 
-        JPanel controls = new JPanel();
-        JButton backBtn = new JButton("Back to Menu");
-        backBtn.addActionListener(e -> {
-            Window w = SwingUtilities.getWindowAncestor(this);
-            if (w instanceof JFrame) {
-                ((JFrame) w).getContentPane().removeAll();
-                w.revalidate();
-                w.repaint();
-            }
-        });
-        controls.add(backBtn);
-        add(controls, BorderLayout.SOUTH);
+        alliesPanel = new JPanel(new GridBagLayout());
+        alliesPanel.setOpaque(false);
+        leftSide.add(alliesPanel, BorderLayout.CENTER);
+
+        leftSkillPanel = new JPanel(new FlowLayout());
+        leftSkillPanel.setOpaque(false);
+        leftSide.add(leftSkillPanel, BorderLayout.SOUTH);
+
+        JPanel rightSide = new JPanel(new BorderLayout());
+        rightSide.setOpaque(false);
+
+        enemiesPanel = new JPanel(new GridBagLayout());
+        enemiesPanel.setOpaque(false);
+        rightSide.add(enemiesPanel, BorderLayout.CENTER);
+
+        rightSkillPanel = new JPanel(new FlowLayout());
+        rightSkillPanel.setOpaque(false);
+        rightSide.add(rightSkillPanel, BorderLayout.SOUTH);
+
+        resultLabel = new JLabel("", SwingConstants.CENTER);
+        resultLabel.setFont(new Font("Arial", Font.BOLD, 36));
+        resultLabel.setForeground(Color.WHITE);
+        resultLabel.setVisible(false);
+
+        setLayout(new OverlayLayout(this));
+        add(resultLabel);
+        add(new JPanel(new GridLayout(1, 2)) {{
+            setOpaque(false);
+            add(leftSide);
+            add(rightSide);
+        }});
+
+        updateCharacterPanels();
+        nextTurn();
     }
 
-    public void setPlayer1(GameCharacter p) {
-        this.player1 = p;
-        if (p == null) return;
-        if (player1Skills[0] != null) {
-            player1Skills[0].setText(p.skills[0].getName());
-            player1Skills[0].setEnabled(true);
+    private void nextTurn() {
+        if (battleEnded) return;
+
+        GameCharacter[] allies = Teams.getAlliedTeam();
+        GameCharacter[] enemies = Teams.getEnemyTeam();
+
+        if (isTeamDead(allies)) {
+            showResult(false);
+            return;
         }
-        if (player1Skills[1] != null) {
-            player1Skills[1].setText(p.skills[1].getName());
-            player1Skills[1].setEnabled(true);
-        }
-        if (player1Skills[2] != null) {
-            player1Skills[2].setText(p.skills[2].getName());
-            player1Skills[2].setEnabled(true);
-        }
-        updateStatusDisplays();
-    }
-
-    public void setPlayer2(GameCharacter p) {
-        this.player2 = p;
-        if (p == null) return;
-        if (player2Skills[0] != null) {
-            player2Skills[0].setText(p.skills[0].getName());
-            player2Skills[0].setEnabled(true);
-        }
-        if (player2Skills[1] != null) {
-            player2Skills[1].setText(p.skills[1].getName());
-            player2Skills[1].setEnabled(true);
-        }
-        if (player2Skills[2] != null) {
-            player2Skills[2].setText(p.skills[2].getName());
-            player2Skills[2].setEnabled(true);
-        }
-        updateStatusDisplays();
-    }
-
-    private JPanel createCharacterPanel(boolean isPlayer1) {
-        JPanel panel = new JPanel(new BorderLayout(5, 5));
-        panel.setBorder(BorderFactory.createTitledBorder(isPlayer1 ? "Player 1" : "Player 2"));
-
-        JButton charButton = new JButton("Click to Target");
-        charButton.setPreferredSize(new Dimension(120, 120));
-        charButton.addActionListener(e -> handleTargetSelection(isPlayer1));
-        panel.add(charButton, BorderLayout.CENTER);
-
-        JLabel status = new JLabel("HP: --- / --- | MP: --- / ---", SwingConstants.CENTER);
-        if (isPlayer1) {
-            player1Status = status;
-        } else {
-            player2Status = status;
-        }
-        panel.add(status, BorderLayout.SOUTH);
-
-        return panel;
-    }
-
-    private JPanel createSkillsPanel(boolean isPlayer1) {
-        JPanel panel = new JPanel(new GridLayout(1, 3, 5, 0));
-        JButton[] skills = isPlayer1 ? player1Skills : player2Skills;
-
-        for (int i = 0; i < 3; i++) {
-            JButton skillBtn = new JButton("Skill " + (i + 1));
-            int skillNum = i + 1;
-            skillBtn.addActionListener(e -> handleSkillUse(isPlayer1, skillNum));
-            skillBtn.setEnabled(false);
-            skills[i] = skillBtn;
-            panel.add(skillBtn);
-        }
-
-        return panel;
-    }
-
-    private void handleTargetSelection(boolean isPlayer1) {
-        selectedTarget = isPlayer1 ? player1 : player2;
-        System.out.println("Selected target: " + (isPlayer1 ? "Player 1" : "Player 2"));
-    }
-
-    private void handleSkillUse(boolean isPlayer1, int skillNum) {
-        if (selectedTarget == null) {
-            JOptionPane.showMessageDialog(this, "Select a target first!");
+        if (isTeamDead(enemies)) {
+            showResult(true);
             return;
         }
 
-        GameCharacter attacker = isPlayer1 ? player1 : player2;
-        if (attacker == null) return;
+        if (allyTurn) {
+            while (currentAllyIndex < allies.length &&
+                    (allies[currentAllyIndex] == null || allies[currentAllyIndex].getCurrentHP() <= 0)) {
+                currentAllyIndex++;
+            }
 
-        try {
-            attacker.useSkill(attacker.skills[skillNum], selectedTarget);
-            updateStatusDisplays();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Not enough mana/wrong target!");
+            if (currentAllyIndex >= allies.length) {
+                allyTurn = false;
+                currentAllyIndex = 0;
+                nextTurn();
+                return;
+            }
+
+            GameCharacter actor = allies[currentAllyIndex];
+            actor.setCurrentMana(Math.min(actor.getCurrentMana() + actor.getManaRecovery(), actor.getMaxMana()));
+            showSkillsForActor(actor, leftSkillPanel, true);
+        } else {
+            while (currentEnemyIndex < enemies.length &&
+                    (enemies[currentEnemyIndex] == null || enemies[currentEnemyIndex].getCurrentHP() <= 0)) {
+                currentEnemyIndex++;
+            }
+
+            if (currentEnemyIndex >= enemies.length) {
+                allyTurn = true;
+                currentEnemyIndex = 0;
+                nextTurn();
+                return;
+            }
+
+            GameCharacter actor = enemies[currentEnemyIndex];
+            actor.setCurrentMana(Math.min(actor.getCurrentMana() + actor.getManaRecovery(), actor.getMaxMana()));
+            showSkillsForActor(actor, rightSkillPanel, false);
         }
     }
 
-    private void updateStatusDisplays() {
-        if (player1 != null) {
-            player1Status.setText(String.format("HP: %d/%d | MP: %d/%d",
-                    player1.getCurrentHealth(), player1.getMaxHealth(),
-                    player1.getCurrentMana(), player1.getMaxMana()));
+    private boolean isTeamDead(GameCharacter[] team) {
+        for (GameCharacter ch : team)
+            if (ch != null && ch.getCurrentHP() > 0)
+                return false;
+        return true;
+    }
+
+    private void addCharacters(JPanel panel, GameCharacter[] team, boolean isAlly) {
+        panel.removeAll();
+        for (GameCharacter ch : team) {
+            if (ch == null) continue;
+            CharacterView view = new CharacterView(ch, ch.getImage());
+            view.setClickListener(clicked -> {
+                if (selectedSkill != null && currentActor != null) {
+                    handleSkillUse(currentActor, selectedSkill, clicked);
+                }
+            });
+            panel.add(view);
         }
-        if (player2 != null) {
-            player2Status.setText(String.format("HP: %d/%d | MP: %d/%d",
-                    player2.getCurrentHealth(), player2.getMaxHealth(),
-                    player2.getCurrentMana(), player2.getMaxMana()));
+        panel.revalidate();
+        panel.repaint();
+    }
+
+    private void handleSkillUse(GameCharacter user, Skill skill, GameCharacter target) {
+        boolean success = user.useSkill(skill, target);
+        if (success && target.getCurrentHP() <= 0) {
+            removeCharacterFromTeam(target, target.isAlly() ? Teams.getAlliedTeam() : Teams.getEnemyTeam());
         }
+
+        updateCharacterPanels();
+        selectedSkill = null;
+
+        if (allyTurn) currentAllyIndex++;
+        else currentEnemyIndex++;
+
+        nextTurn();
+    }
+
+    private void showSkillsForActor(GameCharacter actor, JPanel skillPanel, boolean isAlly) {
+        skillPanel.removeAll();
+        if (actor == null) return;
+
+        currentActor = actor;
+
+        for (Skill skill : actor.getSkills()) {
+            if (skill == null) continue;
+            JButton skillButton = new JButton(skill.getName());
+            skillButton.setFocusPainted(false);
+            skillButton.setBackground(isAlly ? new Color(70, 110, 220) : new Color(220, 90, 90));
+            skillButton.setForeground(Color.WHITE);
+            skillButton.setEnabled(actor.getCurrentMana() >= skill.getManaCost());
+            skillButton.addActionListener(e -> selectedSkill = skill);
+            skillPanel.add(skillButton);
+        }
+
+        if (isAlly) {
+            rightSkillPanel.removeAll();
+        } else {
+            leftSkillPanel.removeAll();
+        }
+
+        skillPanel.revalidate();
+        skillPanel.repaint();
+        updateCharacterPanels();
+    }
+
+    private void removeCharacterFromTeam(GameCharacter target, GameCharacter[] team) {
+        for (int i = 0; i < team.length; i++) {
+            if (team[i] == target) {
+                team[i] = null;
+                break;
+            }
+        }
+    }
+
+    private void showResult(boolean playerWon) {
+        battleEnded = true;
+        resultLabel.setText(playerWon ? "Left Player Wins!" : "Right Player Wins!");
+        resultLabel.setForeground(playerWon ? new Color(80, 255, 80) : new Color(255, 80, 80));
+        resultLabel.setVisible(true);
+        resultLabel.repaint();
+
+        leftSkillPanel.removeAll();
+        rightSkillPanel.removeAll();
+        revalidate();
+        repaint();
+    }
+
+    private void updateCharacterPanels() {
+        addCharacters(alliesPanel, Teams.getAlliedTeam(), true);
+        addCharacters(enemiesPanel, Teams.getEnemyTeam(), false);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        int midX = getWidth() / 2;
+        if (leftBgImage != null) g.drawImage(leftBgImage, 0, 0, midX, getHeight(), null);
+        if (rightBgImage != null) g.drawImage(rightBgImage, midX, 0, midX, getHeight(), null);
     }
 }
