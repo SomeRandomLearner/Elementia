@@ -8,14 +8,13 @@ public class Elementia extends JFrame{
 
     public Elementia() {
         setTitle("Elementia");
-        setSize(1000, 600);
+        setSize(1000, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         container.add(new MainMenuScene(this), "MainMenu");
         container.add(new CharacterSelectScene(this), "CharacterSelect");
         container.add(new LevelSelectScene(this), "LevelSelect");
-        container.add(new VSAIBattleScene(this), "VSAIBattle");
         container.add(new PVPCharacterSelectScene(this), "PVPCharacterSelect");
         container.add(new CharacterDisplay(this), "CharacterDisplay");
 
@@ -29,5 +28,9 @@ public class Elementia extends JFrame{
         layout.show(container, name);
     }
 
+    public void addVSAIBattleScene(){
+        container.add(new VSAIBattleScene(this), "VSAIBattle");
+    }
 
+    public void addPVPBattleScene(){ container.add(new PVPBattleScene(this), "PVPBattle"); }
 }

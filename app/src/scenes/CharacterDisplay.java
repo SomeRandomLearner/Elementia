@@ -1,4 +1,6 @@
 package scenes;
+
+import characters.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -49,7 +51,7 @@ public class CharacterDisplay extends JPanel {
         characterImageLabel.setOpaque(true);
         characterImageLabel.setBackground(Color.LIGHT_GRAY);
 
-        URL aeroPath = getClass().getResource("/images/Aero.png");
+        URL aeroPath = getClass().getResource("/resources/Aero.png");
         assert aeroPath != null : "Aero image not found";
         ImageIcon icon = new ImageIcon(aeroPath);
         if (icon.getIconWidth() > 0) {
@@ -62,11 +64,12 @@ public class CharacterDisplay extends JPanel {
 
         JPanel rightPanel = new JPanel(new BorderLayout(10, 10));
 
-        //Kaizen is editing here
         JButton nextBtn = Utility.createButton("Next");
         JButton backBtn = Utility.createButton("Back");
         JButton selectBtn = Utility.createButton("Select");
         selectBtn.addActionListener(e -> {
+            if(Teams.getAlliedTeamCount() > 0) Teams.clearAlliedTeam(); // Prevents unintended events
+            Teams.addToAlliedTeam(new Aero());
             frame.showScreen("LevelSelect");
         });
         storylineArea = new JTextArea(storyline);
