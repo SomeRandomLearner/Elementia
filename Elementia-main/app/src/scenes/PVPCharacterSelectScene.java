@@ -17,12 +17,19 @@ public class PVPCharacterSelectScene extends JPanel {
     private boolean selectingPlayer1 = true;
     private final JButton startButton;
     private final Elementia frame;
+    private Image backgroundImage;
 
     public PVPCharacterSelectScene(Elementia frame) {
         this.frame = frame;
 
         setLayout(new BorderLayout());
         setBackground(Color.DARK_GRAY);
+
+        try {
+            backgroundImage = ImageIO.read(getClass().getResource("/resources/LevelBackgrounds/Level5Background.png"));
+        } catch (IOException e) {
+            System.err.println("Background image not found!");
+        }
 
         instruction = new JLabel("Player 1: Select your character", SwingConstants.CENTER);
         instruction.setForeground(Color.WHITE);
@@ -58,26 +65,22 @@ public class PVPCharacterSelectScene extends JPanel {
         startButton = Utility.createButton("Start PVP");
         startButton.setEnabled(false);
         startButton.addActionListener(e -> {
-            Teams.clearAlliedTeam(); // Prevents unintended events
+            Teams.clearAlliedTeam();
             Teams.clearEnemyTeam();
-            // Create fresh character instances with full HP and mana
-            GameCharacter player1 = createCharacterInstance(chosen1);
-            GameCharacter player2 = createCharacterInstance(chosen2);
-            Teams.addToAlliedTeam(player1);
-            Teams.addToEnemyTeam(player2);
+            Teams.addToAlliedTeam(chosen1);
+            Teams.addToEnemyTeam(chosen2);
             frame.addPVPBattleScene();
             frame.showScreen("PVPBattle");
         });
 
         JButton backButton = Utility.createButton("Back");
-        backButton.addActionListener(e -> {
-            resetSelection();
-            frame.showScreen("MainMenu");
-        });
+        backButton.addActionListener(e -> frame.showScreen("MainMenu"));
 
         bottom.add(startButton);
         bottom.add(backButton);
         add(bottom, BorderLayout.SOUTH);
+
+        resetSelections();
     }
 
     private void addSelectableView(JPanel grid, CharacterView view, GameCharacter hero, int gridx, int gridy) {
@@ -107,29 +110,18 @@ public class PVPCharacterSelectScene extends JPanel {
         grid.add(view, gbc);
     }
 
-    private GameCharacter createCharacterInstance(GameCharacter template) {
-        GameCharacter fresh;
-        if (template instanceof Aero) {
-            fresh = new Aero();
-        } else if (template instanceof Kayden) {
-            fresh = new Kayden();
-        } else if (template instanceof Psalm) {
-            fresh = new Psalm();
-        } else if (template instanceof Ripper) {
-            fresh = new Ripper();
-        } else if (template instanceof ZnStream) {
-            fresh = new ZnStream();
-        } else {
-            fresh = new Aero(); // Default fallback
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (backgroundImage != null) {
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
         }
-        return fresh;
     }
 
-    private void resetSelection() {
+    private void resetSelections() {
         chosen1 = null;
         chosen2 = null;
         selectingPlayer1 = true;
         startButton.setEnabled(false);
-        instruction.setText("Player 1: Select your character");
     }
 }

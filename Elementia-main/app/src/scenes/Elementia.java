@@ -33,12 +33,13 @@ public class Elementia extends JFrame{
     }
 
     public void addPVPBattleScene(){
-        // Remove old PVPBattle scene if it exists
-        try {
-            container.remove("PVPBattle");
-        } catch (Exception e) {
-            // Component doesn't exist yet, that's fine
+        for (Component c : container.getComponents()) {
+            if (c instanceof PVPBattleScene) {
+                container.remove(c);
+            }
         }
         container.add(new PVPBattleScene(this), "PVPBattle");
+        container.revalidate();
+        container.repaint();
     }
 }
