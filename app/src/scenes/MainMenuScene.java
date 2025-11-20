@@ -31,7 +31,7 @@ public class MainMenuScene extends JPanel {
         titleNamePanel = new JPanel();
         titleNamePanel.setOpaque(false);
         titleNameLabel = new JLabel("ELEMENTIA");
-        titleNameLabel.setForeground(Color.BLACK);
+        titleNameLabel.setForeground(Color.WHITE);
         titleNameLabel.setFont(titlefont);
         titleNamePanel.add(titleNameLabel);
         layeredPane.add(titleNamePanel, Integer.valueOf(1));
