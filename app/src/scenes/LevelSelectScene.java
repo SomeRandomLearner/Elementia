@@ -131,7 +131,7 @@ public class LevelSelectScene extends JPanel{
         JPanel centerPanel = new JPanel(new GridBagLayout());
 
         JButton backButton = Utility.createButton("Back");
-        backButton.addActionListener(e -> frame.showScreen("MainMenu"));
+        backButton.addActionListener(e -> frame.showScreen("CharacterSelect"));
 
         centerPanel.add(buttonPanel);
         add(centerPanel, BorderLayout.CENTER);

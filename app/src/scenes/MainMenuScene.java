@@ -41,7 +41,7 @@ public class MainMenuScene extends JPanel {
         buttonPanel.setOpaque(false);
 
         startButton = createStyledButton("START");
-        startButton.addActionListener(e -> frame.showScreen("CharacterDisplay"));
+        startButton.addActionListener(e -> frame.showScreen("CharacterSelect"));
 
         humanVsHumanButton = createStyledButton("HUMAN vs HUMAN");
         humanVsHumanButton.addActionListener(e -> frame.showScreen("PVPCharacterSelect"));
