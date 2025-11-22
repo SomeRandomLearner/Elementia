@@ -34,8 +34,8 @@ public class PVPCharacterSelectScene extends JPanel {
 
         try {
             BufferedImage aeroImg = ImageIO.read(getClass().getResource("/resources/Aero.png"));
-            BufferedImage kaydenImg = ImageIO.read(getClass().getResource("/resources/Kayden Break Temp.png"));
-            BufferedImage psalmImg = ImageIO.read(getClass().getResource("/resources/PsalmFire.png"));
+            BufferedImage kaydenImg = ImageIO.read(getClass().getResource("/resources/Kayden.png"));
+            BufferedImage psalmImg = ImageIO.read(getClass().getResource("/resources/Psalm.png"));
             BufferedImage ripperImg = ImageIO.read(getClass().getResource("/resources/Ripper.png"));
             BufferedImage znImg = ImageIO.read(getClass().getResource("/resources/ZnStream.png"));
 
