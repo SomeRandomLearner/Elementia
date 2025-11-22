@@ -17,19 +17,12 @@ public class PVPCharacterSelectScene extends JPanel {
     private boolean selectingPlayer1 = true;
     private final JButton startButton;
     private final Elementia frame;
-    private Image backgroundImage;
 
     public PVPCharacterSelectScene(Elementia frame) {
         this.frame = frame;
 
         setLayout(new BorderLayout());
         setBackground(Color.DARK_GRAY);
-
-        try {
-            backgroundImage = ImageIO.read(getClass().getResource("/resources/LevelBackgrounds/Level5Background.png"));
-        } catch (IOException e) {
-            System.err.println("Background image not found!");
-        }
 
         instruction = new JLabel("Player 1: Select your character", SwingConstants.CENTER);
         instruction.setForeground(Color.WHITE);
@@ -65,7 +58,7 @@ public class PVPCharacterSelectScene extends JPanel {
         startButton = Utility.createButton("Start PVP");
         startButton.setEnabled(false);
         startButton.addActionListener(e -> {
-            Teams.clearAlliedTeam();
+            Teams.clearAlliedTeam(); // Prevents unintended events
             Teams.clearEnemyTeam();
             Teams.addToAlliedTeam(chosen1);
             Teams.addToEnemyTeam(chosen2);
@@ -79,8 +72,6 @@ public class PVPCharacterSelectScene extends JPanel {
         bottom.add(startButton);
         bottom.add(backButton);
         add(bottom, BorderLayout.SOUTH);
-
-        resetSelections();
     }
 
     private void addSelectableView(JPanel grid, CharacterView view, GameCharacter hero, int gridx, int gridy) {
@@ -108,20 +99,5 @@ public class PVPCharacterSelectScene extends JPanel {
         });
 
         grid.add(view, gbc);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (backgroundImage != null) {
-            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-        }
-    }
-
-    private void resetSelections() {
-        chosen1 = null;
-        chosen2 = null;
-        selectingPlayer1 = true;
-        startButton.setEnabled(false);
     }
 }

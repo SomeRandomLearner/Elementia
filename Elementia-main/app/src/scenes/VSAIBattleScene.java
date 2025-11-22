@@ -15,6 +15,7 @@ public class VSAIBattleScene extends JPanel {
 
     private JPanel alliesPanel, enemiesPanel, skillsPanel;
     private JLabel resultLabel; // for "You Won!" / "You Lost!"
+    private BattleLog battleLog;
 
     private int currentAllyIndex = 0;
     private boolean allyTurn = true;
@@ -64,6 +65,12 @@ public class VSAIBattleScene extends JPanel {
             add(rightSide);
         }});
 
+        // Initialize battle log
+        battleLog = new BattleLog();
+        battleLog.setPreferredSize(new Dimension(300, 150));
+        setLayout(new BorderLayout());
+        add(battleLog, BorderLayout.SOUTH);
+
         updateCharacterPanels();
         nextTurn();
     }
@@ -99,6 +106,7 @@ public class VSAIBattleScene extends JPanel {
 
             GameCharacter actor = allies[currentAllyIndex];
             actor.setCurrentMana(Math.min(actor.getCurrentMana() + actor.getManaRecovery(), actor.getMaxMana()));
+            battleLog.addTurn(actor.getName());
             showSkillsForActor(actor);
         } else {
             SwingUtilities.invokeLater(this::startEnemyPhase);
@@ -164,11 +172,16 @@ public class VSAIBattleScene extends JPanel {
 
             if (success && target.getCurrentHP() <= 0) {
                 removeCharacterFromTeam(target, allies);
+                battleLog.addDefeated(target.getName());
+            } else if (success) {
+                int damage = (int) ((enemy.getAttack() + skill.getAttackUp()) * skill.getMultiplier()) - target.getDefense();
+                if (damage < 0) damage = 0;
+                battleLog.addSkillUse(enemy.getName(), skill.getName(), target.getName(), damage);
             }
 
             updateCharacterPanels();
             index[0]++;
-        });
+        }});
 
         timer.setInitialDelay(0);
         timer.start();
@@ -215,6 +228,11 @@ public class VSAIBattleScene extends JPanel {
         boolean success = currentActor.useSkill(selectedSkill, enemy);
         if (success && enemy.getCurrentHP() <= 0) {
             removeCharacterFromTeam(enemy, Teams.getEnemyTeam());
+            battleLog.addDefeated(enemy.getName());
+        } else if (success) {
+            int damage = (int) ((currentActor.getAttack() + selectedSkill.getAttackUp()) * selectedSkill.getMultiplier()) - enemy.getDefense();
+            if (damage < 0) damage = 0;
+            battleLog.addSkillUse(currentActor.getName(), selectedSkill.getName(), enemy.getName(), damage);
         }
 
         updateCharacterPanels();
@@ -278,6 +296,8 @@ public class VSAIBattleScene extends JPanel {
         resultLabel.setForeground(playerWon ? new Color(80, 255, 80) : new Color(255, 80, 80));
         resultLabel.setVisible(true);
         resultLabel.repaint();
+
+        battleLog.addResult(playerWon ? "VICTORY!" : "DEFEAT!");
 
         skillsPanel.removeAll();
         skillsPanel.revalidate();

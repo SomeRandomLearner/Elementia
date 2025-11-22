@@ -14,6 +14,7 @@ public class PVPBattleScene extends JPanel {
 
     private JPanel alliesPanel, enemiesPanel, leftSkillPanel, rightSkillPanel;
     private JLabel resultLabel;
+    private BattleLog battleLog;
 
     private int currentAllyIndex = 0;
     private int currentEnemyIndex = 0;
@@ -69,6 +70,12 @@ public class PVPBattleScene extends JPanel {
             add(rightSide);
         }});
 
+        // Initialize battle log
+        battleLog = new BattleLog();
+        battleLog.setPreferredSize(new Dimension(300, 150));
+        setLayout(new BorderLayout());
+        add(battleLog, BorderLayout.SOUTH);
+
         updateCharacterPanels();
         nextTurn();
     }
@@ -103,6 +110,7 @@ public class PVPBattleScene extends JPanel {
 
             GameCharacter actor = allies[currentAllyIndex];
             actor.setCurrentMana(Math.min(actor.getCurrentMana() + actor.getManaRecovery(), actor.getMaxMana()));
+            battleLog.addTurn(actor.getName() + " (Left)");
             showSkillsForActor(actor, leftSkillPanel, true);
         } else {
             while (currentEnemyIndex < enemies.length &&
@@ -119,6 +127,7 @@ public class PVPBattleScene extends JPanel {
 
             GameCharacter actor = enemies[currentEnemyIndex];
             actor.setCurrentMana(Math.min(actor.getCurrentMana() + actor.getManaRecovery(), actor.getMaxMana()));
+            battleLog.addTurn(actor.getName() + " (Right)");
             showSkillsForActor(actor, rightSkillPanel, false);
         }
     }
@@ -150,6 +159,11 @@ public class PVPBattleScene extends JPanel {
         boolean success = user.useSkill(skill, target);
         if (success && target.getCurrentHP() <= 0) {
             removeCharacterFromTeam(target, target.isAlly() ? Teams.getAlliedTeam() : Teams.getEnemyTeam());
+            battleLog.addDefeated(target.getName());
+        } else if (success) {
+            int damage = (int) ((user.getAttack() + skill.getAttackUp()) * skill.getMultiplier()) - target.getDefense();
+            if (damage < 0) damage = 0;
+            battleLog.addSkillUse(user.getName(), skill.getName(), target.getName(), damage);
         }
 
         updateCharacterPanels();
@@ -200,10 +214,12 @@ public class PVPBattleScene extends JPanel {
 
     private void showResult(boolean playerWon) {
         battleEnded = true;
-        resultLabel.setText(playerWon ? "Left Player Wins!" : "Right Player Wins!");
+        resultLabel.setText(playerWon ? "Player 1 Wins!" : "Player 2 Wins!");
         resultLabel.setForeground(playerWon ? new Color(80, 255, 80) : new Color(255, 80, 80));
         resultLabel.setVisible(true);
         resultLabel.repaint();
+
+        battleLog.addResult(playerWon ? "Player 1 WINS!" : "Player 2 WINS!");
 
         leftSkillPanel.removeAll();
         rightSkillPanel.removeAll();

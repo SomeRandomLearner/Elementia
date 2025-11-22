@@ -32,14 +32,5 @@ public class Elementia extends JFrame{
         container.add(new VSAIBattleScene(this), "VSAIBattle");
     }
 
-    public void addPVPBattleScene(){
-        for (Component c : container.getComponents()) {
-            if (c instanceof PVPBattleScene) {
-                container.remove(c);
-            }
-        }
-        container.add(new PVPBattleScene(this), "PVPBattle");
-        container.revalidate();
-        container.repaint();
-    }
+    public void addPVPBattleScene(){ container.add(new PVPBattleScene(this), "PVPBattle"); }
 }
