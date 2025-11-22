@@ -10,18 +10,19 @@ import java.util.Random;
 public class VSAIBattleScene extends JPanel {
     private Image leftBgImage;
     private Image rightBgImage;
+
     private GameCharacter currentActor;
     private Skill selectedSkill = null;
 
     private JPanel alliesPanel, enemiesPanel, skillsPanel;
-    private JLabel resultLabel; // for "You Won!" / "You Lost!"
+    private JLabel resultLabel;
 
     private int currentAllyIndex = 0;
     private boolean allyTurn = true;
     private boolean battleEnded = false;
 
     public VSAIBattleScene(Elementia frame) {
-        setLayout(new GridLayout(1, 2));
+        setLayout(new BorderLayout());
 
         int level = LevelSelectScene.selectedLevel;
         try {
@@ -30,6 +31,16 @@ public class VSAIBattleScene extends JPanel {
         } catch (IOException e) {
             System.err.println("Background images not found!");
         }
+
+        resultLabel = new JLabel("", SwingConstants.CENTER);
+        resultLabel.setFont(new Font("Arial", Font.BOLD, 40));
+        resultLabel.setForeground(Color.WHITE);
+        resultLabel.setVisible(false);
+
+        add(resultLabel, BorderLayout.NORTH);
+
+        JPanel container = new JPanel(new GridLayout(1, 2));
+        container.setOpaque(false);
 
         JPanel leftSide = new JPanel(new BorderLayout());
         leftSide.setOpaque(false);
@@ -48,21 +59,18 @@ public class VSAIBattleScene extends JPanel {
 
         JPanel rightSide = new JPanel(new BorderLayout());
         rightSide.setOpaque(false);
+
         enemiesPanel = new JPanel(new GridBagLayout());
         enemiesPanel.setOpaque(false);
         rightSide.add(enemiesPanel, BorderLayout.CENTER);
 
-        resultLabel = new JLabel("", SwingConstants.CENTER);
-        resultLabel.setFont(new Font("Arial", Font.BOLD, 36));
-        resultLabel.setForeground(Color.WHITE);
-        resultLabel.setVisible(false);
-        setLayout(new OverlayLayout(this));
-        add(resultLabel);
-        add(new JPanel(new GridLayout(1, 2)) {{
-            setOpaque(false);
-            add(leftSide);
-            add(rightSide);
-        }});
+        container.add(leftSide);
+        container.add(rightSide);
+
+//      JLabel battlelog = new JLabel("BattleLog", JLabel.CENTER);
+//      add(battlelog, BorderLayout.NORTH);
+
+        add(container, BorderLayout.CENTER);
 
         updateCharacterPanels();
         nextTurn();
@@ -84,9 +92,9 @@ public class VSAIBattleScene extends JPanel {
         }
 
         if (allyTurn) {
-            // Skip defeated allies
             while (currentAllyIndex < allies.length &&
-                    (allies[currentAllyIndex] == null || allies[currentAllyIndex].getCurrentHP() <= 0)) {
+                    (allies[currentAllyIndex] == null ||
+                            allies[currentAllyIndex].getCurrentHP() <= 0)) {
                 currentAllyIndex++;
             }
 
@@ -151,15 +159,15 @@ public class VSAIBattleScene extends JPanel {
             }
 
             Skill[] skills = enemy.getSkills();
-            java.util.List<Skill> available = new java.util.ArrayList<>();
-            if (skills != null) for (Skill s : skills) if (s != null) available.add(s);
+            java.util.List<Skill> list = new java.util.ArrayList<>();
+            for (Skill s : skills) if (s != null) list.add(s);
 
-            if (available.isEmpty()) {
+            if (list.isEmpty()) {
                 index[0]++;
                 return;
             }
 
-            Skill skill = available.get(new Random().nextInt(available.size()));
+            Skill skill = list.get(new Random().nextInt(list.size()));
             boolean success = enemy.useSkill(skill, target);
 
             if (success && target.getCurrentHP() <= 0) {
@@ -175,15 +183,15 @@ public class VSAIBattleScene extends JPanel {
     }
 
     private boolean isTeamDead(GameCharacter[] team) {
-        for (GameCharacter ch : team)
-            if (ch != null && ch.getCurrentHP() > 0)
+        for (GameCharacter c : team)
+            if (c != null && c.getCurrentHP() > 0)
                 return false;
         return true;
     }
 
     private GameCharacter getRandomLivingCharacter(GameCharacter[] team) {
         java.util.List<GameCharacter> alive = new java.util.ArrayList<>();
-        for (GameCharacter c: team)
+        for (GameCharacter c : team)
             if (c != null && c.getCurrentHP() > 0)
                 alive.add(c);
         if (alive.isEmpty()) return null;
@@ -194,7 +202,7 @@ public class VSAIBattleScene extends JPanel {
         panel.removeAll();
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 0;
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(10,10,10,10);
 
         for (GameCharacter ch : team) {
             if (ch == null) continue;
@@ -209,7 +217,7 @@ public class VSAIBattleScene extends JPanel {
         }
     }
 
-    private void handleEnemyClick(GameCharacter enemy) {
+private void handleEnemyClick(GameCharacter enemy) {
         if (currentActor == null || selectedSkill == null) return;
 
         boolean success = currentActor.useSkill(selectedSkill, enemy);

@@ -1,108 +1,194 @@
 package scenes;
-import characters.GameCharacter;
-import characters.Teams;
+
+import characters.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
-import java.net.URL;
-import java.util.List;
+
+public class CharacterSelectScene extends JPanel {
 
 
-public class CharacterSelectScene extends JPanel{
-    private final CardLayout cardLayout;
-    private final JPanel characterScreens;
-    private final List<String> heroes = List.of("Aero", "Kayden", "Psalm", "Ripper", "ZnStream");
-    private int currentIndex = 0;
-    private String currentCard = heroes.getFirst(); // Gets the name of the character in focus
+    public CharacterSelectScene(Elementia frame) {
 
-    public CharacterSelectScene(Elementia frame) throws RuntimeException{
+
         setLayout(new BorderLayout());
-        setBackground(Color.BLACK);
+        setBackground(Color.DARK_GRAY);
 
-        JLabel title = new JLabel("Character Select", SwingConstants.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 28));
-        title.setForeground(Color.WHITE);
-        add(title, BorderLayout.NORTH);
+        JLabel titleLabel = new JLabel("Select Your Character", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Times New Roman", Font.BOLD, 28));
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        add(titleLabel, BorderLayout.NORTH);
 
-        cardLayout = new CardLayout();
-        characterScreens = new JPanel(cardLayout);
-        JPanel aeroScreen = Utility.createScene("Aero", Color.LIGHT_GRAY);
-        JPanel kaydenScreen = Utility.createScene("Kayden", Color.CYAN);
-        JPanel psalmScreen = Utility.createScene("Psalm", Color.RED);
-        JPanel ripperScreen = Utility.createScene("Ripper", Color.DARK_GRAY);
-        JPanel znStreamScreen = Utility.createScene("ZnStream", Color.BLUE);
-
-        // Places an image for each character
-        URL aeroPath = getClass().getResource("/resources/Aero.png");
-        assert aeroPath != null : "Aero image not found";
-        var aeroImgHolder = new JLabel(new ImageIcon(aeroPath));
-        aeroScreen.add(aeroImgHolder);
-
-        URL psalmPath = getClass().getResource("/resources/PsalmFire.png");
-        assert psalmPath != null : "PsalmFire image not found";
-        var psalmImgHolder = new JLabel(new ImageIcon(psalmPath));
-        psalmScreen.add(psalmImgHolder);
-
-        URL kaydenPath = getClass().getResource("/resources/Kayden Break Temp.png");
-        assert kaydenPath != null : "Kayden Break Temp image not found";
-        var kaydenImgHolder = new JLabel(new ImageIcon(kaydenPath));
-        kaydenScreen.add(kaydenImgHolder);
-
-        URL znStreamPath = getClass().getResource("/resources/ZnStream.png");
-        assert znStreamPath != null : "ZnStream image not found";
-        var znStreamImgHolder = new JLabel(new ImageIcon(znStreamPath));
-        znStreamScreen.add(znStreamImgHolder);
-
-        characterScreens.add(aeroScreen, "Aero");
-        characterScreens.add(kaydenScreen, "Kayden");
-        characterScreens.add(psalmScreen, "Psalm");
-        characterScreens.add(ripperScreen, "Ripper");
-        characterScreens.add(znStreamScreen, "ZnStream");
-
-        add(characterScreens, BorderLayout.CENTER);
-
-        JButton nextBtn = Utility.createButton("Next");
-        JButton backBtn = Utility.createButton("Back");
-        JButton selectBtn = Utility.createButton("Select");
+        JPanel characterPanel = new JPanel(new GridLayout(1, 5, 15, 10));
+        characterPanel.setBackground(Color.DARK_GRAY);
+        characterPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 40, 40));
 
 
-        nextBtn.addActionListener(e -> {
-            cardLayout.next(characterScreens);
-            currentIndex = (currentIndex + 1) % heroes.size();
-            currentCard = heroes.get(currentIndex);
+        CharacterInfo[] characters = {
+                new CharacterInfo(
+                        "<html><center>Aero<br>The Wind Element</center></html>",
+                        "Born on the cliffs where the winds howl endlessly, Aero commands the freedom of the skies.",
+                        new String[]{"Zephyr Slash", "Cyclone Fury", "Aether Guard"},
+                        new String[]{
+                                "A slicing wave of compressed wind blows forward.",
+                                "A spinning vortex pulls enemies inward.",
+                                "A wind barrier forms and deflects attacks."
+                        },
+                        "images/characters/AERO/AERO.png",
+                        new String[]{
+                                "FIRE KICK.png",
+                                "FIRE PUNCH.png",
+                                "HEALING FAN.png"
+                        },
+                        "AERO"
+                ),
 
-        });
-        backBtn.addActionListener(e -> {
-            cardLayout.previous(characterScreens);
-            currentIndex = (currentIndex - 1 + heroes.size()) % heroes.size(); // without the extra + heroes.size(), an ArrayOutOfBoundsException appears
-            currentCard = heroes.get(currentIndex);
+                new CharacterInfo(
+                        "<html><center>Kayden<br>The Lightning Element</center></html>",
+                        "Forged in volcanic fury, Ignis burns to protect allies with unyielding flame.",
+                        new String[]{"LIGHTNING STRIKE", "FORCE CONTROL", "SUPER SPEED"},
+                        new String[]{
+                                "Kayden dashes at lightning velocity.",
+                                "A concentrated bolt shoots from his hands.",
+                                "Electrifies the area, pushing or pulling foes."
+                        },
+                        "images/characters/KAYDEN/KAYDEN.png",
+                        new String[]{
+                                "LIGHTNING STRIKE.png",
+                                "FORCE CONTROL.png",
+                                "SUPER SPEED.png"
+                        },
+                        "KAYDEN"
+                ),
 
-        });
-        selectBtn.addActionListener(e -> {
-            try { //  public GameCharacter(String name, int maxHealth, int maxMana, int attack, int defense, int manaRecovery, String imagePath);
-                if(Teams.getAlliedTeamCount() > 0) Teams.clearAlliedTeam(); // Prevents unintended events
-                switch (currentCard) {
-                    case "Aero" -> Teams.addToAlliedTeam(new GameCharacter("Aero", 100, 100, 30, 10, 10,"/resources/Aero.png")); //, 100, 100, 30, 10, "/resources/Aero.png" temporary
-                    case "Kayden" -> Teams.addToAlliedTeam(new GameCharacter("Kayden", 100, 100, 30, 10, 10,"/resources/Kayden Break Temp.png"));
-                    case "Psalm" -> Teams.addToAlliedTeam(new GameCharacter("Psalm", 100, 100, 30, 10, 10,"/resources/PsalmFire.png"));
-                    case "Ripper" -> Teams.addToAlliedTeam(new GameCharacter("Ripper", 100, 100, 30, 10, 10,"/resources/Aero.png"));
-                    case "ZnStream" -> Teams.addToAlliedTeam(new GameCharacter("ZnStream", 100, 100, 30, 10, 10, "/resources/ZnStream.png"));
-                    default -> throw new RuntimeException();
+                new CharacterInfo(
+                        "<html><center>Psalm<br>The Fire Element</center></html>",
+                        "A guardian of melody and light, Psalm burns with radiant flame.",
+                        new String[]{"FIRE KICK", "HEALING FAN", "FIRE PUNCH"},
+                        new String[]{
+                                "A fiery combo hits multiple enemies.",
+                                "A warm flame heals nearby allies.",
+                                "A flaming kick sends enemies flying."
+                        },
+                        "images/characters/PSALM/PSALM.png",
+                        new String[]{
+                                "FIRE KICK.png",
+                                "HEALING FAN.png",
+                                "FIRE PUNCH.png"
+                        },
+                        "PSALM"
+                ),
+
+                new CharacterInfo(
+                        "<html><center>Ripper<br>The Shadow Element</center></html>",
+                        "A silent hunter cloaked in darkness.",
+                        new String[]{"Night Slash", "Phantom Step", "Void Strike"},
+                        new String[]{
+                                "Strikes from the shadows.",
+                                "Moves unseen, evading danger.",
+                                "Unleashes a void-powered slash."
+                        },
+                        "images/characters/RIPPER/RIPPER.png",
+                        new String[]{
+                                "FIRE KICK.png",
+                                "FIRE PUNCH.png",
+                                "HEALING FAN.png"
+                        },
+                        "RIPPER"
+                ),
+
+                new CharacterInfo(
+                        "<html><center>ZnStream<br>The Water Element</center></html>",
+                        "Raised beneath the tides, ZnStream channels the deep ocean.",
+                        new String[]{"Wave Crush", "Tidal Prison", "Ocean's Grace"},
+                        new String[]{
+                                "ZnStream dissolves into water to evade damage.",
+                                "Traps enemies in a swirling whirlpool.",
+                                "Heals and strengthens allies nearby."
+                        },
+                        "images/characters/ZNSTREAM/ZNSTREAM.png",
+                        new String[]{
+                                "LIQUIFY.png",
+                                "WATER SLINGSHOT.png",
+                                "WATER TAKEOVER.png"
+                        },
+                        "ZNSTREAM"
+                )
+        };
+
+        for (int i = 0; i < characters.length; i++) {
+
+            CharacterInfo ch = characters[i];
+
+            JPanel card = new JPanel(new BorderLayout());
+            card.setBackground(new Color(100, 100, 100));
+            card.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
+            card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+            JLabel nameLabel = new JLabel(ch.getName(), SwingConstants.CENTER);
+            nameLabel.setForeground(Color.WHITE);
+            nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+
+
+            ImageIcon icon = null;
+            try {
+                String fullPath = System.getProperty("user.dir") + "/" + ch.getImagePath();
+                java.io.File file = new java.io.File(fullPath);
+
+                if (file.exists()) {
+                    Image img = new ImageIcon(fullPath).getImage()
+                            .getScaledInstance(550, 550, Image.SCALE_SMOOTH);
+                    icon = new ImageIcon(img);
+                } else {
+                    System.out.println("⚠ Image MISSING: " + file.getAbsolutePath());
                 }
-            } catch (RuntimeException ex) {
-                throw new RuntimeException(ex);
+            } catch (Exception ex) {
+                System.out.println("⚠ Error loading image: " + ch.getImagePath());
             }
 
-            frame.showScreen("LevelSelect");
-        });
+            JLabel imageLabel = (icon != null)
+                    ? new JLabel(icon, SwingConstants.CENTER)
+                    : new JLabel("[Image Missing]", SwingConstants.CENTER);
 
-        add(nextBtn, BorderLayout.EAST);
-        add(backBtn, BorderLayout.WEST);
-        add(selectBtn, BorderLayout.SOUTH);
+            imageLabel.setForeground(Color.WHITE);
+            imageLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            card.add(imageLabel, BorderLayout.CENTER);
+            card.add(nameLabel, BorderLayout.SOUTH);
+
+            int index = i;
+            card.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent e) {
+                    if(Teams.getAlliedTeamCount() > 0) Teams.clearAlliedTeam();
+                    switch(index){
+                        case 0 -> Teams.addToAlliedTeam(new Aero());
+                        case 1 -> Teams.addToAlliedTeam(new Kayden());
+                        case 2 -> Teams.addToAlliedTeam(new Psalm());
+                        case 3 -> Teams.addToAlliedTeam(new Ripper());
+                        case 4 -> Teams.addToAlliedTeam(new ZnStream());
+                    }
+                    frame.addCharacterDisplayScene(characters[index]);
+                    frame.showScreen("CharacterDisplay");
+                }
+
+                @Override
+                public void mouseEntered(java.awt.event.MouseEvent e) {
+                    card.setBackground(new Color(70, 130, 180));
+                }
+
+                @Override
+                public void mouseExited(java.awt.event.MouseEvent e) {
+                    card.setBackground(new Color(100, 100, 100));
+                }
+            });
+
+            characterPanel.add(card);
+        }
+
+        add(characterPanel, BorderLayout.CENTER);
     }
-
-
 }
+
 

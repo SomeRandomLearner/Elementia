@@ -16,7 +16,6 @@ public class Elementia extends JFrame{
         container.add(new CharacterSelectScene(this), "CharacterSelect");
         container.add(new LevelSelectScene(this), "LevelSelect");
         container.add(new PVPCharacterSelectScene(this), "PVPCharacterSelect");
-        container.add(new CharacterDisplay(this), "CharacterDisplay");
 
         add(container);
         layout.show(container, "MainMenu");
@@ -27,6 +26,8 @@ public class Elementia extends JFrame{
     public void showScreen(String name) {
         layout.show(container, name);
     }
+
+    public void addCharacterDisplayScene(CharacterInfo ChInfo){ container.add(new CharacterDisplayScene(this, ChInfo), "CharacterDisplay"); }
 
     public void addVSAIBattleScene(){
         container.add(new VSAIBattleScene(this), "VSAIBattle");
