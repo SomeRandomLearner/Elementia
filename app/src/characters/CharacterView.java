@@ -10,7 +10,7 @@ public class CharacterView extends JPanel {
     private final GameCharacter character;
     private final BufferedImage image;
     private OnClickListener clickListener;
-    private boolean isHovered = false; // changed from isSelected → hover state
+    private boolean isHovered = false;
 
     public interface OnClickListener {
         void onClick(GameCharacter character);
@@ -21,9 +21,9 @@ public class CharacterView extends JPanel {
         this.image = image;
 
         setOpaque(false);
-        setPreferredSize(new Dimension(120, 200)); // room for name + bars
+        setPreferredSize(new Dimension(120, 200));
 
-        // Mouse listener for hover and click
+
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -61,12 +61,12 @@ public class CharacterView extends JPanel {
         int panelW = getWidth();
         int panelH = getHeight();
 
-        // Margins and reserved space for bars
+
         int topMargin = 10;
         int bottomMargin = 35;
         int availableHeight = panelH - topMargin - bottomMargin;
 
-        // Scale image based on panel height
+
         int imgW = image.getWidth();
         int imgH = image.getHeight();
         double scale = (double) availableHeight / imgH;
@@ -75,17 +75,17 @@ public class CharacterView extends JPanel {
         int x = (panelW - drawW) / 2;
         int y = topMargin;
 
-        // Draw character
+
         g2.drawImage(image, x, y, drawW, drawH, this);
 
-        // === Name label ===
+
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 14f));
         g2.setColor(Color.WHITE);
         FontMetrics fm = g2.getFontMetrics();
         int nameWidth = fm.stringWidth(character.getName());
         g2.drawString(character.getName(), (panelW - nameWidth) / 2, y + drawH + 15);
 
-        // === HP Bar ===
+
         int barWidth = 80;
         int barHeight = 8;
         int barX = (panelW - barWidth) / 2;
@@ -99,7 +99,7 @@ public class CharacterView extends JPanel {
         g2.setColor(Color.WHITE);
         g2.drawRect(barX, hpY, barWidth, barHeight);
 
-        // === Mana Bar ===
+
         int manaY = hpY + 10;
         double manaPercent = (double) character.getCurrentMana() / character.getMaxMana();
         g2.setColor(Color.DARK_GRAY);
@@ -109,9 +109,9 @@ public class CharacterView extends JPanel {
         g2.setColor(Color.WHITE);
         g2.drawRect(barX, manaY, barWidth, barHeight / 2);
 
-        // === Hover highlight ===
+
         if (isHovered) {
-            g2.setColor(new Color(0, 255, 0, 60)); // soft green glow
+            g2.setColor(new Color(0, 255, 0, 60));
             g2.fillRect(0, 0, getWidth(), getHeight());
             g2.setColor(Color.GREEN);
             g2.setStroke(new BasicStroke(2f));
