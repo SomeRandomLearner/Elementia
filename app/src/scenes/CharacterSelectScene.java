@@ -28,7 +28,7 @@ public class CharacterSelectScene extends JPanel {
         CharacterInfo[] characters = {
                 new CharacterInfo(
                         "<html><center>Aero<br>The Wind Element</center></html>",
-                        "Born on the cliffs where the winds howl endlessly, Aero commands the freedom of the skies.",
+                        "Born on the cliffs where the winds howl endlessly, Aero commands the freedom of the skies. She was the chosen to wield the unseen strengths of the skies. With powers that protect and guide, she uses her elemental wind to support her allies and turn the tide of battlefield.",
                         new String[]{"Zephyr Slash", "Cyclone Fury", "Aether Guard"},
                         new String[]{
                                 "A slicing wave of compressed wind blows forward.",
@@ -46,7 +46,7 @@ public class CharacterSelectScene extends JPanel {
 
                 new CharacterInfo(
                         "<html><center>Kayden<br>The Lightning Element</center></html>",
-                        "Forged in volcanic fury, Ignis burns to protect allies with unyielding flame.",
+                        "Kayden was one of the strongest Elementalists, a lone wolf who mastered his Elemental power on his own. Feared and respected, his name spread as a legend whispered with both awe and Fear.",
                         new String[]{"LIGHTNING STRIKE", "FORCE CONTROL", "SUPER SPEED"},
                         new String[]{
                                 "Kayden dashes at lightning velocity.",
@@ -82,7 +82,7 @@ public class CharacterSelectScene extends JPanel {
 
                 new CharacterInfo(
                         "<html><center>Ripper<br>The Shadow Element</center></html>",
-                        "A silent hunter cloaked in darkness.",
+                        "A silent hunter cloaked in darkness and one with the Earth. An Earth elementalists who can feel the slightest change within the earth he steps on.",
                         new String[]{"Night Slash", "Phantom Step", "Void Strike"},
                         new String[]{
                                 "Strikes from the shadows.",
@@ -100,7 +100,7 @@ public class CharacterSelectScene extends JPanel {
 
                 new CharacterInfo(
                         "<html><center>ZnStream<br>The Water Element</center></html>",
-                        "Raised beneath the tides, ZnStream channels the deep ocean.",
+                        "From collective thoughts and energy of humans. He seeks to understand the stories and emotions that he could not witness the conclusion of.",
                         new String[]{"Wave Crush", "Tidal Prison", "Ocean's Grace"},
                         new String[]{
                                 "ZnStream dissolves into water to evade damage.",
