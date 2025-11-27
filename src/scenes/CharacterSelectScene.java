@@ -188,6 +188,9 @@ public class CharacterSelectScene extends JPanel {
         }
 
         add(characterPanel, BorderLayout.CENTER);
+        JButton backBtn = Utility.createButton("Return to Main Menu");
+        backBtn.addActionListener(e -> frame.showScreen("MainMenu"));
+        add(backBtn, BorderLayout.SOUTH);
     }
 }
 

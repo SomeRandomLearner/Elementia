@@ -12,7 +12,7 @@ public class MainMenuScene extends JPanel {
     JLabel titleNameLabel, backgroundLabel;
     Font titlefont = new Font("Times New Roman", Font.BOLD, 100);
     Font normalFont = new Font("Times New Roman", Font.PLAIN, 30);
-    JButton startButton, humanVsHumanButton, exitButton;
+    JButton startButton, exitButton;
     Image originalBackground;
 
     public MainMenuScene(Elementia frame) {
@@ -37,20 +37,16 @@ public class MainMenuScene extends JPanel {
         layeredPane.add(titleNamePanel, Integer.valueOf(1));
 
 
-        buttonPanel = new JPanel(new GridLayout(3, 1, 0, 15));
+        buttonPanel = new JPanel(new GridLayout(2, 1, 0, 50));
         buttonPanel.setOpaque(false);
 
         startButton = createStyledButton("START");
         startButton.addActionListener(e -> frame.showScreen("CharacterSelect"));
 
-        humanVsHumanButton = createStyledButton("HUMAN vs HUMAN");
-        humanVsHumanButton.addActionListener(e -> frame.showScreen("PVPCharacterSelect"));
-
         exitButton = createStyledButton("EXIT");
         exitButton.addActionListener(e -> System.exit(0));
 
         buttonPanel.add(startButton);
-        buttonPanel.add(humanVsHumanButton);
         buttonPanel.add(exitButton);
         layeredPane.add(buttonPanel, Integer.valueOf(1));
 
