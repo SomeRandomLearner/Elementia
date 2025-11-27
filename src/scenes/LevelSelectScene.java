@@ -31,7 +31,7 @@ public class LevelSelectScene extends JPanel{
 
         //Level 1
         levelButtons[0].addActionListener(e -> {
-            this.selectedLevel = 1;
+            selectedLevel = 1;
             while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam(); // Clears non-support characters
             Teams.addToAlliedTeam(new Kayden());
             for(GameCharacter character: Teams.getAlliedTeam()) {
@@ -44,12 +44,12 @@ public class LevelSelectScene extends JPanel{
             Teams.getEnemyTeam()[0].addNewSkill("Stab", 20, 20, 1.0f);
             Teams.getEnemyTeam()[0].addNewSkill("Execute", 70, 70, 1.0f);
             Teams.getEnemyTeam()[0].setCharacterImage("/resources/Assassin.png");
-            frame.addVSAIBattleScene();
-            frame.showScreen("VSAIBattle");
+            frame.addBattleScene();
+            frame.showScreen("Battle");
         });
         //Level 2
         levelButtons[1].addActionListener(e -> {
-            this.selectedLevel = 2;
+            selectedLevel = 2;
             while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
             Teams.addToAlliedTeam(new Aero());
 
@@ -68,12 +68,12 @@ public class LevelSelectScene extends JPanel{
             Teams.getEnemyTeam()[1].addNewSkill("Stab", 20, 20, 1.0f);
             Teams.getEnemyTeam()[1].addNewSkill("Execute", 70, 70, 1.0f);
             Teams.getEnemyTeam()[1].setCharacterImage("/resources/Assassin.png");
-            frame.addVSAIBattleScene();
-            frame.showScreen("VSAIBattle");
+            frame.addBattleScene();
+            frame.showScreen("Battle");
         });
         //Level 3
         levelButtons[2].addActionListener(e -> {
-            this.selectedLevel = 3;
+            selectedLevel = 3;
             while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
             Teams.addToAlliedTeam(new ZnStream());
             for(GameCharacter character: Teams.getAlliedTeam()) {
@@ -87,12 +87,12 @@ public class LevelSelectScene extends JPanel{
             Teams.getEnemyTeam()[1].addNewSkill("Stab", 20, 20, 1.0f);
             Teams.getEnemyTeam()[1].addNewSkill("Execute", 70, 70, 1.0f);
             Teams.getEnemyTeam()[1].setCharacterImage("/resources/Assassin.png");
-            frame.addVSAIBattleScene();
-            frame.showScreen("VSAIBattle");
+            frame.addBattleScene();
+            frame.showScreen("Battle");
         });
         //Level 4
         levelButtons[3].addActionListener(e -> {
-            this.selectedLevel = 4;
+            selectedLevel = 4;
             while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
             Teams.addToAlliedTeam(new Psalm());
             for(GameCharacter character: Teams.getAlliedTeam()) {
@@ -108,12 +108,12 @@ public class LevelSelectScene extends JPanel{
             Teams.getEnemyTeam()[2].addNewSkill("Execute", 70, 70, 1.0f);
             Teams.getEnemyTeam()[2].setCharacterImage("/resources/Assassin.png");
 
-            frame.addVSAIBattleScene();
-            frame.showScreen("VSAIBattle");
+            frame.addBattleScene();
+            frame.showScreen("Battle");
         });
         //Level 5
         levelButtons[4].addActionListener(e -> {
-            this.selectedLevel = 5;
+            selectedLevel = 5;
             while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
             Teams.addToAlliedTeam(new Ripper());
             for(GameCharacter character: Teams.getAlliedTeam()) {
@@ -124,8 +124,8 @@ public class LevelSelectScene extends JPanel{
             Teams.addToEnemyTeam(new Kayden());
             Teams.addToEnemyTeam(new Psalm());
             Teams.addToEnemyTeam(new ZnStream());
-            frame.addVSAIBattleScene();
-            frame.showScreen("VSAIBattle");
+            frame.addBattleScene();
+            frame.showScreen("Battle");
         });
 
         JPanel centerPanel = new JPanel(new GridBagLayout());

@@ -1,6 +1,5 @@
 package characters;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Teams {

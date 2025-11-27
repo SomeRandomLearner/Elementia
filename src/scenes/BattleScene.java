@@ -7,21 +7,22 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Random;
 
-public class VSAIBattleScene extends JPanel {
+public class BattleScene extends JPanel {
     private Image leftBgImage;
     private Image rightBgImage;
 
     private GameCharacter currentActor;
     private Skill selectedSkill = null;
 
-    private JPanel alliesPanel, enemiesPanel, skillsPanel;
-    private JLabel resultLabel;
+    private final JPanel centerPanel, alliesPanel, enemiesPanel, skillsPanel;
+    private final JLabel resultLabel;
+    private final BattleLog battleLog;
 
     private int currentAllyIndex = 0;
     private boolean allyTurn = true;
     private boolean battleEnded = false;
 
-    public VSAIBattleScene(Elementia frame) {
+    public BattleScene(Elementia frame) {
         setLayout(new BorderLayout());
 
         int level = LevelSelectScene.selectedLevel;
@@ -32,15 +33,15 @@ public class VSAIBattleScene extends JPanel {
             System.err.println("Background images not found!");
         }
 
+        // For win/lose popup
         resultLabel = new JLabel("", SwingConstants.CENTER);
         resultLabel.setFont(new Font("Arial", Font.BOLD, 40));
         resultLabel.setForeground(Color.WHITE);
+        resultLabel.setAlignmentX(0.5f);
+        resultLabel.setAlignmentY(0.5f);
+        resultLabel.setMaximumSize(new Dimension(1000, 200));
         resultLabel.setVisible(false);
 
-        add(resultLabel, BorderLayout.NORTH);
-
-        JPanel container = new JPanel(new GridLayout(1, 2));
-        container.setOpaque(false);
 
         JPanel leftSide = new JPanel(new BorderLayout());
         leftSide.setOpaque(false);
@@ -57,6 +58,7 @@ public class VSAIBattleScene extends JPanel {
         skillsPanel.setOpaque(false);
         leftSide.add(skillsPanel, BorderLayout.SOUTH);
 
+
         JPanel rightSide = new JPanel(new BorderLayout());
         rightSide.setOpaque(false);
 
@@ -64,13 +66,32 @@ public class VSAIBattleScene extends JPanel {
         enemiesPanel.setOpaque(false);
         rightSide.add(enemiesPanel, BorderLayout.CENTER);
 
+
+        // Adds left and right together
+        JPanel container = new JPanel(new GridLayout(1, 2));
+        container.setOpaque(false);
         container.add(leftSide);
         container.add(rightSide);
 
-//      JLabel battlelog = new JLabel("BattleLog", JLabel.CENTER);
-//      add(battlelog, BorderLayout.NORTH);
 
-        add(container, BorderLayout.CENTER);
+        centerPanel = new JPanel();
+        centerPanel.setOpaque(false);
+        centerPanel.setLayout(new OverlayLayout(centerPanel));
+
+        centerPanel.add(container);
+        centerPanel.add(resultLabel);
+
+
+        battleLog = new BattleLog();
+        battleLog.setPreferredSize(new Dimension(300, 100));
+
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setOpaque(false);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+        mainPanel.add(battleLog, BorderLayout.SOUTH);
+
+
+        add(mainPanel, BorderLayout.CENTER);
 
         updateCharacterPanels();
         nextTurn();
@@ -107,6 +128,7 @@ public class VSAIBattleScene extends JPanel {
 
             GameCharacter actor = allies[currentAllyIndex];
             actor.setCurrentMana(Math.min(actor.getCurrentMana() + actor.getManaRecovery(), actor.getMaxMana()));
+            battleLog.addTurn(actor.getName());
             showSkillsForActor(actor);
         } else {
             SwingUtilities.invokeLater(this::startEnemyPhase);
@@ -124,6 +146,7 @@ public class VSAIBattleScene extends JPanel {
                 actingEnemies.add(e);
             }
 
+        // Once all enemies have made their actions, initiate the allied team's turn
         if (actingEnemies.isEmpty()) {
             allyTurn = true;
             currentAllyIndex = 0;
@@ -172,6 +195,11 @@ public class VSAIBattleScene extends JPanel {
 
             if (success && target.getCurrentHP() <= 0) {
                 removeCharacterFromTeam(target, allies);
+                battleLog.addDefeated(target.getName());
+            } else if (success) {
+                int damage = (int) ((enemy.getAttack() + skill.getAttackUp()) * skill.getMultiplier()) - target.getDefense();
+                if (damage < 0) damage = 0;
+                battleLog.addSkillUse(enemy.getName(), skill.getName(), target.getName(), damage);
             }
 
             updateCharacterPanels();
@@ -183,17 +211,17 @@ public class VSAIBattleScene extends JPanel {
     }
 
     private boolean isTeamDead(GameCharacter[] team) {
-        for (GameCharacter c : team)
-            if (c != null && c.getCurrentHP() > 0)
+        for (GameCharacter ch : team)
+            if (ch != null && ch.getCurrentHP() > 0)
                 return false;
         return true;
     }
 
     private GameCharacter getRandomLivingCharacter(GameCharacter[] team) {
         java.util.List<GameCharacter> alive = new java.util.ArrayList<>();
-        for (GameCharacter c : team)
-            if (c != null && c.getCurrentHP() > 0)
-                alive.add(c);
+        for (GameCharacter ch : team)
+            if (ch != null && ch.getCurrentHP() > 0)
+                alive.add(ch);
         if (alive.isEmpty()) return null;
         return alive.get(new Random().nextInt(alive.size()));
     }
@@ -217,12 +245,17 @@ public class VSAIBattleScene extends JPanel {
         }
     }
 
-private void handleEnemyClick(GameCharacter enemy) {
+    private void handleEnemyClick(GameCharacter enemy) {
         if (currentActor == null || selectedSkill == null) return;
 
         boolean success = currentActor.useSkill(selectedSkill, enemy);
         if (success && enemy.getCurrentHP() <= 0) {
             removeCharacterFromTeam(enemy, Teams.getEnemyTeam());
+            battleLog.addDefeated(enemy.getName());
+        } else if (success) {
+            int damage = (int) ((currentActor.getAttack() + selectedSkill.getAttackUp()) * selectedSkill.getMultiplier()) - enemy.getDefense();
+            if (damage < 0) damage = 0;
+            battleLog.addSkillUse(currentActor.getName(), selectedSkill.getName(), enemy.getName(), damage);
         }
 
         updateCharacterPanels();
@@ -286,6 +319,8 @@ private void handleEnemyClick(GameCharacter enemy) {
         resultLabel.setForeground(playerWon ? new Color(80, 255, 80) : new Color(255, 80, 80));
         resultLabel.setVisible(true);
         resultLabel.repaint();
+
+        battleLog.addResult(playerWon ? "VICTORY!" : "DEFEAT!");
 
         skillsPanel.removeAll();
         skillsPanel.revalidate();
