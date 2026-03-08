@@ -1,7 +1,7 @@
 package scenes;
 import characters.*;
 import characters.Teams;
-import characters.ZnStream;
+import characters.ZenStream;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,11 +39,7 @@ public class LevelSelectScene extends JPanel{
                 character.setCurrentMana(character.getMaxMana());
             }
             if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
-            Teams.addToEnemyTeam(new GameCharacter("Assassin", 100, 100, 30, 10, 10, "/resources/Aero.png"));
-            Teams.getEnemyTeam()[0].addNewSkill();
-            Teams.getEnemyTeam()[0].addNewSkill("Stab", 20, 20, 1.0f);
-            Teams.getEnemyTeam()[0].addNewSkill("Execute", 70, 70, 1.0f);
-            Teams.getEnemyTeam()[0].setCharacterImage("/resources/Assassin.png");
+            Teams.addToEnemyTeam(new Kayden());
             frame.addBattleScene();
             frame.showScreen("Battle");
         });
@@ -58,16 +54,9 @@ public class LevelSelectScene extends JPanel{
                 character.setCurrentMana(character.getMaxMana());
             }
             if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
-            Teams.addToEnemyTeam(new GameCharacter("Assassin"));
-            Teams.getEnemyTeam()[0].addNewSkill();
-            Teams.getEnemyTeam()[0].addNewSkill("Stab", 20, 20, 1.0f);
-            Teams.getEnemyTeam()[0].addNewSkill("Execute", 70, 70, 1.0f);
-            Teams.getEnemyTeam()[0].setCharacterImage("/resources/Assassin.png");
-            Teams.addToEnemyTeam(new GameCharacter("Assassin"));
-            Teams.getEnemyTeam()[1].addNewSkill();
-            Teams.getEnemyTeam()[1].addNewSkill("Stab", 20, 20, 1.0f);
-            Teams.getEnemyTeam()[1].addNewSkill("Execute", 70, 70, 1.0f);
-            Teams.getEnemyTeam()[1].setCharacterImage("/resources/Assassin.png");
+
+            Teams.addToEnemyTeam(new Ripper());
+            Teams.addToEnemyTeam(new Ripper());
             frame.addBattleScene();
             frame.showScreen("Battle");
         });
@@ -75,18 +64,14 @@ public class LevelSelectScene extends JPanel{
         levelButtons[2].addActionListener(e -> {
             selectedLevel = 3;
             while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
-            Teams.addToAlliedTeam(new ZnStream());
+            Teams.addToAlliedTeam(new ZenStream());
             for(GameCharacter character: Teams.getAlliedTeam()) {
                 character.setCurrentHP(character.getMaxHP());
                 character.setCurrentMana(character.getMaxMana());
             }
             if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
             Teams.addToEnemyTeam(new Aero());
-            Teams.addToEnemyTeam(new GameCharacter("Assassin"));
-            Teams.getEnemyTeam()[1].addNewSkill();
-            Teams.getEnemyTeam()[1].addNewSkill("Stab", 20, 20, 1.0f);
-            Teams.getEnemyTeam()[1].addNewSkill("Execute", 70, 70, 1.0f);
-            Teams.getEnemyTeam()[1].setCharacterImage("/resources/Assassin.png");
+
             frame.addBattleScene();
             frame.showScreen("Battle");
         });
@@ -100,13 +85,9 @@ public class LevelSelectScene extends JPanel{
                 character.setCurrentMana(character.getMaxMana());
             }
             if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
-            Teams.addToEnemyTeam(new ZnStream());
+            Teams.addToEnemyTeam(new ZenStream());
             Teams.addToEnemyTeam(new Ripper());
-            Teams.addToEnemyTeam(new GameCharacter("Assassin"));
-            Teams.getEnemyTeam()[2].addNewSkill();
-            Teams.getEnemyTeam()[2].addNewSkill("Stab", 20, 20, 1.0f);
-            Teams.getEnemyTeam()[2].addNewSkill("Execute", 70, 70, 1.0f);
-            Teams.getEnemyTeam()[2].setCharacterImage("/resources/Assassin.png");
+
 
             frame.addBattleScene();
             frame.showScreen("Battle");
@@ -123,7 +104,7 @@ public class LevelSelectScene extends JPanel{
             if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
             Teams.addToEnemyTeam(new Kayden());
             Teams.addToEnemyTeam(new Psalm());
-            Teams.addToEnemyTeam(new ZnStream());
+            Teams.addToEnemyTeam(new ZenStream());
             frame.addBattleScene();
             frame.showScreen("Battle");
         });

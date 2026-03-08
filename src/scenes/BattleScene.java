@@ -197,7 +197,8 @@ public class BattleScene extends JPanel {
                 removeCharacterFromTeam(target, allies);
                 battleLog.addDefeated(target.getName());
             } else if (success) {
-                int damage = (int) ((enemy.getAttack() + skill.getAttackUp()) * skill.getMultiplier()) - target.getDefense();
+                Random random = new Random();
+                int damage = random.nextInt(skill.getMaxDamage() - skill.getMinDamage() + 1) + skill.getMinDamage() - target.getDefense();
                 if (damage < 0) damage = 0;
                 battleLog.addSkillUse(enemy.getName(), skill.getName(), target.getName(), damage);
             }
@@ -253,7 +254,8 @@ public class BattleScene extends JPanel {
             removeCharacterFromTeam(enemy, Teams.getEnemyTeam());
             battleLog.addDefeated(enemy.getName());
         } else if (success) {
-            int damage = (int) ((currentActor.getAttack() + selectedSkill.getAttackUp()) * selectedSkill.getMultiplier()) - enemy.getDefense();
+            Random random = new Random();
+            int damage = random.nextInt(selectedSkill.getMaxDamage() - selectedSkill.getMinDamage() + 1) + selectedSkill.getMinDamage() - enemy.getDefense();
             if (damage < 0) damage = 0;
             battleLog.addSkillUse(currentActor.getName(), selectedSkill.getName(), enemy.getName(), damage);
         }

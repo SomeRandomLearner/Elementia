@@ -1,22 +1,27 @@
 package characters;
+
 public class Skill{
+    private String id;
     private String name;
     private int manaCost;
-    private int attackUp;
-    private float multiplier;
+    private int minDamage;
+    private int maxDamage;
+    private int cooldown;
+    private int cooldownTimer;
 
-    public Skill(String name, int manaCost, int attackUp, float multiplier){
+
+    public Skill(String id, String name, int manaCost, int minDamage, int maxDamage, int cooldown){
+        this.id = id;
         this.name = name;
         this.manaCost = manaCost;
-        this.attackUp = attackUp;
-        this.multiplier = multiplier;
+        this.minDamage = minDamage;
+        this.maxDamage = maxDamage;
+        this.cooldown = cooldown;
+        cooldownTimer = cooldown;
     }
 
-    public Skill(){
-        this.name = "Attack";
-        this.manaCost = 0;
-        this.attackUp = 0; //0; no damage increase
-        this.multiplier = 1.0f; //1.0 is the normal damage multiplier; no change
+    public String getId(){
+        return id;
     }
 
     public String getName() {
@@ -35,19 +40,34 @@ public class Skill{
         this.manaCost = manaCost;
     }
 
-    public int getAttackUp() {
-        return attackUp;
+    public int getMinDamage() {
+        return minDamage;
     }
 
-    public void setAttackUp(int attackUp) {
-        this.attackUp = attackUp;
+    public void setMinDamage(int minDamage) {
+        this.minDamage = minDamage;
+    }
+    public int getMaxDamage() {
+        return maxDamage;
     }
 
-    public float getMultiplier() {
-        return multiplier;
+    public void setMaxDamage(int minDamage) {
+        this.minDamage = maxDamage;
     }
 
-    public void setMultiplier(float multiplier) {
-        this.multiplier = multiplier;
+    public int getCooldown() {
+        return cooldown;
+    }
+
+    public void setCooldown(int cooldown) {
+        this.cooldown = cooldown;
+    }
+
+    public int getCooldownTimer() {
+        return cooldown;
+    }
+
+    public void setCooldownTimer(int cooldownTimer) {
+        this.cooldownTimer = cooldownTimer;
     }
 }

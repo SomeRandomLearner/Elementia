@@ -167,7 +167,7 @@ public class CharacterSelectScene extends JPanel {
                         case 1 -> Teams.addToAlliedTeam(new Kayden());
                         case 2 -> Teams.addToAlliedTeam(new Psalm());
                         case 3 -> Teams.addToAlliedTeam(new Ripper());
-                        case 4 -> Teams.addToAlliedTeam(new ZnStream());
+                        case 4 -> Teams.addToAlliedTeam(new ZenStream());
                     }
                     frame.addCharacterDisplayScene(characters[index]);
                     frame.showScreen("CharacterDisplay");

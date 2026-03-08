@@ -4,14 +4,14 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Random;
 
-public class GameCharacter {
+public abstract class GameCharacter {
     private String name;
     private int currentHealth;
     private int maxHealth;
     private int currentMana;
     private int maxMana;
-    private int attack;
     private int defense;
     private int manaRecovery;
     private boolean allyStatus = false;
@@ -20,13 +20,12 @@ public class GameCharacter {
     private Skill[] skills = new Skill[3];
     private int skillCount = 0;
 
-    public GameCharacter(String name, int maxHealth, int maxMana, int attack, int defense, int manaRecovery, String imagePath) {
+    public GameCharacter(String name, int maxHealth, int maxMana, int defense, int manaRecovery, String imagePath) {
         this.name = name;
         this.maxHealth = maxHealth;
         this.currentHealth = maxHealth;
         this.maxMana = maxMana;
         this.currentMana = maxMana;
-        this.attack = attack;
         this.defense = defense;
         this.manaRecovery = manaRecovery;
 
@@ -50,7 +49,6 @@ public class GameCharacter {
         this.currentHealth = maxHealth;
         this.maxMana = 100;
         this.currentMana = maxMana;
-        this.attack = 30;
         this.defense = 10;
         this.manaRecovery = 10;
 
@@ -68,8 +66,7 @@ public class GameCharacter {
             this.characterImage = null;
         }
         this.addNewSkill();
-        this.addNewSkill("Strike Barrage", 50, 40, 1.0f);
-        this.addNewSkill("Hail Mary", this.maxMana, 0, 3.0f);
+
     }
 
 
@@ -82,22 +79,29 @@ public class GameCharacter {
         }
 
         this.currentMana -= skill.getManaCost();
-        int damage = (int) ((this.attack + skill.getAttackUp()) * skill.getMultiplier());
+        Random random = new Random();
+        int damage = random.nextInt(skill.getMaxDamage() - skill.getMinDamage() + 1) + skill.getMinDamage();
         target.takeDamage(damage);
         skillCasted = true;
         return skillCasted;
     }
 
 
-    public void addNewSkill(String name, int manaCost, int attackUp, float multiplier) {
+    public void addNewSkill(String id, String name, int manaCost, int minDamage, int maxDamage, int cooldown) {
         if (this.skillCount < 3) {
-            this.skills[this.skillCount] = new Skill(name, manaCost, attackUp, multiplier);
+            this.skills[this.skillCount] = new Skill(id, name, manaCost, minDamage, maxDamage, cooldown);
+            this.skillCount++;
+        }
+    }
+    public void addNewSkill(Skill skill) {
+        if (this.skillCount < 3) {
+            this.skills[this.skillCount] = skill;
             this.skillCount++;
         }
     }
     public void addNewSkill() {
         if (this.skillCount < 3) {
-            this.skills[this.skillCount] = new Skill();
+            this.skills[this.skillCount] = SkillRegistry.getSkill("attack");
             this.skillCount++;
         }
     }
@@ -161,14 +165,6 @@ public class GameCharacter {
 
     public int getMaxMana() {
         return maxMana;
-    }
-
-    public int getAttack() {
-        return attack;
-    }
-
-    public void setAttack(int attack) {
-        this.attack = attack;
     }
 
     public int getDefense() {
