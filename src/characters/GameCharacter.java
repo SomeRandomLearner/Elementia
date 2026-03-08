@@ -20,7 +20,7 @@ public abstract class GameCharacter {
     private Skill[] skills = new Skill[3];
     private int skillCount = 0;
 
-    public GameCharacter(String name, int maxHealth, int maxMana, int defense, int manaRecovery, String imagePath) {
+    public GameCharacter(String name, int maxHealth, int maxMana, int defense, int manaRecovery) {
         this.name = name;
         this.maxHealth = maxHealth;
         this.currentHealth = maxHealth;
@@ -28,45 +28,6 @@ public abstract class GameCharacter {
         this.currentMana = maxMana;
         this.defense = defense;
         this.manaRecovery = manaRecovery;
-
-        try {
-            InputStream imgStream = getClass().getResourceAsStream(imagePath);
-            if (imgStream != null) {
-                this.characterImage = ImageIO.read(imgStream);
-            } else {
-                System.err.println("Error: Couldn't find image at path: " + imagePath);
-                this.characterImage = null;
-            }
-        } catch (IOException e) {
-            System.err.println("Error loading image: " + imagePath);
-            e.printStackTrace();
-            this.characterImage = null;
-        }
-    }
-    public GameCharacter(String name) {
-        this.name = name;
-        this.maxHealth = 100;
-        this.currentHealth = maxHealth;
-        this.maxMana = 100;
-        this.currentMana = maxMana;
-        this.defense = 10;
-        this.manaRecovery = 10;
-
-        try {
-            InputStream imgStream = getClass().getResourceAsStream("/resources/Aero.png"); // Aero.png default for now; change later
-            if (imgStream != null) {
-                this.characterImage = ImageIO.read(imgStream);
-            } else {
-                System.err.println("Error: Couldn't find image at path: " + "/resources/Aero.png");
-                this.characterImage = null;
-            }
-        } catch (IOException e) {
-            System.err.println("Error loading image: " + "/resources/Aero.png");
-            e.printStackTrace();
-            this.characterImage = null;
-        }
-        this.addNewSkill();
-
     }
 
 
