@@ -34,10 +34,6 @@ public class LevelSelectScene extends JPanel{
             selectedLevel = 1;
             while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam(); // Clears non-support characters
             Teams.addToAlliedTeam(new Kayden());
-            for(GameCharacter character: Teams.getAlliedTeam()) {
-                character.setCurrentHP(character.getMaxHP());
-                character.setCurrentMana(character.getMaxMana());
-            }
             if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
             Teams.addToEnemyTeam(new Kayden());
             frame.addBattleScene();
@@ -49,12 +45,7 @@ public class LevelSelectScene extends JPanel{
             while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
             Teams.addToAlliedTeam(new Aero());
 
-            for(GameCharacter character: Teams.getAlliedTeam()) {
-                character.setCurrentHP(character.getMaxHP());
-                character.setCurrentMana(character.getMaxMana());
-            }
             if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
-
             Teams.addToEnemyTeam(new Ripper());
             Teams.addToEnemyTeam(new Ripper());
             frame.addBattleScene();
@@ -65,10 +56,6 @@ public class LevelSelectScene extends JPanel{
             selectedLevel = 3;
             while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
             Teams.addToAlliedTeam(new ZenStream());
-            for(GameCharacter character: Teams.getAlliedTeam()) {
-                character.setCurrentHP(character.getMaxHP());
-                character.setCurrentMana(character.getMaxMana());
-            }
             if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
             Teams.addToEnemyTeam(new Aero());
 
@@ -80,14 +67,9 @@ public class LevelSelectScene extends JPanel{
             selectedLevel = 4;
             while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
             Teams.addToAlliedTeam(new Psalm());
-            for(GameCharacter character: Teams.getAlliedTeam()) {
-                character.setCurrentHP(character.getMaxHP());
-                character.setCurrentMana(character.getMaxMana());
-            }
             if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
             Teams.addToEnemyTeam(new ZenStream());
             Teams.addToEnemyTeam(new Ripper());
-
 
             frame.addBattleScene();
             frame.showScreen("Battle");
@@ -97,10 +79,6 @@ public class LevelSelectScene extends JPanel{
             selectedLevel = 5;
             while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
             Teams.addToAlliedTeam(new Ripper());
-            for(GameCharacter character: Teams.getAlliedTeam()) {
-                character.setCurrentHP(character.getMaxHP());
-                character.setCurrentMana(character.getMaxMana());
-            }
             if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
             Teams.addToEnemyTeam(new Kayden());
             Teams.addToEnemyTeam(new Psalm());

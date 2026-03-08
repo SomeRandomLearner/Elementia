@@ -51,10 +51,6 @@ public class BattleLog extends JPanel {
         addEntry(">>> " + characterName + " was defeated! <<<");
     }
 
-    public void addTurn(String characterName) {
-        addEntry("--- " + characterName + "'s Turn ---");
-    }
-
     public void addResult(String result) {
         addEntry("=== BATTLE END === " + result);
     }

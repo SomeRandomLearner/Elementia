@@ -17,7 +17,7 @@ public class Skill{
         this.minDamage = minDamage;
         this.maxDamage = maxDamage;
         this.cooldown = cooldown;
-        cooldownTimer = cooldown;
+        cooldownTimer = 0;
     }
 
     public String getId(){
@@ -28,9 +28,7 @@ public class Skill{
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) { this.name = name; }
 
     public int getManaCost() {
         return manaCost;
@@ -44,30 +42,27 @@ public class Skill{
         return minDamage;
     }
 
-    public void setMinDamage(int minDamage) {
-        this.minDamage = minDamage;
-    }
+    public void setMinDamage(int minDamage) { this.minDamage = minDamage; }
+
     public int getMaxDamage() {
         return maxDamage;
     }
 
-    public void setMaxDamage(int minDamage) {
-        this.minDamage = maxDamage;
+    public void setMaxDamage(int maxDamage) {
+        this.maxDamage = maxDamage;
     }
 
-    public int getCooldown() {
-        return cooldown;
-    }
+    public int getCooldown() { return cooldown; }
 
     public void setCooldown(int cooldown) {
         this.cooldown = cooldown;
     }
 
     public int getCooldownTimer() {
-        return cooldown;
+        return cooldownTimer;
     }
 
-    public void setCooldownTimer(int cooldownTimer) {
-        this.cooldownTimer = cooldownTimer;
-    }
+    public void incrementCooldownTimer(){ cooldownTimer++; }
+
+    public void resetCooldownTimer() { cooldownTimer = 0; }
 }

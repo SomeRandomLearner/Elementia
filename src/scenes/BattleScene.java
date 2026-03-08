@@ -21,6 +21,11 @@ public class BattleScene extends JPanel {
     private int currentAllyIndex = 0;
     private boolean allyTurn = true;
     private boolean battleEnded = false;
+    private boolean isFirstTurn = true;
+
+
+    private GameCharacter[] allies = Teams.getAlliedTeam();
+    private GameCharacter[] enemies = Teams.getEnemyTeam();
 
     public BattleScene(Elementia frame) {
         setLayout(new BorderLayout());
@@ -93,15 +98,31 @@ public class BattleScene extends JPanel {
 
         add(mainPanel, BorderLayout.CENTER);
 
+        // Reset all characters before the battle starts
+        for(GameCharacter character : allies){
+            character.setCurrentHP(character.getMaxHP());
+            character.setCurrentMana(character.getMaxMana());
+            for(Skill skill : character.getSkills()){
+                skill.resetCooldownTimer();
+            }
+        }
+        for(GameCharacter character : enemies){
+            for(Skill skill : character.getSkills()){
+                skill.resetCooldownTimer();
+            }
+        }
+
         updateCharacterPanels();
+
+        battleLog.addEntry("--- Allies Turn Start! ---");
         nextTurn();
     }
 
     private void nextTurn() {
         if (battleEnded) return;
 
-        GameCharacter[] allies = Teams.getAlliedTeam();
-        GameCharacter[] enemies = Teams.getEnemyTeam();
+        allies = Teams.getAlliedTeam();
+        enemies = Teams.getEnemyTeam();
 
         if (isTeamDead(allies)) {
             showResult(false);
@@ -114,8 +135,7 @@ public class BattleScene extends JPanel {
 
         if (allyTurn) {
             while (currentAllyIndex < allies.length &&
-                    (allies[currentAllyIndex] == null ||
-                            allies[currentAllyIndex].getCurrentHP() <= 0)) {
+                    (allies[currentAllyIndex] == null || allies[currentAllyIndex].getCurrentHP() <= 0)) {
                 currentAllyIndex++;
             }
 
@@ -128,7 +148,12 @@ public class BattleScene extends JPanel {
 
             GameCharacter actor = allies[currentAllyIndex];
             actor.setCurrentMana(Math.min(actor.getCurrentMana() + actor.getManaRecovery(), actor.getMaxMana()));
-            battleLog.addTurn(actor.getName());
+
+            if(!isFirstTurn) {
+                for (Skill s : actor.getSkills()) {
+                    if (s != null) s.incrementCooldownTimer();
+                }
+            }
             showSkillsForActor(actor);
         } else {
             SwingUtilities.invokeLater(this::startEnemyPhase);
@@ -136,10 +161,9 @@ public class BattleScene extends JPanel {
     }
 
     private void startEnemyPhase() {
-        GameCharacter[] enemies = Teams.getEnemyTeam();
-        GameCharacter[] allies = Teams.getAlliedTeam();
-
         java.util.List<GameCharacter> actingEnemies = new java.util.ArrayList<>();
+
+
         for (GameCharacter e : enemies)
             if (e != null && e.getCurrentHP() > 0) {
                 e.setCurrentMana(Math.min(e.getCurrentMana() + e.getManaRecovery(), e.getMaxMana()));
@@ -154,26 +178,33 @@ public class BattleScene extends JPanel {
             return;
         }
 
+
+        battleLog.addEntry("--- Enemies Turn Start! ---");
+
         final int delayMs = 700;
         final int[] index = {0};
         Timer timer = new Timer(delayMs, null);
 
-        timer.addActionListener(evt -> {
+        timer.addActionListener(e -> {
             if (index[0] >= actingEnemies.size()) {
                 timer.stop();
                 allyTurn = true;
+                isFirstTurn = false;
                 currentAllyIndex = 0;
                 updateCharacterPanels();
                 nextTurn();
+                battleLog.addEntry("--- Allies Turn Start! ---");
                 return;
             }
 
-            GameCharacter enemy = actingEnemies.get(index[0]);
-            if (enemy == null || enemy.getCurrentHP() <= 0) {
+            // Iterate until a living enemy is found
+            GameCharacter enemyActor = actingEnemies.get(index[0]);
+            if (enemyActor == null || enemyActor.getCurrentHP() <= 0) {
                 index[0]++;
                 return;
             }
 
+            // Targets a player ally
             GameCharacter target = getRandomLivingCharacter(allies);
             if (target == null) {
                 showResult(false);
@@ -181,26 +212,34 @@ public class BattleScene extends JPanel {
                 return;
             }
 
-            Skill[] skills = enemy.getSkills();
-            java.util.List<Skill> list = new java.util.ArrayList<>();
-            for (Skill s : skills) if (s != null) list.add(s);
+            Skill[] skills = enemyActor.getSkills();
 
-            if (list.isEmpty()) {
-                index[0]++;
-                return;
+            java.util.List<Skill> usableSkills = new java.util.ArrayList<>();
+            for (Skill s : skills) {
+                if (s != null) {
+                    if(!isFirstTurn) s.incrementCooldownTimer();
+                    if(s.getCooldown() <= s.getCooldownTimer()) usableSkills.add(s);
+                }
             }
 
-            Skill skill = list.get(new Random().nextInt(list.size()));
-            boolean success = enemy.useSkill(skill, target);
+            if (usableSkills.isEmpty()) {
+                index[0]++;
+                return; // No skill means this character does nothing haha
+            }
 
-            if (success && target.getCurrentHP() <= 0) {
-                removeCharacterFromTeam(target, allies);
-                battleLog.addDefeated(target.getName());
-            } else if (success) {
-                Random random = new Random();
-                int damage = random.nextInt(skill.getMaxDamage() - skill.getMinDamage() + 1) + skill.getMinDamage() - target.getDefense();
+            // Chooses a random skill
+            Skill skill = usableSkills.get(new Random().nextInt(usableSkills.size()));
+            skill.resetCooldownTimer();
+            boolean success = enemyActor.useSkill(skill, target);
+
+            if (success) {
+                int damage = new Random().nextInt(skill.getMaxDamage() - skill.getMinDamage() + 1) + skill.getMinDamage() - target.getDefense();
                 if (damage < 0) damage = 0;
-                battleLog.addSkillUse(enemy.getName(), skill.getName(), target.getName(), damage);
+                battleLog.addSkillUse(enemyActor.getName(), skill.getName(), target.getName(), damage);
+                if (target.getCurrentHP() <= 0) {
+                    removeCharacterFromTeam(target, allies);
+                    battleLog.addDefeated(target.getName());
+                }
             }
 
             updateCharacterPanels();
@@ -250,16 +289,16 @@ public class BattleScene extends JPanel {
         if (currentActor == null || selectedSkill == null) return;
 
         boolean success = currentActor.useSkill(selectedSkill, enemy);
-        if (success && enemy.getCurrentHP() <= 0) {
-            removeCharacterFromTeam(enemy, Teams.getEnemyTeam());
-            battleLog.addDefeated(enemy.getName());
-        } else if (success) {
-            Random random = new Random();
-            int damage = random.nextInt(selectedSkill.getMaxDamage() - selectedSkill.getMinDamage() + 1) + selectedSkill.getMinDamage() - enemy.getDefense();
+        if(success){
+            selectedSkill.resetCooldownTimer();
+            int damage = new Random().nextInt(selectedSkill.getMaxDamage() - selectedSkill.getMinDamage() + 1) + selectedSkill.getMinDamage() - enemy.getDefense();
             if (damage < 0) damage = 0;
             battleLog.addSkillUse(currentActor.getName(), selectedSkill.getName(), enemy.getName(), damage);
+            if (enemy.getCurrentHP() <= 0) {
+                removeCharacterFromTeam(enemy, Teams.getEnemyTeam());
+                battleLog.addDefeated(enemy.getName());
+            }
         }
-
         updateCharacterPanels();
         selectedSkill = null;
         currentAllyIndex++;
@@ -291,20 +330,27 @@ public class BattleScene extends JPanel {
 
             for (Skill skill : actor.getSkills()) {
                 if (skill == null) continue;
-                JButton skillButton = new JButton(skill.getName());
-                skillButton.setFocusPainted(false);
-                skillButton.setBackground(new Color(70, 110, 220));
-                skillButton.setForeground(Color.WHITE);
-                if (actor.getCurrentMana() < skill.getManaCost()) {
-                    skillButton.setEnabled(false);
-                }
-                skillButton.addActionListener(e -> selectedSkill = skill);
+                JButton skillButton = getJButton(actor, skill);
                 skillsPanel.add(skillButton);
             }
         }
         skillsPanel.revalidate();
         skillsPanel.repaint();
         updateCharacterPanels();
+    }
+
+    private JButton getJButton(GameCharacter actor, Skill skill) {
+        JButton skillButton = new JButton(skill.getName());
+        skillButton.setFocusPainted(false);
+        skillButton.setBackground(new Color(70, 110, 220));
+        skillButton.setForeground(Color.WHITE);
+        if (actor.getCurrentMana() < skill.getManaCost() || skill.getCooldown() > skill.getCooldownTimer()) {
+            skillButton.setEnabled(false);
+            skillButton.setBackground(Color.DARK_GRAY);
+            if(skill.getCooldown() > skill.getCooldownTimer()) skillButton.setText(skill.getName() + " " + (skill.getCooldown() - skill.getCooldownTimer()));
+        }
+        skillButton.addActionListener(e -> selectedSkill = skill);
+        return skillButton;
     }
 
     private void removeCharacterFromTeam(GameCharacter target, GameCharacter[] team) {
