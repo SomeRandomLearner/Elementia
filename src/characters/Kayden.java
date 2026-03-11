@@ -11,7 +11,7 @@ public class Kayden extends GameCharacter{
     }
 
     public Kayden(){
-        super("Kayden", 100, 100, 20, 10);
+        super("Kayden", 90, 110, 20, 10);
         super.addNewSkill(SkillRegistry.getSkill("super_speed"));
         super.addNewSkill(SkillRegistry.getSkill("lightning_strike"));
         super.addNewSkill(SkillRegistry.getSkill("force_control"));

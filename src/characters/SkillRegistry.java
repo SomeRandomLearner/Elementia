@@ -11,8 +11,8 @@ public class SkillRegistry {
 
         // ZenStream's Skills
         registerSkill(new Skill("sling_water", "Sling Water", 10, 20, 30, 0));
-        registerSkill(new Skill("liquify", "Liquify", 25, 20, 40, 2));
-        registerSkill(new Skill("water_takeover", "Water Takeover", 60, 50, 70, 3));
+        registerSkill(new Skill("liquify", "Liquify", 25, 20, 40, 1));
+        registerSkill(new Skill("water_takeover", "Water Takeover", 60, 50, 70, 2));
 
         // Kayden's Skills
         registerSkill(new Skill("super_speed", "Super Speed", 25, 50, 75, 0));

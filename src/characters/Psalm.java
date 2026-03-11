@@ -10,7 +10,7 @@ public class Psalm extends GameCharacter{
         super.setCharacterImage("/resources/Psalm.png");
     }
     public Psalm(){
-        super("Psalm", 100, 100, 20, 10);
+        super("Psalm", 90, 110, 20, 10);
         super.addNewSkill(SkillRegistry.getSkill("rapid_punch"));
         super.addNewSkill(SkillRegistry.getSkill("healing_fan"));
         super.addNewSkill(SkillRegistry.getSkill("fire_kick"));

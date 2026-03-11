@@ -11,7 +11,7 @@ public class ZenStream extends GameCharacter{
     }
 
     public ZenStream(){
-        super("ZenStream", 100, 100, 20, 10);
+        super("ZenStream", 80, 80, 30, 20);
         super.addNewSkill(SkillRegistry.getSkill("sling_water"));
         super.addNewSkill(SkillRegistry.getSkill("liquify"));
         super.addNewSkill(SkillRegistry.getSkill("water_takeover"));
