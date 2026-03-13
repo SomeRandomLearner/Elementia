@@ -41,23 +41,23 @@ public class MainMenuScene extends JPanel {
 
         creditsPanel = new JPanel();creditsPanel.setLayout(new BoxLayout(creditsPanel, BoxLayout.Y_AXIS));
         creditsPanel.setBackground(Color.BLACK);
-        JLabel lblCredits = new JLabel("CREDITS");
-        lblCredits.setForeground(Color.WHITE);
+        JLabel creditsLabel = new JLabel("CREDITS");
+        creditsLabel.setForeground(Color.WHITE);
 
-        lblCredits.setAlignmentX(Component.CENTER_ALIGNMENT);
-        creditsPanel.add(lblCredits);
+        creditsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        creditsPanel.add(creditsLabel);
 
-        JTextArea txtCredits = getCreditsArea();
-        txtCredits.setAlignmentX(Component.CENTER_ALIGNMENT);
-        creditsPanel.add(txtCredits);
+        JTextArea creditsTextArea = getCreditsArea();
+        creditsTextArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+        creditsPanel.add(creditsTextArea);
 
-        JButton btnClose = createStyledButton("Return");
-        btnClose.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JButton closeButton = createStyledButton("Return");
+        closeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 
-        btnClose.addActionListener(e -> creditsPanel.setVisible(false));
+        closeButton.addActionListener(e -> creditsPanel.setVisible(false));
         creditsPanel.setVisible(false);
-        creditsPanel.add(btnClose);
+        creditsPanel.add(closeButton);
 
         startButton = createStyledButton("START");
         startButton.addActionListener(e -> frame.showScreen("CharacterSelect"));
@@ -90,16 +90,16 @@ public class MainMenuScene extends JPanel {
     }
 
     private static JTextArea getCreditsArea() {
-        JTextArea txtCredits = new JTextArea();
-        txtCredits.setEditable(false);
-        txtCredits.setBackground(new Color(30, 30, 40));
-        txtCredits.setForeground(new Color(200, 200, 220));
-        txtCredits.setFont(new Font("Courier New", Font.PLAIN, 11));
-        txtCredits.setLineWrap(true);
-        txtCredits.setWrapStyleWord(true);
-        txtCredits.setMargin(new Insets(5, 5, 5, 5));
-        txtCredits.setText("This game is non-commercial and for educational purposes only\nContributors:\nJoshua Raagas\nKaizen Gabriel Guiroy\nKangel Hermosilla\nMaria Mie Cadungog\nPsalmist Mae Guiroy\nVince Jayson");
-        return txtCredits;
+        JTextArea creditsTextArea = new JTextArea();
+        creditsTextArea.setEditable(false);
+        creditsTextArea.setBackground(new Color(30, 30, 40));
+        creditsTextArea.setForeground(new Color(200, 200, 220));
+        creditsTextArea.setFont(new Font("Courier New", Font.PLAIN, 11));
+        creditsTextArea.setLineWrap(true);
+        creditsTextArea.setWrapStyleWord(true);
+        creditsTextArea.setMargin(new Insets(5, 5, 5, 5));
+        creditsTextArea.setText("This game is non-commercial and for educational purposes only\nContributors:\nJoshua Raagas\nKaizen Gabriel Guiroy\nKangel Hermosilla\nMaria Mie Cadungog\nPsalmist Mae Guiroy\nVince Jayson");
+        return creditsTextArea;
     }
 
 
