@@ -18,5 +18,10 @@ public class Aero extends GameCharacter{
         super.setCharacterImage("/resources/Aero.png");
     }
 
+    @Override
+    public GameCharacter clone(){
+        return new Aero();
+    }
+
 
 }

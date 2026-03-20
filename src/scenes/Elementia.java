@@ -6,15 +6,42 @@ public class Elementia extends JFrame{
     private final CardLayout layout = new CardLayout();
     private final JPanel container = new JPanel(layout);
 
+    private JPanel mainMenu;
+    private JPanel modeSelect;
+
+    // Arcade Mode
+    private JPanel characterSelect;
+    private JPanel levelSelect;
+    private BattleScene battle;
+
+    // PVP Mode
+    private JPanel pvpCharacterSelect;
+    private JPanel pvpStageSelect;
+    private PVPBattleScene pvpBattle;
+
     public Elementia() {
         setTitle("Elementia");
         setSize(1000, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        container.add(new MainMenuScene(this), "MainMenu");
-        container.add(new CharacterSelectScene(this), "CharacterSelect");
-        container.add(new LevelSelectScene(this), "LevelSelect");
+        mainMenu = new MainMenuScene(this);
+        modeSelect = new ModeSelectScene(this);
+        characterSelect = new CharacterSelectScene(this);
+        levelSelect = new LevelSelectScene(this);
+        battle = new BattleScene(this);
+        pvpCharacterSelect = new PVPCharacterSelectScene(this);
+        pvpStageSelect = new PVPStageSelectScene(this);
+        pvpBattle = new PVPBattleScene(this);
+
+        container.add(mainMenu, "MainMenu");
+        container.add(modeSelect, "ModeSelect");
+        container.add(characterSelect, "CharacterSelect");
+        container.add(levelSelect, "LevelSelect");
+
+        container.add(pvpCharacterSelect, "PVPCharacterSelect");
+        container.add(pvpStageSelect, "PVPStageSelect");
+        container.add(pvpBattle, "PVPBattle");
 
 
         add(container);
@@ -32,4 +59,17 @@ public class Elementia extends JFrame{
     public void addBattleScene(){
         container.add(new BattleScene(this), "Battle");
     }
+
+    public JPanel getModeSelect() { return modeSelect; }
+
+    public JPanel getLevelSelect() { return levelSelect; }
+
+    public BattleScene getBattle() { return battle; }
+
+    public JPanel getPVPCharacterSelect() { return pvpCharacterSelect; }
+
+    public JPanel getPVPStageSelect() { return pvpStageSelect; }
+
+    public PVPBattleScene getPVPBattle() { return pvpBattle; }
+
 }

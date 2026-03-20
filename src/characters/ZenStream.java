@@ -17,6 +17,9 @@ public class ZenStream extends GameCharacter{
         super.addNewSkill(SkillRegistry.getSkill("water_takeover"));
         super.setCharacterImage("/resources/ZenStream.png");
     }
-
+    @Override
+    public GameCharacter clone(){
+        return new ZenStream();
+    }
 
 }

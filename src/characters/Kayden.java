@@ -18,4 +18,8 @@ public class Kayden extends GameCharacter{
         super.setCharacterImage("/resources/Kayden.png");
     }
 
+    @Override
+    public GameCharacter clone(){
+        return new Kayden();
+    }
 }

@@ -47,6 +47,8 @@ public abstract class GameCharacter {
         return skillCasted;
     }
 
+    public abstract GameCharacter clone();
+
 
     public void addNewSkill(String id, String name, int manaCost, int minDamage, int maxDamage, int cooldown) {
         if (this.skillCount < 3) {
@@ -94,6 +96,18 @@ public abstract class GameCharacter {
             this.currentHealth = 0;
         }
     }
+
+    public enum Character{
+        AERO,
+        KAELIS,
+        KANGEL,
+        KAYDEN,
+        MAELOR,
+        PSALM,
+        RIPPER,
+        VEYRION,
+        ZENSTREAM,
+    };
 
     // ---------- Getters & Setters ----------
     public BufferedImage getImage() {

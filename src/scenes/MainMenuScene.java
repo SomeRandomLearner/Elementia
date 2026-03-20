@@ -14,7 +14,7 @@ public class MainMenuScene extends JPanel {
     Font normalFont = new Font("Times New Roman", Font.PLAIN, 30);
     JButton startButton, exitButton, creditsButton;
     Image originalBackground;
-    int height = 1000, width = 600;
+    int width = 600, height = 1000;
     public MainMenuScene(Elementia frame) {
         URL bgPath = getClass().getResource("/resources/Menu Bar.png");
         assert bgPath != null : "Menu Bar not found";
@@ -39,7 +39,8 @@ public class MainMenuScene extends JPanel {
         buttonPanel = new JPanel(new GridLayout(3, 1, 0, 50));
         buttonPanel.setOpaque(false);
 
-        creditsPanel = new JPanel();creditsPanel.setLayout(new BoxLayout(creditsPanel, BoxLayout.Y_AXIS));
+        creditsPanel = new JPanel();
+        creditsPanel.setLayout(new BoxLayout(creditsPanel, BoxLayout.Y_AXIS));
         creditsPanel.setBackground(Color.BLACK);
         JLabel creditsLabel = new JLabel("CREDITS");
         creditsLabel.setForeground(Color.WHITE);
@@ -60,7 +61,7 @@ public class MainMenuScene extends JPanel {
         creditsPanel.add(closeButton);
 
         startButton = createStyledButton("START");
-        startButton.addActionListener(e -> frame.showScreen("CharacterSelect"));
+        startButton.addActionListener(e -> frame.showScreen("ModeSelect"));
 
         creditsButton = createStyledButton("CREDITS");
         creditsButton.addActionListener(e -> creditsPanel.setVisible(true));

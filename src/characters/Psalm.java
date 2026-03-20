@@ -16,4 +16,8 @@ public class Psalm extends GameCharacter{
         super.addNewSkill(SkillRegistry.getSkill("fire_kick"));
         super.setCharacterImage("/resources/Psalm.png");
     }
+    @Override
+    public GameCharacter clone(){
+        return new Psalm();
+    }
 }

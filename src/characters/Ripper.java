@@ -17,6 +17,9 @@ public class Ripper extends GameCharacter{
         super.addNewSkill(SkillRegistry.getSkill("hardening_punch"));
         super.setCharacterImage("/resources/Ripper.png");
     }
-
+    @Override
+    public GameCharacter clone(){
+        return new Ripper();
+    }
 
 }
