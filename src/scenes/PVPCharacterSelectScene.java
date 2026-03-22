@@ -120,8 +120,13 @@ public class PVPCharacterSelectScene extends JPanel {
                 else {
                     player2HasChosen[0] = true;
                     player2ChosenCharacter = chosenCharacter;
-                    if(player1ChosenCharacter == player2ChosenCharacter)
+                    if(player1ChosenCharacter == player2ChosenCharacter) { // resolves duplicate character problems
                         player2ChosenCharacter = chosenCharacter.clone();
+                        player2ChosenCharacter.removeAllSkills();
+                        for(Skill skill : player1ChosenCharacter.getSkills()){
+                            player2ChosenCharacter.addNewSkill(skill.clone());
+                        }
+                    }
                     characterSelectLabel.setText("All Ready!");
                     confirmButton.setEnabled(true);
                 }

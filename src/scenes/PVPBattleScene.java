@@ -18,6 +18,7 @@ public class PVPBattleScene extends JPanel {
     JPanel skillPanel;
 
     JLabel currentTurnLabel;
+    JLabel winCounterLabel;
 
     Font normalFont = new Font("Times New Roman", Font.PLAIN, 30);
     ImageIcon bgIcon = null;
@@ -33,17 +34,19 @@ public class PVPBattleScene extends JPanel {
     GameCharacter currentCharacter;
     boolean isPlayer1FirstTurn;
     boolean isPlayer2FirstTurn;
+    byte player1WinCount;
+    byte player2WinCount;
 
     int height = 1000, width = 600;
     public PVPBattleScene(Elementia frame) {
-        bgIcon = new ImageIcon(getClass().getResource("/resources/LevelBackgrounds/Level1Background.png")); // default background image
+        bgIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/LevelBackgrounds/Level1Background.png"))); // default background image
         bgImage = bgIcon.getImage();
 
         JPanel wrapperPanel = new JPanel(new BorderLayout());
         wrapperPanel.setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
         wrapperPanel.setOpaque(false); // must be set to false in order to remove grey background of the panel.
 
-        topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 6));
+        topPanel = new JPanel(new GridLayout(1,3));
         topPanel.setPreferredSize(new Dimension(0, 60));
         topPanel.setOpaque(false);
         centerPanel = new JPanel(new GridLayout(1,2));
@@ -52,6 +55,12 @@ public class PVPBattleScene extends JPanel {
         bottomPanel.setPreferredSize(new Dimension(0, 100));
         bottomPanel.setOpaque(false);
 
+        JPanel topLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 6));
+        topLeftPanel.setOpaque(false);
+        JPanel topCenterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        topCenterPanel.setOpaque(false);
+        JPanel topRightPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        topRightPanel.setOpaque(false);
         JPanel leftWrapperPanel = new JPanel(new GridBagLayout());
         leftWrapperPanel.setOpaque(false);
         JPanel rightWrapperPanel = new JPanel(new GridBagLayout());
@@ -82,9 +91,19 @@ public class PVPBattleScene extends JPanel {
             frame.showScreen("PVPCharacterSelect");
         });
         currentTurnLabel = new JLabel();
+        currentTurnLabel.setForeground(Color.WHITE);
+        topLeftPanel.add(backBtn);
+        topCenterPanel.add(currentTurnLabel);
 
-        topPanel.add(backBtn);
-        topPanel.add(currentTurnLabel);
+        player1WinCount = player2WinCount = 0;
+        winCounterLabel = new JLabel(player1WinCount + " / " + player2WinCount);
+        winCounterLabel.setForeground(Color.WHITE);
+
+        topRightPanel.add(winCounterLabel);
+
+        topPanel.add(topLeftPanel);
+        topPanel.add(topCenterPanel);
+        topPanel.add(topRightPanel);
         wrapperPanel.add(topPanel, BorderLayout.NORTH);
         wrapperPanel.add(centerPanel, BorderLayout.CENTER);
         wrapperPanel.add(bottomPanel, BorderLayout.SOUTH);
@@ -183,6 +202,11 @@ public class PVPBattleScene extends JPanel {
     private void nextTurn(){
         if(hasWinner()){
             System.out.println("Player " + (currentPlayerTurn + 1) + " wins!");
+            if(currentPlayerTurn == 0) player1WinCount++;
+            else player2WinCount++;
+
+            winCounterLabel.setText(player1WinCount + " / " + player2WinCount);
+
             return;
         }
         if(currentCharacterTurn >= currentTeam.size() - 1) {

@@ -1,6 +1,6 @@
 package characters;
 
-public class Skill{
+public class Skill implements Cloneable{
     private String id;
     private String name;
     private int manaCost;
@@ -65,4 +65,11 @@ public class Skill{
     public void incrementCooldownTimer(){ cooldownTimer++; }
 
     public void resetCooldownTimer() { cooldownTimer = 0; }
+
+    @Override
+    public Skill clone(){    try {
+        return (Skill) super.clone();
+    } catch (CloneNotSupportedException e) {
+        throw new AssertionError();
+    }}
 }
