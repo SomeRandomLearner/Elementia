@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 
 
 public class PVPCharacterSelectScene extends JPanel {
@@ -35,14 +36,11 @@ public class PVPCharacterSelectScene extends JPanel {
         characterSelectLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
         characterSelectLabel.setForeground(Color.WHITE);
 
-        GameCharacter[] player1Team = new GameCharacter[3];
-        GameCharacter[] player2Team = new GameCharacter[3];
-
-        aeroImgIcon = new ImageIcon(new ImageIcon("src/resources/Aero.png").getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
-        kaydenImgIcon = new ImageIcon(new ImageIcon("src/resources/Kayden.png").getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
-        psalmImgIcon = new ImageIcon(new ImageIcon("src/resources/Psalm.png").getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
-        ripperImgIcon = new ImageIcon(new ImageIcon("src/resources/Ripper.png").getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
-        zenStreamImgIcon = new ImageIcon(new ImageIcon("src/resources/ZenStream.png").getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
+        aeroImgIcon = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/Aero.png"))).getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
+        kaydenImgIcon = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/Kayden.png"))).getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
+        psalmImgIcon = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/Psalm.png"))).getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
+        ripperImgIcon = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/Ripper.png"))).getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
+        zenStreamImgIcon = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/ZenStream.png"))).getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
 
 
         gbc.gridx = 0;
