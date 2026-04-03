@@ -2,6 +2,7 @@ package scenes;
 
 import characters.*;
 import logic.BattleLogic;
+import logic.Skill;
 
 import javax.swing.*;
 import java.awt.*;

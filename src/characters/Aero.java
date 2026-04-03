@@ -1,5 +1,7 @@
 package characters;
 
+import logic.SkillRegistry;
+
 public class Aero extends GameCharacter{
 
     public Aero(int maxHealth, int maxMana, int defense, int manaRecovery) {

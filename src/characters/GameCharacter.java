@@ -1,8 +1,10 @@
 package characters;
 
+import logic.Skill;
+import logic.SkillRegistry;
+
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;

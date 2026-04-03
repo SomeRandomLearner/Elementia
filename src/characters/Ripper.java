@@ -1,5 +1,7 @@
 package characters;
 
+import logic.SkillRegistry;
+
 public class Ripper extends GameCharacter{
 
     public Ripper(int maxHealth, int maxMana, int defense, int manaRecovery) {
@@ -11,15 +13,11 @@ public class Ripper extends GameCharacter{
     }
 
     public Ripper(){
-        super("Ripper", 80, 80, 30, 30);
-        super.addNewSkill(SkillRegistry.getSkill("tackle"));
-        super.addNewSkill(SkillRegistry.getSkill("ground_slam"));
-        super.addNewSkill(SkillRegistry.getSkill("hardening_punch"));
-        super.setCharacterImage("/resources/Ripper.png");
+        this(80, 80, 30, 30);
     }
     @Override
     public GameCharacter clone(){
-        return new Ripper();
+        return new Ripper(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
     }
 
 }

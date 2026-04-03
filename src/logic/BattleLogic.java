@@ -1,7 +1,6 @@
 package logic;
 
 import characters.GameCharacter;
-import characters.Skill;
 
 import java.util.*;
 

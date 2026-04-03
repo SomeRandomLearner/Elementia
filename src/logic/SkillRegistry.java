@@ -1,4 +1,4 @@
-package characters;
+package logic;
 
 import java.util.HashMap;
 

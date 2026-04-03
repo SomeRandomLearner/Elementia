@@ -1,4 +1,4 @@
-package characters;
+package logic;
 
 public class Skill implements Cloneable{
     private String id;

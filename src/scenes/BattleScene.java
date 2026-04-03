@@ -2,6 +2,7 @@ package scenes;
 
 import characters.*;
 import logic.BattleLog;
+import logic.Skill;
 import logic.Utility;
 
 import javax.imageio.ImageIO;

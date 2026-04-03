@@ -2,7 +2,7 @@ package scenes;
 
 import characters.CharacterView;
 import characters.GameCharacter;
-import characters.Skill;
+import logic.Skill;
 import logic.BattleEventListener;
 import logic.BattleLogic;
 import logic.TurnResult;
