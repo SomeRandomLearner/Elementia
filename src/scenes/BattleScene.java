@@ -1,6 +1,9 @@
 package scenes;
 
 import characters.*;
+import logic.BattleLog;
+import logic.Utility;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -55,7 +58,7 @@ public class BattleScene extends JPanel {
         backBtn.addActionListener(e -> frame.showScreen("LevelSelect"));
         leftSide.add(backBtn, BorderLayout.NORTH);
 
-        alliesPanel = new JPanel(new GridBagLayout());
+        alliesPanel = new JPanel(null);
         alliesPanel.setOpaque(false);
         leftSide.add(alliesPanel, BorderLayout.CENTER);
 
@@ -67,7 +70,7 @@ public class BattleScene extends JPanel {
         JPanel rightSide = new JPanel(new BorderLayout());
         rightSide.setOpaque(false);
 
-        enemiesPanel = new JPanel(new GridBagLayout());
+        enemiesPanel = new JPanel(null);
         enemiesPanel.setOpaque(false);
         rightSide.add(enemiesPanel, BorderLayout.CENTER);
 
@@ -268,20 +271,29 @@ public class BattleScene extends JPanel {
 
     private void addCharacters(JPanel panel, GameCharacter[] team, boolean isAlly) {
         panel.removeAll();
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridy = 0;
-        gbc.insets = new Insets(10,10,10,10);
 
-        for (GameCharacter ch : team) {
-            if (ch == null) continue;
+        // Calculate spacing based on the actual panel size
+        int panelWidth = panel.getWidth() > 0 ? panel.getWidth() : 400; // fallback if not laid out yet
+        int panelHeight = panel.getHeight() > 0 ? panel.getHeight() : 600;
 
-            CharacterView view = new CharacterView(ch, ch.getImage());
+        int charSize = 120;
+        int startY = panelHeight / 5;
+        int ySpacing = panelHeight / 4;
+
+        for (int i = 0; i < team.length; i++) {
+            if (team[i] == null) continue; // Don't draw dead/null characters
+
+            CharacterView view = new CharacterView(team[i]);
             view.setClickListener(clicked -> {
                 if (!isAlly) handleEnemyClick(clicked);
             });
 
-            panel.add(view, gbc);
-            gbc.gridy++;
+            // Allies on the right side of their left-panel, Enemies on the left side of their right-panel
+            int xPos = isAlly ? panelWidth - charSize : 20;
+            int yPos = startY + (i * ySpacing);
+
+            view.setBounds(xPos, yPos, charSize, charSize);
+            panel.add(view);
         }
     }
 

@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 
 public class CharacterView extends JPanel {
     private final GameCharacter character;
-    private final BufferedImage image;
     private OnClickListener clickListener;
     private boolean isHovered = false;
 
@@ -16,13 +15,11 @@ public class CharacterView extends JPanel {
         void onClick(GameCharacter character);
     }
 
-    public CharacterView(GameCharacter character, BufferedImage image) {
+    public CharacterView(GameCharacter character) {
         this.character = character;
-        this.image = image;
 
         setOpaque(false);
         setPreferredSize(new Dimension(120, 200));
-
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -52,39 +49,42 @@ public class CharacterView extends JPanel {
         this.clickListener = listener;
     }
 
+    public GameCharacter getCharacter() {
+        return character;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (character == null || image == null) return;
+
+        if (character == null) return;
+
+        BufferedImage currentImage = character.getImage();
+        if (currentImage == null) return;
 
         Graphics2D g2 = (Graphics2D) g.create();
         int panelW = getWidth();
         int panelH = getHeight();
 
-
         int topMargin = 10;
         int bottomMargin = 35;
         int availableHeight = panelH - topMargin - bottomMargin;
 
-
-        int imgW = image.getWidth();
-        int imgH = image.getHeight();
-        double scale = (double) availableHeight / imgH;
+        int imgW = currentImage.getWidth();
+        int imgH = currentImage.getHeight();
+        double scale = Math.min((double)availableHeight / imgH, (double)panelW / imgW);
         int drawW = (int) (imgW * scale);
         int drawH = (int) (imgH * scale);
         int x = (panelW - drawW) / 2;
         int y = topMargin;
 
-
-        g2.drawImage(image, x, y, drawW, drawH, this);
-
+        g2.drawImage(currentImage, x, y, drawW, drawH, this);
 
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 14f));
         g2.setColor(Color.WHITE);
         FontMetrics fm = g2.getFontMetrics();
         int nameWidth = fm.stringWidth(character.getName());
         g2.drawString(character.getName(), (panelW - nameWidth) / 2, y + drawH + 15);
-
 
         int barWidth = 80;
         int barHeight = 8;
@@ -99,7 +99,6 @@ public class CharacterView extends JPanel {
         g2.setColor(Color.WHITE);
         g2.drawRect(barX, hpY, barWidth, barHeight);
 
-
         int manaY = hpY + 10;
         double manaPercent = (double) character.getCurrentMana() / character.getMaxMana();
         g2.setColor(Color.DARK_GRAY);
@@ -108,7 +107,6 @@ public class CharacterView extends JPanel {
         g2.fillRect(barX, manaY, (int) (barWidth * manaPercent), barHeight / 2);
         g2.setColor(Color.WHITE);
         g2.drawRect(barX, manaY, barWidth, barHeight / 2);
-
 
         if (isHovered) {
             g2.setColor(new Color(0, 255, 0, 60));

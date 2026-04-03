@@ -1,6 +1,7 @@
 package scenes;
 
 import characters.*;
+import logic.Utility;
 
 import javax.swing.*;
 import java.awt.*;

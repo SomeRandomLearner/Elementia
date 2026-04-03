@@ -1,4 +1,4 @@
-package scenes;
+package logic;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,6 +1,7 @@
 package scenes;
 
 import characters.*;
+import logic.BattleLogic;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,8 +52,13 @@ public class PVPCharacterSelectScene extends JPanel {
 
         confirmButton = createStyledButton("Confirm");
         confirmButton.addActionListener(e -> {
-            frame.getPVPBattle().addToPlayer1Team(player1ChosenCharacter);
-            frame.getPVPBattle().addToPlayer2Team(player2ChosenCharacter);
+            BattleLogic battleLogic = new BattleLogic();
+
+            battleLogic.resetCharacterChoices();
+            battleLogic.addToTeam(1, player1ChosenCharacter);
+            battleLogic.addToTeam(2, player2ChosenCharacter);
+
+            frame.getPVPBattle().setBattleLogic(battleLogic);
             frame.showScreen("PVPStageSelect");
         });
         confirmButton.setEnabled(false);

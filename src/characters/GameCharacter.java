@@ -2,6 +2,7 @@ package characters;
 
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
@@ -15,7 +16,11 @@ public abstract class GameCharacter {
     private int defense;
     private int manaRecovery;
     private boolean allyStatus = false;
+    private boolean takingDamage;
+    private boolean isDead;
     private BufferedImage characterImage;
+    private int x;
+    private int y;
 
     private Skill[] skills = new Skill[3];
     private int skillCount = 0;
@@ -28,6 +33,7 @@ public abstract class GameCharacter {
         this.currentMana = maxMana;
         this.defense = defense;
         this.manaRecovery = manaRecovery;
+        isDead = false;
     }
 
 
@@ -43,6 +49,8 @@ public abstract class GameCharacter {
         Random random = new Random();
         int damage = random.nextInt(skill.getMaxDamage() - skill.getMinDamage() + 1) + skill.getMinDamage();
         target.takeDamage(damage);
+
+        skill.resetCooldownTimer();
         skillCasted = true;
         return skillCasted;
     }
@@ -92,9 +100,19 @@ public abstract class GameCharacter {
         if (finalDamage > 0) {
             this.currentHealth -= finalDamage;
         }
-        if (this.currentHealth < 0) {
+        if (this.currentHealth <= 0) {
             this.currentHealth = 0;
+            isDead = true;
+            setCharacterImage("/resources/Grave.png");
         }
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean dead) {
+        isDead = dead;
     }
 
     public enum Character{
@@ -174,6 +192,9 @@ public abstract class GameCharacter {
         return skillNames;
     }
 
+    public void recoverMana(){
+        setCurrentMana(Math.min(currentMana + manaRecovery, maxMana));
+    }
 
     public void setCharacterImage(BufferedImage characterImage) {
         this.characterImage = characterImage;
@@ -193,6 +214,18 @@ public abstract class GameCharacter {
             e.printStackTrace();
             this.characterImage = null;
         }
+    }
+    public int getX(){
+        return x;
+    }
+    public void setX(int x){
+        this.x = x;
+    }
+    public int getY(){
+        return y;
+    }
+    public void setY(int y){
+        this.y = y;
     }
 
 }
