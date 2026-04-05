@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class GameCharacter {
@@ -216,6 +217,20 @@ public abstract class GameCharacter {
             e.printStackTrace();
             this.characterImage = null;
         }
+    }
+
+    public static final ArrayList<GameCharacter>getAllCharacters(){
+        ArrayList<GameCharacter> allCharactersArray = new ArrayList<>();
+        allCharactersArray.add(new Aero());
+        allCharactersArray.add(new Kaelis());
+        allCharactersArray.add(new Kangel());
+        allCharactersArray.add(new Kayden());
+        allCharactersArray.add(new Maelor());
+        allCharactersArray.add(new Psalm());
+        allCharactersArray.add(new Ripper());
+        allCharactersArray.add(new Veyrion());
+        allCharactersArray.add(new ZenStream());
+        return allCharactersArray;
     }
     public int getX(){
         return x;

@@ -7,16 +7,16 @@ public class Elementia extends JFrame{
     private final JPanel container = new JPanel(layout);
 
     private JPanel mainMenu;
-    private JPanel modeSelect;
+    private ModeSelectScene modeSelect;
 
     // Arcade Mode
-    private JPanel characterSelect;
-    private JPanel levelSelect;
+    private CharacterSelectScene characterSelect;
+    private LevelSelectScene levelSelect;
     private BattleScene battle;
 
     // PVP Mode
-    private JPanel pvpCharacterSelect;
-    private JPanel pvpStageSelect;
+    private PVPCharacterSelectScene pvpCharacterSelect;
+    private PVPStageSelectScene pvpStageSelect;
     private PVPBattleScene pvpBattle;
 
     public Elementia() {
@@ -60,15 +60,15 @@ public class Elementia extends JFrame{
         container.add(new BattleScene(this), "Battle");
     }
 
-    public JPanel getModeSelect() { return modeSelect; }
+    public ModeSelectScene getModeSelect() { return modeSelect; }
 
-    public JPanel getLevelSelect() { return levelSelect; }
+    public LevelSelectScene getLevelSelect() { return levelSelect; }
 
     public BattleScene getBattle() { return battle; }
 
-    public JPanel getPVPCharacterSelect() { return pvpCharacterSelect; }
+    public PVPCharacterSelectScene getPVPCharacterSelect() { return pvpCharacterSelect; }
 
-    public JPanel getPVPStageSelect() { return pvpStageSelect; }
+    public PVPStageSelectScene getPVPStageSelect() { return pvpStageSelect; }
 
     public PVPBattleScene getPVPBattle() { return pvpBattle; }
 

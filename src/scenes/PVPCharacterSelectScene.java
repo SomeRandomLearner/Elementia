@@ -12,21 +12,25 @@ import java.util.Objects;
 
 
 public class PVPCharacterSelectScene extends JPanel {
-    Font normalFont = new Font("Times New Roman", Font.PLAIN, 30);
+    private Font normalFont = new Font("Times New Roman", Font.PLAIN, 30);
 
-    ImageIcon aeroImgIcon;
-    ImageIcon kaydenImgIcon;
-    ImageIcon psalmImgIcon;
-    ImageIcon ripperImgIcon;
-    ImageIcon zenStreamImgIcon;
-    // add other characters here later
+    private ImageIcon aeroImgIcon;
+    private ImageIcon kaelisImgIcon;
+    private ImageIcon kangelImgIcon;
+    private ImageIcon kaydenImgIcon;
+    private ImageIcon psalmImgIcon;
+    private ImageIcon maelorImgIcon;
+    private ImageIcon ripperImgIcon;
+    private ImageIcon veyrionImgIcon;
+    private ImageIcon zenStreamImgIcon;
+
     private GameCharacter player1ChosenCharacter;
     private GameCharacter player2ChosenCharacter;
     
-    final boolean[] player1HasChosen = {false};
-    final boolean[] player2HasChosen = {false};
-    JLabel characterSelectLabel = null;
-    JButton confirmButton = null;
+    private final boolean[] player1HasChosen = {false};
+    private final boolean[] player2HasChosen = {false};
+    private JLabel characterSelectLabel = null;
+    private JButton confirmButton = null;
 
     public PVPCharacterSelectScene(Elementia frame){
         setLayout(new GridBagLayout());
@@ -38,11 +42,15 @@ public class PVPCharacterSelectScene extends JPanel {
         characterSelectLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
         characterSelectLabel.setForeground(Color.WHITE);
 
-        aeroImgIcon = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/Aero.png"))).getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
-        kaydenImgIcon = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/Kayden.png"))).getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
-        psalmImgIcon = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/Psalm.png"))).getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
-        ripperImgIcon = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/Ripper.png"))).getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
-        zenStreamImgIcon = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/ZenStream.png"))).getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
+        aeroImgIcon = getCharacterImageIcon("/resources/Aero.png");
+        kaelisImgIcon = getCharacterImageIcon("/resources/Kaelis.png");
+        kangelImgIcon = getCharacterImageIcon("/resources/Kangel.png");
+        kaydenImgIcon = getCharacterImageIcon("/resources/Kayden.png");
+        maelorImgIcon = getCharacterImageIcon("/resources/Maelor.png");
+        psalmImgIcon = getCharacterImageIcon("/resources/Psalm.png");
+        ripperImgIcon = getCharacterImageIcon("/resources/Ripper.png");
+        veyrionImgIcon = getCharacterImageIcon("/resources/Veyrion.png");
+        zenStreamImgIcon = getCharacterImageIcon("/resources/ZenStream.png");
 
 
         gbc.gridx = 0;
@@ -66,22 +74,25 @@ public class PVPCharacterSelectScene extends JPanel {
 
 
         JLabel aeroImgLabel = getImgLabel(GameCharacter.Character.AERO, aeroImgIcon);
-        aeroImgLabel.setPreferredSize(new Dimension(180,180));
+        JLabel kaelisImgLabel = getImgLabel(GameCharacter.Character.KAELIS, kaelisImgIcon);
+        JLabel kangelImgLabel = getImgLabel(GameCharacter.Character.KANGEL, kangelImgIcon);
         JLabel kaydenImgLabel = getImgLabel(GameCharacter.Character.KAYDEN, kaydenImgIcon);
-        kaydenImgLabel.setPreferredSize(new Dimension(180,180));
+        JLabel maelorImgLabel = getImgLabel(GameCharacter.Character.MAELOR, maelorImgIcon);
         JLabel psalmImgLabel = getImgLabel(GameCharacter.Character.PSALM, psalmImgIcon);
-        psalmImgLabel.setPreferredSize(new Dimension(180,180));
         JLabel ripperImgLabel = getImgLabel(GameCharacter.Character.RIPPER, ripperImgIcon);
-        ripperImgLabel.setPreferredSize(new Dimension(180,180));
+        JLabel veyrionImgLabel = getImgLabel(GameCharacter.Character.VEYRION, veyrionImgIcon);
         JLabel zenStreamImgLabel = getImgLabel(GameCharacter.Character.ZENSTREAM, zenStreamImgIcon);
-        zenStreamImgLabel.setPreferredSize(new Dimension(180,180));
 
         JPanel wrapperPanel = new JPanel(new GridLayout(3,3));
 
         wrapperPanel.add(aeroImgLabel);
+        wrapperPanel.add(kaelisImgLabel);
+        wrapperPanel.add(kangelImgLabel);
         wrapperPanel.add(kaydenImgLabel);
+        wrapperPanel.add(maelorImgLabel);
         wrapperPanel.add(psalmImgLabel);
         wrapperPanel.add(ripperImgLabel);
+        wrapperPanel.add(veyrionImgLabel);
         wrapperPanel.add(zenStreamImgLabel);
 
 
@@ -97,6 +108,11 @@ public class PVPCharacterSelectScene extends JPanel {
         gbc.gridwidth = GridBagConstraints.REMAINDER;
 
         add(confirmButton, gbc);
+
+        gbc.gridy = 5;
+        JButton backBtn = createStyledButton("Return to Main Menu");
+        backBtn.addActionListener(e -> frame.showScreen("MainMenu"));
+        add(backBtn, gbc);
     }
 
 
@@ -106,13 +122,13 @@ public class PVPCharacterSelectScene extends JPanel {
         imgLabel.setForeground(Color.WHITE);
         final GameCharacter chosenCharacter = switch (characterName){
             case AERO -> new Aero();
-//            case KAELIS -> new Kaelis();
-//            case KANGEL -> new Kangel();
+            case KAELIS -> new Kaelis();
+            case KANGEL -> new Kangel();
             case KAYDEN -> new Kayden();
-//            case MAELOR -> new Maelor();
+            case MAELOR -> new Maelor();
             case PSALM -> new Psalm();
             case RIPPER -> new Ripper();
-//            case VEYRION -> new Veyrion;
+            case VEYRION -> new Veyrion( );
             case ZENSTREAM -> new ZenStream();
             default -> null;
         };
@@ -139,10 +155,14 @@ public class PVPCharacterSelectScene extends JPanel {
                 }
             }
         });
+        imgLabel.setPreferredSize(new Dimension(180,180));
         return imgLabel;
     }
 
 
+    private ImageIcon getCharacterImageIcon(String path){
+        return new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource(path))).getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
+    }
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
         button.setBackground(Color.BLACK);

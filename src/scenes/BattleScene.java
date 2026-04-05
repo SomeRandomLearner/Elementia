@@ -9,6 +9,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 public class BattleScene extends JPanel {
@@ -28,16 +30,22 @@ public class BattleScene extends JPanel {
     private boolean isFirstTurn = true;
 
 
-    private GameCharacter[] allies = Teams.getAlliedTeam();
-    private GameCharacter[] enemies = Teams.getEnemyTeam();
+    private ArrayList<GameCharacter> allies = Teams.getAlliedTeam();
+    private ArrayList<GameCharacter> enemies = Teams.getEnemyTeam();
+
+    private LevelSelectScene levelSelect;
+    private int levelNumber = 1;
 
     public BattleScene(Elementia frame) {
         setLayout(new BorderLayout());
+        levelSelect = frame.getLevelSelect();
+        levelNumber = levelSelect.getSelectedLevel();
+        int levelBackgroundNumber = levelNumber % 6; // only 5 available levels
+        if(levelNumber > 5) levelBackgroundNumber++;
 
-        int level = LevelSelectScene.selectedLevel;
         try {
-            leftBgImage = ImageIO.read(getClass().getResource("/resources/LevelBackgrounds/Level" + level + "Background.png"));
-            rightBgImage = ImageIO.read(getClass().getResource("/resources/LevelBackgrounds/Level" + level + "Backgroundmirror.png"));
+            leftBgImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/LevelBackgrounds/Level" + levelBackgroundNumber + "Background.png")));
+            rightBgImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/resources/LevelBackgrounds/Level" + levelBackgroundNumber + "Backgroundmirror.png")));
         } catch (IOException e) {
             System.err.println("Background images not found!");
         }
@@ -56,7 +64,11 @@ public class BattleScene extends JPanel {
         leftSide.setOpaque(false);
 
         JButton backBtn = Utility.createButton("Back");
-        backBtn.addActionListener(e -> frame.showScreen("LevelSelect"));
+        backBtn.addActionListener(e -> {
+            levelSelect.revalidate();
+            levelSelect.unlockLevels();
+            frame.showScreen("LevelSelect");
+        });
         leftSide.add(backBtn, BorderLayout.NORTH);
 
         alliesPanel = new JPanel(null);
@@ -138,19 +150,19 @@ public class BattleScene extends JPanel {
         }
 
         if (allyTurn) {
-            while (currentAllyIndex < allies.length &&
-                    (allies[currentAllyIndex] == null || allies[currentAllyIndex].getCurrentHP() <= 0)) {
+            while (currentAllyIndex < allies.size() &&
+                    (allies.get(currentAllyIndex) == null || allies.get(currentAllyIndex).getCurrentHP() <= 0)) {
                 currentAllyIndex++;
             }
 
-            if (currentAllyIndex >= allies.length) {
+            if (currentAllyIndex >= allies.size()) {
                 allyTurn = false;
                 currentAllyIndex = 0;
                 SwingUtilities.invokeLater(this::startEnemyPhase);
                 return;
             }
 
-            GameCharacter actor = allies[currentAllyIndex];
+            GameCharacter actor = allies.get(currentAllyIndex);
             actor.setCurrentMana(Math.min(actor.getCurrentMana() + actor.getManaRecovery(), actor.getMaxMana()));
 
             if(!isFirstTurn) {
@@ -241,7 +253,7 @@ public class BattleScene extends JPanel {
                 if (damage < 0) damage = 0;
                 battleLog.addSkillUse(enemyActor.getName(), skill.getName(), target.getName(), damage);
                 if (target.getCurrentHP() <= 0) {
-                    removeCharacterFromTeam(target, allies);
+//                    removeCharacterFromTeam(target, allies);
                     battleLog.addDefeated(target.getName());
                 }
             }
@@ -254,14 +266,14 @@ public class BattleScene extends JPanel {
         timer.start();
     }
 
-    private boolean isTeamDead(GameCharacter[] team) {
+    private boolean isTeamDead(ArrayList<GameCharacter> team) {
         for (GameCharacter ch : team)
             if (ch != null && ch.getCurrentHP() > 0)
                 return false;
         return true;
     }
 
-    private GameCharacter getRandomLivingCharacter(GameCharacter[] team) {
+    private GameCharacter getRandomLivingCharacter(ArrayList<GameCharacter> team) {
         java.util.List<GameCharacter> alive = new java.util.ArrayList<>();
         for (GameCharacter ch : team)
             if (ch != null && ch.getCurrentHP() > 0)
@@ -270,7 +282,7 @@ public class BattleScene extends JPanel {
         return alive.get(new Random().nextInt(alive.size()));
     }
 
-    private void addCharacters(JPanel panel, GameCharacter[] team, boolean isAlly) {
+    private void addCharacters(JPanel panel, ArrayList<GameCharacter> team, boolean isAlly) {
         panel.removeAll();
 
         // Calculate spacing based on the actual panel size
@@ -281,10 +293,10 @@ public class BattleScene extends JPanel {
         int startY = panelHeight / 5;
         int ySpacing = panelHeight / 4;
 
-        for (int i = 0; i < team.length; i++) {
-            if (team[i] == null) continue; // Don't draw dead/null characters
+        for (int i = 0; i < team.size(); i++) {
+            if (team.get(i) == null) continue; // Don't draw dead/null characters
 
-            CharacterView view = new CharacterView(team[i]);
+            CharacterView view = new CharacterView(team.get(i));
             view.setClickListener(clicked -> {
                 if (!isAlly) handleEnemyClick(clicked);
             });
@@ -308,7 +320,7 @@ public class BattleScene extends JPanel {
             if (damage < 0) damage = 0;
             battleLog.addSkillUse(currentActor.getName(), selectedSkill.getName(), enemy.getName(), damage);
             if (enemy.getCurrentHP() <= 0) {
-                removeCharacterFromTeam(enemy, Teams.getEnemyTeam());
+                // removeCharacterFromTeam(enemy, Teams.getEnemyTeam());
                 battleLog.addDefeated(enemy.getName());
             }
         }
@@ -366,12 +378,8 @@ public class BattleScene extends JPanel {
         return skillButton;
     }
 
-    private void removeCharacterFromTeam(GameCharacter target, GameCharacter[] team) {
-        for (int i = 0; i < team.length; i++)
-            if (team[i] == target) {
-                team[i] = null;
-                break;
-            }
+    private void removeCharacterFromTeam(GameCharacter target, ArrayList<GameCharacter> team) {
+        team.remove(target);
     }
 
     private void showResult(boolean playerWon) {
@@ -386,5 +394,14 @@ public class BattleScene extends JPanel {
         skillsPanel.removeAll();
         skillsPanel.revalidate();
         skillsPanel.repaint();
+
+        if(playerWon && !levelSelect.getLevelStatus(getSelectedLevel())){
+            levelSelect.incrementCompletedLevels();
+            levelSelect.setLevelStatus(levelNumber, true);
+        }
+    }
+
+    private int getSelectedLevel(){
+        return levelSelect.getSelectedLevel();
     }
 }

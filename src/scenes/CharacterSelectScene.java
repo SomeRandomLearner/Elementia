@@ -1,197 +1,152 @@
 package scenes;
 
 import characters.*;
+import logic.BattleLogic;
+import logic.Skill;
 import logic.Utility;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Objects;
 
 public class CharacterSelectScene extends JPanel {
+    private Font normalFont = new Font("Times New Roman", Font.PLAIN, 30);
 
+    private final ImageIcon aeroImgIcon;
+    private final ImageIcon kaelisImgIcon;
+    private final ImageIcon kangelImgIcon;
+    private final ImageIcon kaydenImgIcon;
+    private final ImageIcon psalmImgIcon;
+    private final ImageIcon maelorImgIcon;
+    private final ImageIcon ripperImgIcon;
+    private final ImageIcon veyrionImgIcon;
+    private final ImageIcon zenStreamImgIcon;
 
+    private GameCharacter chosenCharacter;
+
+    private JLabel characterSelectLabel = null;
+    private JButton confirmButton = null;
     public CharacterSelectScene(Elementia frame) {
 
+        setLayout(new GridBagLayout());
+        setBackground(Color.BLACK);
 
-        setLayout(new BorderLayout());
-        setBackground(Color.DARK_GRAY);
+        GridBagConstraints gbc = new GridBagConstraints();
 
-        JLabel titleLabel = new JLabel("Select Your Character", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Times New Roman", Font.BOLD, 28));
-        titleLabel.setForeground(Color.WHITE);
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
-        add(titleLabel, BorderLayout.NORTH);
+        characterSelectLabel = new JLabel("Choose a Character");
+        characterSelectLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        characterSelectLabel.setForeground(Color.WHITE);
 
-        JPanel characterPanel = new JPanel(new GridLayout(1, 5, 15, 10));
-        characterPanel.setBackground(Color.DARK_GRAY);
-        characterPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 40, 40));
-
-
-        CharacterInfo[] characters = {
-                new CharacterInfo(
-                        "<html><center>Aero<br>The Wind Element</center></html>",
-                        "Born on the cliffs where the winds howl endlessly, Aero commands the freedom of the skies. She was the chosen to wield the unseen strengths of the skies. With powers that protect and guide, she uses her elemental wind to support her allies and turn the tide of battlefield.",
-                        new String[]{"Zephyr Slash", "Cyclone Fury", "Aether Guard"},
-                        new String[]{
-                                "A slicing wave of compressed wind blows forward.",
-                                "A spinning vortex pulls enemies inward.",
-                                "A wind barrier forms and deflects attacks."
-                        },
-                        "images/characters/AERO/AERO.png",
-                        new String[]{
-                                "FIRE KICK.png",
-                                "FIRE PUNCH.png",
-                                "HEALING FAN.png"
-                        },
-                        "AERO"
-                ),
-
-                new CharacterInfo(
-                        "<html><center>Kayden<br>The Lightning Element</center></html>",
-                        "Kayden was one of the strongest Elementalists, a lone wolf who mastered his Elemental power on his own. Feared and respected, his name spread as a legend whispered with both awe and Fear.",
-                        new String[]{"LIGHTNING STRIKE", "FORCE CONTROL", "SUPER SPEED"},
-                        new String[]{
-                                "Kayden dashes at lightning velocity.",
-                                "A concentrated bolt shoots from his hands.",
-                                "Electrifies the area, pushing or pulling foes."
-                        },
-                        "images/characters/KAYDEN/KAYDEN.png",
-                        new String[]{
-                                "LIGHTNING STRIKE.png",
-                                "FORCE CONTROL.png",
-                                "SUPER SPEED.png"
-                        },
-                        "KAYDEN"
-                ),
-
-                new CharacterInfo(
-                        "<html><center>Psalm<br>The Fire Element</center></html>",
-                        "A guardian of melody and light, Psalm burns with radiant flame.",
-                        new String[]{"FIRE KICK", "HEALING FAN", "FIRE PUNCH"},
-                        new String[]{
-                                "A fiery combo hits multiple enemies.",
-                                "A warm flame heals nearby allies.",
-                                "A flaming kick sends enemies flying."
-                        },
-                        "images/characters/PSALM/PSALM.png",
-                        new String[]{
-                                "FIRE KICK.png",
-                                "HEALING FAN.png",
-                                "FIRE PUNCH.png"
-                        },
-                        "PSALM"
-                ),
-
-                new CharacterInfo(
-                        "<html><center>Ripper<br>The Shadow Element</center></html>",
-                        "A silent hunter cloaked in darkness and one with the Earth. An Earth elementalists who can feel the slightest change within the earth he steps on.",
-                        new String[]{"Night Slash", "Phantom Step", "Void Strike"},
-                        new String[]{
-                                "Strikes from the shadows.",
-                                "Moves unseen, evading danger.",
-                                "Unleashes a void-powered slash."
-                        },
-                        "images/characters/RIPPER/RIPPER.png",
-                        new String[]{
-                                "FIRE KICK.png",
-                                "FIRE PUNCH.png",
-                                "HEALING FAN.png"
-                        },
-                        "RIPPER"
-                ),
-
-                new CharacterInfo(
-                        "<html><center>ZnStream<br>The Water Element</center></html>",
-                        "From collective thoughts and energy of humans. He seeks to understand the stories and emotions that he could not witness the conclusion of.",
-                        new String[]{"Wave Crush", "Tidal Prison", "Ocean's Grace"},
-                        new String[]{
-                                "ZnStream dissolves into water to evade damage.",
-                                "Traps enemies in a swirling whirlpool.",
-                                "Heals and strengthens allies nearby."
-                        },
-                        "images/characters/ZNSTREAM/ZNSTREAM.png",
-                        new String[]{
-                                "LIQUIFY.png",
-                                "WATER SLINGSHOT.png",
-                                "WATER TAKEOVER.png"
-                        },
-                        "ZNSTREAM"
-                )
-        };
-
-        for (int i = 0; i < characters.length; i++) {
-
-            CharacterInfo ch = characters[i];
-
-            JPanel card = new JPanel(new BorderLayout());
-            card.setBackground(new Color(100, 100, 100));
-            card.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
-            card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-            JLabel nameLabel = new JLabel(ch.getName(), SwingConstants.CENTER);
-            nameLabel.setForeground(Color.WHITE);
-            nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        aeroImgIcon = getCharacterImageIcon("/resources/Aero.png");
+        kaelisImgIcon = getCharacterImageIcon("/resources/Kaelis.png");
+        kangelImgIcon = getCharacterImageIcon("/resources/Kangel.png");
+        kaydenImgIcon = getCharacterImageIcon("/resources/Kayden.png");
+        maelorImgIcon = getCharacterImageIcon("/resources/Maelor.png");
+        psalmImgIcon = getCharacterImageIcon("/resources/Psalm.png");
+        ripperImgIcon = getCharacterImageIcon("/resources/Ripper.png");
+        veyrionImgIcon = getCharacterImageIcon("/resources/Veyrion.png");
+        zenStreamImgIcon = getCharacterImageIcon("/resources/ZenStream.png");
 
 
-            ImageIcon icon = null;
-            try {
-                String fullPath = System.getProperty("user.dir") + "/" + ch.getImagePath();
-                java.io.File file = new java.io.File(fullPath);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.gridheight = 1;
+        add(characterSelectLabel, gbc);
 
-                if (file.exists()) {
-                    Image img = new ImageIcon(fullPath).getImage()
-                            .getScaledInstance(550, 550, Image.SCALE_SMOOTH);
-                    icon = new ImageIcon(img);
-                } else {
-                    System.out.println("⚠ Image MISSING: " + file.getAbsolutePath());
-                }
-            } catch (Exception ex) {
-                System.out.println("⚠ Error loading image: " + ch.getImagePath());
-            }
+        confirmButton = createStyledButton("Confirm");
+        confirmButton.addActionListener(e -> {
+            Teams.clearAlliedTeam();
+            Teams.addToAlliedTeam(chosenCharacter);
+            frame.showScreen("LevelSelect");
+        });
+        confirmButton.setEnabled(false);
 
-            JLabel imageLabel = (icon != null)
-                    ? new JLabel(icon, SwingConstants.CENTER)
-                    : new JLabel("[Image Missing]", SwingConstants.CENTER);
 
-            imageLabel.setForeground(Color.WHITE);
-            imageLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JLabel aeroImgLabel = getImgLabel(GameCharacter.Character.AERO, aeroImgIcon);
+        JLabel kaelisImgLabel = getImgLabel(GameCharacter.Character.KAELIS, kaelisImgIcon);
+        JLabel kangelImgLabel = getImgLabel(GameCharacter.Character.KANGEL, kangelImgIcon);
+        JLabel kaydenImgLabel = getImgLabel(GameCharacter.Character.KAYDEN, kaydenImgIcon);
+        JLabel maelorImgLabel = getImgLabel(GameCharacter.Character.MAELOR, maelorImgIcon);
+        JLabel psalmImgLabel = getImgLabel(GameCharacter.Character.PSALM, psalmImgIcon);
+        JLabel ripperImgLabel = getImgLabel(GameCharacter.Character.RIPPER, ripperImgIcon);
+        JLabel veyrionImgLabel = getImgLabel(GameCharacter.Character.VEYRION, veyrionImgIcon);
+        JLabel zenStreamImgLabel = getImgLabel(GameCharacter.Character.ZENSTREAM, zenStreamImgIcon);
 
-            card.add(imageLabel, BorderLayout.CENTER);
-            card.add(nameLabel, BorderLayout.SOUTH);
+        JPanel wrapperPanel = new JPanel(new GridLayout(3, 3));
 
-            int index = i;
-            card.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseClicked(java.awt.event.MouseEvent e) {
-                    if(Teams.getAlliedTeamCount() > 0) Teams.clearAlliedTeam();
-                    switch(index){
-                        case 0 -> Teams.addToAlliedTeam(new Aero());
-                        case 1 -> Teams.addToAlliedTeam(new Kayden());
-                        case 2 -> Teams.addToAlliedTeam(new Psalm());
-                        case 3 -> Teams.addToAlliedTeam(new Ripper());
-                        case 4 -> Teams.addToAlliedTeam(new ZenStream());
-                    }
-                    frame.addCharacterDisplayScene(characters[index]);
-                    frame.showScreen("CharacterDisplay");
-                }
+        wrapperPanel.add(aeroImgLabel);
+        wrapperPanel.add(kaelisImgLabel);
+        wrapperPanel.add(kangelImgLabel);
+        wrapperPanel.add(kaydenImgLabel);
+        wrapperPanel.add(maelorImgLabel);
+        wrapperPanel.add(psalmImgLabel);
+        wrapperPanel.add(ripperImgLabel);
+        wrapperPanel.add(veyrionImgLabel);
+        wrapperPanel.add(zenStreamImgLabel);
 
-                @Override
-                public void mouseEntered(java.awt.event.MouseEvent e) {
-                    card.setBackground(new Color(70, 130, 180));
-                }
 
-                @Override
-                public void mouseExited(java.awt.event.MouseEvent e) {
-                    card.setBackground(new Color(100, 100, 100));
-                }
-            });
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        add(wrapperPanel, gbc);
 
-            characterPanel.add(card);
-        }
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridheight = 1;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
 
-        add(characterPanel, BorderLayout.CENTER);
-        JButton backBtn = Utility.createButton("Return to Main Menu");
+        add(confirmButton, gbc);
+
+        gbc.gridy = 5;
+        JButton backBtn = createStyledButton("Return to Main Menu");
         backBtn.addActionListener(e -> frame.showScreen("MainMenu"));
-        add(backBtn, BorderLayout.SOUTH);
+        add(backBtn, gbc);
+    }
+
+
+    private JLabel getImgLabel(GameCharacter.Character characterName, ImageIcon imgIcon) {
+        JLabel imgLabel = new JLabel(imgIcon);
+        imgLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        imgLabel.setForeground(Color.WHITE);
+
+        imgLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                chosenCharacter = switch (characterName) {
+                    case AERO -> new Aero();
+                    case KAELIS -> new Kaelis();
+                    case KANGEL -> new Kangel();
+                    case KAYDEN -> new Kayden();
+                    case MAELOR -> new Maelor();
+                    case PSALM -> new Psalm();
+                    case RIPPER -> new Ripper();
+                    case VEYRION -> new Veyrion();
+                    case ZENSTREAM -> new ZenStream();
+                    default -> null;
+                };
+                confirmButton.setEnabled(true);
+            }
+        });
+        imgLabel.setPreferredSize(new Dimension(180, 180));
+        return imgLabel;
+    }
+
+
+    private ImageIcon getCharacterImageIcon(String path) {
+        return new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource(path))).getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
+    }
+
+    private JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        button.setBackground(Color.BLACK);
+        button.setForeground(Color.WHITE);
+        button.setFont(normalFont);
+        button.setFocusPainted(false);
+        return button;
     }
 }
 

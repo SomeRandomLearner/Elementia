@@ -6,11 +6,33 @@ import logic.Utility;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+import characters.GameCharacter;
+
+import static characters.GameCharacter.Character.*;
 
 public class LevelSelectScene extends JPanel{
-    static int selectedLevel = 1;
+    private int selectedLevel = 1;
+    private int completedLevels = 0;
+    private final HashMap<Integer, Boolean> levelStatuses;
+    private final JButton[] levelButtons;
+
     public LevelSelectScene(Elementia frame) {
-        final byte NO_OF_LEVELS = 5;
+        final byte NO_OF_LEVELS = 10;
+
+        levelStatuses = new HashMap<>();
+        levelStatuses.put(1, false);
+        levelStatuses.put(2, false);
+        levelStatuses.put(3, false);
+        levelStatuses.put(4, false);
+        levelStatuses.put(5, false);
+        levelStatuses.put(6, false);
+        levelStatuses.put(7, false);
+        levelStatuses.put(8, false);
+        levelStatuses.put(9, false);
+        levelStatuses.put(10, false);
 
         setLayout(new BorderLayout());
         setBackground(Color.BLACK);
@@ -20,8 +42,8 @@ public class LevelSelectScene extends JPanel{
         title.setForeground(Color.WHITE);
         add(title, BorderLayout.NORTH);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout());
-        JButton[] levelButtons = new JButton[NO_OF_LEVELS];// Manually edit accordingly
+        JPanel buttonPanel = new JPanel(new GridLayout(2,5,20,20));
+        levelButtons = new JButton[NO_OF_LEVELS];// Manually edit accordingly
         for(int i = 0; i < NO_OF_LEVELS; i++){
             levelButtons[i] = Utility.createButton("" + (i+1));
             buttonPanel.add(levelButtons[i]);
@@ -30,13 +52,15 @@ public class LevelSelectScene extends JPanel{
         // Adds three enemies at most;
         // Feel free to change the enemies or the number of levels
 
+        unlockLevels();
+
         //Level 1
         levelButtons[0].addActionListener(e -> {
             selectedLevel = 1;
             while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam(); // Clears non-support characters
-            Teams.addToAlliedTeam(new Kayden());
             if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
-            Teams.addToEnemyTeam(new Kayden());
+            Teams.addToEnemyTeam(new ZenStream());
+
             frame.addBattleScene();
             frame.showScreen("Battle");
         });
@@ -44,10 +68,8 @@ public class LevelSelectScene extends JPanel{
         levelButtons[1].addActionListener(e -> {
             selectedLevel = 2;
             while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
-            Teams.addToAlliedTeam(new Aero());
 
             if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
-            Teams.addToEnemyTeam(new Ripper());
             Teams.addToEnemyTeam(new Ripper());
             frame.addBattleScene();
             frame.showScreen("Battle");
@@ -56,7 +78,7 @@ public class LevelSelectScene extends JPanel{
         levelButtons[2].addActionListener(e -> {
             selectedLevel = 3;
             while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
-            Teams.addToAlliedTeam(new ZenStream());
+
             if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
             Teams.addToEnemyTeam(new Aero());
 
@@ -67,10 +89,9 @@ public class LevelSelectScene extends JPanel{
         levelButtons[3].addActionListener(e -> {
             selectedLevel = 4;
             while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
-            Teams.addToAlliedTeam(new Psalm());
+
             if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
-            Teams.addToEnemyTeam(new ZenStream());
-            Teams.addToEnemyTeam(new Ripper());
+            Teams.addToEnemyTeam(new Psalm());
 
             frame.addBattleScene();
             frame.showScreen("Battle");
@@ -79,11 +100,74 @@ public class LevelSelectScene extends JPanel{
         levelButtons[4].addActionListener(e -> {
             selectedLevel = 5;
             while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
-            Teams.addToAlliedTeam(new Ripper());
+
+            if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
+            Teams.addToEnemyTeam(new Kaelis());
+            frame.addBattleScene();
+            frame.showScreen("Battle");
+        });
+        //Level 6
+        levelButtons[5].addActionListener(e -> {
+            selectedLevel = 6;
+            while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
+
+            if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
+            Teams.addToEnemyTeam(new Kangel());
+            frame.addBattleScene();
+            frame.showScreen("Battle");
+        });
+        //Level 7
+        levelButtons[6].addActionListener(e -> {
+            selectedLevel = 7;
+            while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
+
+            if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
+            Teams.addToEnemyTeam(new Maelor());
+            frame.addBattleScene();
+            frame.showScreen("Battle");
+        });
+        //Level 8
+        levelButtons[7].addActionListener(e -> {
+            selectedLevel = 8;
+            while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
+
+            if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
+            Teams.addToEnemyTeam(new Veyrion());
+            frame.addBattleScene();
+            frame.showScreen("Battle");
+        });
+        //Level 9
+        levelButtons[8].addActionListener(e -> {
+            selectedLevel = 9;
+            while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
+
             if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
             Teams.addToEnemyTeam(new Kayden());
-            Teams.addToEnemyTeam(new Psalm());
-            Teams.addToEnemyTeam(new ZenStream());
+            frame.addBattleScene();
+            frame.showScreen("Battle");
+        });
+        //Level 10
+        levelButtons[9].addActionListener(e -> {
+            selectedLevel = 10;
+            while(Teams.getAlliedTeamCount() > 1) Teams.popAlliedTeam();
+
+            ArrayList<GameCharacter> availableCharacters = GameCharacter.getAllCharacters();
+            for(GameCharacter character : Teams.getAlliedTeam()){
+                availableCharacters.remove(character);
+            }
+            while(Teams.getAlliedTeamCount() < 3){
+                int randomInt = new Random().nextInt(availableCharacters.size());
+                Teams.addToAlliedTeam(Teams.getAlliedTeam().get(randomInt));
+            }
+
+
+
+            if(Teams.getEnemyTeamCount() > 0) Teams.clearEnemyTeam();
+
+            while(Teams.getEnemyTeamCount() < 3){
+                int randomInt = new Random().nextInt(availableCharacters.size());
+                Teams.addToEnemyTeam(Teams.getEnemyTeam().get(randomInt));
+            }
             frame.addBattleScene();
             frame.showScreen("Battle");
         });
@@ -96,5 +180,27 @@ public class LevelSelectScene extends JPanel{
         centerPanel.add(buttonPanel);
         add(centerPanel, BorderLayout.CENTER);
         add(backButton, BorderLayout.SOUTH);
+    }
+
+    public int getSelectedLevel(){
+        return selectedLevel;
+    }
+
+    public void incrementCompletedLevels(){
+        completedLevels++;
+    }
+
+    public void setLevelStatus(int levelNumber, boolean status){
+        levelStatuses.replace(levelNumber, status);
+    }
+
+    public boolean getLevelStatus(int levelNumber){
+        return levelStatuses.get(levelNumber);
+    }
+
+    protected void unlockLevels(){
+        for(int i = 0; i < levelButtons.length; i++){
+            levelButtons[i].setEnabled(i <= completedLevels);
+        }
     }
 }

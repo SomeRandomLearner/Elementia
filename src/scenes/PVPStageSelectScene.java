@@ -65,6 +65,11 @@ public class PVPStageSelectScene extends JPanel {
             frame.getPVPBattle().startGame();
             frame.showScreen("PVPBattle");
         });
+
+        gbc.gridy = 4;
+        JButton backBtn = createStyledButton("Go Back");
+        backBtn.addActionListener(e -> frame.showScreen("PVPCharacterSelect"));
+        add(backBtn, gbc);
     }
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
