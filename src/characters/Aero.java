@@ -1,6 +1,10 @@
 package characters;
 
+import logic.Skill;
 import logic.SkillRegistry;
+
+import javax.swing.*;
+import java.util.Objects;
 
 public class Aero extends GameCharacter{
 
@@ -10,6 +14,14 @@ public class Aero extends GameCharacter{
         super.addNewSkill(SkillRegistry.getSkill("cyclone_fury"));
         super.addNewSkill(SkillRegistry.getSkill("aether_guard"));
         super.setCharacterImage("/resources/Aero.png");
+        ImageIcon[] animationFrames = new ImageIcon[3];
+        animationFrames[0] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/air1.png"))).getImage());
+        animationFrames[1] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/air2.png"))).getImage());
+        animationFrames[2] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/air3.png"))).getImage());
+
+        for(Skill skill : this.getSkills()){
+            skill.setAnimationFrames(animationFrames);
+        }
     }
 
     public Aero(){

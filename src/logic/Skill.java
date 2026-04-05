@@ -1,14 +1,16 @@
 package logic;
 
+import javax.swing.*;
+
 public class Skill implements Cloneable{
-    private String id;
+    private final String id;
     private String name;
     private int manaCost;
     private int minDamage;
     private int maxDamage;
     private int cooldown;
     private int cooldownTimer;
-
+    private ImageIcon[] animationFrames = null;
 
     public Skill(String id, String name, int manaCost, int minDamage, int maxDamage, int cooldown){
         this.id = id;
@@ -72,4 +74,12 @@ public class Skill implements Cloneable{
     } catch (CloneNotSupportedException e) {
         throw new AssertionError();
     }}
+
+    public void setAnimationFrames(ImageIcon[] animationFrames){
+        this.animationFrames = animationFrames;
+    }
+
+    public ImageIcon[] getAnimationFrames(){
+        return animationFrames;
+    }
 }

@@ -16,8 +16,8 @@ import java.util.Objects;
 public class PVPBattleScene extends JPanel {
     private JPanel topPanel;
     private JPanel centerPanel;
-    private JPanel leftPanel;
-    private JPanel rightPanel;
+    private AnimatedPanel leftPanel;
+    private AnimatedPanel rightPanel;
     private JPanel bottomPanel;
     private JPanel topLeftPanel;
     private JPanel topCenterPanel;
@@ -66,9 +66,11 @@ public class PVPBattleScene extends JPanel {
         rightWrapperPanel.setOpaque(false);
 
         // FlowLayout.RIGHT and LEFT make the characters come as close as possible to the enemy
-        leftPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 6));
+        leftPanel = new AnimatedPanel();
+        leftPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 20, 6));
         leftPanel.setOpaque(false);
-        rightPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 6));
+        rightPanel = new AnimatedPanel();
+        rightPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 6));
         rightPanel.setOpaque(false);
 
         leftWrapperPanel.add(leftPanel);
@@ -256,6 +258,15 @@ public class PVPBattleScene extends JPanel {
         if (target == null || battleLogic.getSelectedSkill() == null || battleLogic.getCurrentTeam().contains(target)) return;
 
         battleLogic.setTargetCharacter(target);
+        int currentPlayerTurn = battleLogic.getCurrentPlayerTurn();
+        if(currentPlayerTurn == 1){
+            rightPanel.setSelectedSkill(battleLogic.getSelectedSkill());
+            rightPanel.playSkillAnimation();
+        }
+        else{
+            leftPanel.setSelectedSkill(battleLogic.getSelectedSkill());
+            leftPanel.playSkillAnimation();
+        }
         battleLogic.currentCharacterUseSkillOnTarget();
 
         battleLogic.setSelectedSkill(null);

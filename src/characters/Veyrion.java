@@ -1,6 +1,10 @@
 package characters;
 
+import logic.Skill;
 import logic.SkillRegistry;
+
+import javax.swing.*;
+import java.util.Objects;
 
 public class Veyrion extends GameCharacter{
     public Veyrion(int maxHealth, int maxMana, int defense, int manaRecovery) {
@@ -9,6 +13,14 @@ public class Veyrion extends GameCharacter{
         super.addNewSkill(SkillRegistry.getSkill("dark_grasp"));
         super.addNewSkill(SkillRegistry.getSkill("night_veil"));
         super.setCharacterImage("/resources/Veyrion.png");
+        ImageIcon[] animationFrames = new ImageIcon[3];
+        animationFrames[0] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/shadow1.png"))).getImage());
+        animationFrames[1] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/shadow2.png"))).getImage());
+        animationFrames[2] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/shadow3.png"))).getImage());
+
+        for(Skill skill : this.getSkills()){
+            skill.setAnimationFrames(animationFrames);
+        }
     }
     public Veyrion(){
         this(80,80,50,6);

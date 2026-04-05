@@ -21,6 +21,7 @@ public class BattleScene extends JPanel {
     private Skill selectedSkill = null;
 
     private final JPanel centerPanel, alliesPanel, enemiesPanel, skillsPanel;
+    private final AnimatedPanel leftSide, rightSide;
     private final JLabel resultLabel;
     private final BattleLog battleLog;
 
@@ -40,7 +41,7 @@ public class BattleScene extends JPanel {
         setLayout(new BorderLayout());
         levelSelect = frame.getLevelSelect();
         levelNumber = levelSelect.getSelectedLevel();
-        int levelBackgroundNumber = levelNumber % 6; // only 5 available levels
+        int levelBackgroundNumber = levelNumber % 6; // only 5 available backgrounds
         if(levelNumber > 5) levelBackgroundNumber++;
 
         try {
@@ -60,7 +61,8 @@ public class BattleScene extends JPanel {
         resultLabel.setVisible(false);
 
 
-        JPanel leftSide = new JPanel(new BorderLayout());
+        leftSide = new AnimatedPanel();
+        leftSide.setLayout(new BorderLayout());
         leftSide.setOpaque(false);
 
         JButton backBtn = Utility.createButton("Back");
@@ -80,7 +82,8 @@ public class BattleScene extends JPanel {
         leftSide.add(skillsPanel, BorderLayout.SOUTH);
 
 
-        JPanel rightSide = new JPanel(new BorderLayout());
+        rightSide = new AnimatedPanel();
+        rightSide.setLayout(new BorderLayout());
         rightSide.setOpaque(false);
 
         enemiesPanel = new JPanel(null);
@@ -249,7 +252,9 @@ public class BattleScene extends JPanel {
             boolean success = enemyActor.useSkill(skill, target);
 
             if (success) {
-                int damage = new Random().nextInt(skill.getMaxDamage() - skill.getMinDamage() + 1) + skill.getMinDamage() - target.getDefense();
+                leftSide.setSelectedSkill(skill);
+                leftSide.playSkillAnimation();
+                int damage = new Random().nextInt(skill.getMaxDamage() - skill.getMinDamage() + 1) + skill.getMinDamage() - target.getDefense(); // update this later
                 if (damage < 0) damage = 0;
                 battleLog.addSkillUse(enemyActor.getName(), skill.getName(), target.getName(), damage);
                 if (target.getCurrentHP() <= 0) {
@@ -316,6 +321,8 @@ public class BattleScene extends JPanel {
         boolean success = currentActor.useSkill(selectedSkill, enemy);
         if(success){
             selectedSkill.resetCooldownTimer();
+            rightSide.setSelectedSkill(selectedSkill);
+            rightSide.playSkillAnimation();
             int damage = new Random().nextInt(selectedSkill.getMaxDamage() - selectedSkill.getMinDamage() + 1) + selectedSkill.getMinDamage() - enemy.getDefense();
             if (damage < 0) damage = 0;
             battleLog.addSkillUse(currentActor.getName(), selectedSkill.getName(), enemy.getName(), damage);

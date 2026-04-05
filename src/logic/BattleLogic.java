@@ -208,6 +208,8 @@ public class BattleLogic {
         this.battleEventListener = battleEventListener;
     }
 
+    public int getCurrentPlayerTurn(){ return currentPlayerTurn;}
+
     public GameCharacter getCurrentCharacter(){
         return currentCharacter;
     }

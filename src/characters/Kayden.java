@@ -1,6 +1,10 @@
 package characters;
 
+import logic.Skill;
 import logic.SkillRegistry;
+
+import javax.swing.*;
+import java.util.Objects;
 
 public class Kayden extends GameCharacter{
 
@@ -10,6 +14,14 @@ public class Kayden extends GameCharacter{
         super.addNewSkill(SkillRegistry.getSkill("lightning_strike"));
         super.addNewSkill(SkillRegistry.getSkill("force_control"));
         super.setCharacterImage("/resources/Kayden.png");
+        ImageIcon[] animationFrames = new ImageIcon[3];
+        animationFrames[0] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/lightning1.png"))).getImage());
+        animationFrames[1] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/lightning2.png"))).getImage());
+        animationFrames[2] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/lightning3.png"))).getImage());
+
+        for(Skill skill : this.getSkills()){
+            skill.setAnimationFrames(animationFrames);
+        }
     }
 
     public Kayden(){
