@@ -25,11 +25,7 @@ public class Aero extends GameCharacter{
     }
 
     public Aero(){
-        super("Aero", 100, 100, 20, 10);
-        super.addNewSkill(SkillRegistry.getSkill("zephyr_splash"));
-        super.addNewSkill(SkillRegistry.getSkill("cyclone_fury"));
-        super.addNewSkill(SkillRegistry.getSkill("aether_guard"));
-        super.setCharacterImage("/resources/Aero.png");
+        this(100, 100, 20, 10);
     }
 
     @Override
