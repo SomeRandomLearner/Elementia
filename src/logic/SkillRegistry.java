@@ -22,7 +22,7 @@ public class SkillRegistry {
         // Aero's Skills
         registerSkill(new Skill("zephyr_splash", "Zephyr Splash", 15, 15, 45, 0));
         registerSkill(new Skill("cyclone_fury", "Cyclone Fury", 80, 70, 119, 2));
-        registerSkill(new Skill("aether_guard", "Aether Guard", -60, 0, 0, 3)); // restores mana only;
+        registerSkill(new Skill("aether_guard", "Aether Guard", -60, 0, 0, 2)); // restores mana only;
 
         // Psalm's Skills (Fire)
         registerSkill(new Skill("rapid_punch", "Rapid Punch", 10, 45, 65, 0));
@@ -35,22 +35,22 @@ public class SkillRegistry {
         registerSkill(new Skill("hardening_punch", "Hardening Punch", 80, 100, 110, 3));
 
         // Kangel's Skills
-        registerSkill(new Skill("blood_bind", "Blood Bind", 20, 15, 25, 0));
+        registerSkill(new Skill("blood_bind", "Blood Bind", 0, 15, 45, 0));
         registerSkill(new Skill("crimson_spear", "Crimson Spear", 30, 30, 70, 2));
         registerSkill(new Skill("life_drain", "Life Drain", 70, 100, 150, 5));
 
         // Maelor's Skills
-        registerSkill(new Skill("magnetic_pull", "Magnetic Pull", 0, 20, 30, 0));
+        registerSkill(new Skill("magnetic_pull", "Magnetic Pull", 0, 20, 35, 0));
         registerSkill(new Skill("repulse_field", "Repulse Field", 10, 60, 80, 2));
         registerSkill(new Skill("iron_storm", "Iron Storm", 55, 10, 200, 3));
 
         // Kaelis' Skills
-        registerSkill(new Skill("wolf_call", "Wolf Call", 20, 20, 30, 0));
+        registerSkill(new Skill("wolf_call", "Wolf Call", 0, 20, 30, 0));
         registerSkill(new Skill("hawk_sight", "Hawk Sight", 15, 10, 50, 2));
         registerSkill(new Skill("beast_surge", "Beast Surge", 70, 80, 120, 4));
 
         // Veyrion's Skills (Shadow)
-        registerSkill(new Skill("shadow_step", "Shadow Step", 15, 10, 50, 0));
+        registerSkill(new Skill("shadow_step", "Shadow Step", 0, 10, 50, 0));
         registerSkill(new Skill("dark_grasp", "Dark Grasp", 30, 25, 70, 2));
         registerSkill(new Skill("night_veil", "Night Veil", 55, 35, 110, 5));
     }
