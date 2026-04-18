@@ -32,4 +32,8 @@ public class Kayden extends GameCharacter{
     public GameCharacter clone(){
         return new Kayden(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
     }
+    @Override
+    public String getImagePath(){
+        return "/resources/Kayden.png";
+    }
 }

@@ -31,5 +31,8 @@ public class Ripper extends GameCharacter{
     public GameCharacter clone(){
         return new Ripper(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
     }
-
+    @Override
+    public String getImagePath(){
+        return "/resources/Ripper.png";
+    }
 }

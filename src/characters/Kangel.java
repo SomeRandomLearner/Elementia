@@ -31,4 +31,8 @@ public class Kangel extends GameCharacter {
     public GameCharacter clone() {
         return new Kangel(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
     }
+    @Override
+    public String getImagePath(){
+        return "/resources/Kangel.png";
+    }
 }

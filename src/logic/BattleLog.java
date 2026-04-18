@@ -14,7 +14,7 @@ public class BattleLog extends JPanel {
         setBackground(new Color(20, 20, 30));
         setBorder(BorderFactory.createLineBorder(new Color(100, 100, 120), 2));
 
-        JLabel titleLabel = new JLabel(" Battle Log");
+        JLabel titleLabel = new JLabel("Battle Log");
         titleLabel.setForeground(new Color(150, 150, 200));
         titleLabel.setFont(new Font("Arial", Font.BOLD, 12));
         titleLabel.setBackground(new Color(40, 40, 50));

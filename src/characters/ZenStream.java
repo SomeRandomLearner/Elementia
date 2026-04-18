@@ -30,5 +30,9 @@ public class ZenStream extends GameCharacter{
     public GameCharacter clone(){
         return new ZenStream(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
     }
+    @Override
+    public String getImagePath(){
+        return "/resources/ZenStream.png";
+    }
 
 }

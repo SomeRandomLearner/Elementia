@@ -14,16 +14,6 @@ import java.util.Objects;
 public class PVPCharacterSelectScene extends JPanel {
     private Font normalFont = new Font("Times New Roman", Font.PLAIN, 30);
 
-    private ImageIcon aeroImgIcon;
-    private ImageIcon kaelisImgIcon;
-    private ImageIcon kangelImgIcon;
-    private ImageIcon kaydenImgIcon;
-    private ImageIcon psalmImgIcon;
-    private ImageIcon maelorImgIcon;
-    private ImageIcon ripperImgIcon;
-    private ImageIcon veyrionImgIcon;
-    private ImageIcon zenStreamImgIcon;
-
     private GameCharacter player1ChosenCharacter;
     private GameCharacter player2ChosenCharacter;
     
@@ -34,24 +24,13 @@ public class PVPCharacterSelectScene extends JPanel {
 
     public PVPCharacterSelectScene(Elementia frame){
         setLayout(new GridBagLayout());
-        setBackground(Color.BLACK);
+        setBackground(Color.WHITE);
 
         GridBagConstraints gbc = new GridBagConstraints();
 
         characterSelectLabel = new JLabel("Player 1 Choose a Character");
         characterSelectLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
-        characterSelectLabel.setForeground(Color.WHITE);
-
-        aeroImgIcon = getCharacterImageIcon("/resources/Aero.png");
-        kaelisImgIcon = getCharacterImageIcon("/resources/Kaelis.png");
-        kangelImgIcon = getCharacterImageIcon("/resources/Kangel.png");
-        kaydenImgIcon = getCharacterImageIcon("/resources/Kayden.png");
-        maelorImgIcon = getCharacterImageIcon("/resources/Maelor.png");
-        psalmImgIcon = getCharacterImageIcon("/resources/Psalm.png");
-        ripperImgIcon = getCharacterImageIcon("/resources/Ripper.png");
-        veyrionImgIcon = getCharacterImageIcon("/resources/Veyrion.png");
-        zenStreamImgIcon = getCharacterImageIcon("/resources/ZenStream.png");
-
+        characterSelectLabel.setForeground(Color.BLACK);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -61,7 +40,8 @@ public class PVPCharacterSelectScene extends JPanel {
 
         confirmButton = createStyledButton("Confirm");
         confirmButton.addActionListener(e -> {
-            BattleLogic battleLogic = new BattleLogic();
+            boolean isPVP = true;
+            BattleLogic battleLogic = new BattleLogic(isPVP);
 
             battleLogic.resetCharacterChoices();
             battleLogic.addToTeam(1, player1ChosenCharacter);
@@ -72,29 +52,18 @@ public class PVPCharacterSelectScene extends JPanel {
         });
         confirmButton.setEnabled(false);
 
-
-        JLabel aeroImgLabel = getImgLabel(GameCharacter.Character.AERO, aeroImgIcon);
-        JLabel kaelisImgLabel = getImgLabel(GameCharacter.Character.KAELIS, kaelisImgIcon);
-        JLabel kangelImgLabel = getImgLabel(GameCharacter.Character.KANGEL, kangelImgIcon);
-        JLabel kaydenImgLabel = getImgLabel(GameCharacter.Character.KAYDEN, kaydenImgIcon);
-        JLabel maelorImgLabel = getImgLabel(GameCharacter.Character.MAELOR, maelorImgIcon);
-        JLabel psalmImgLabel = getImgLabel(GameCharacter.Character.PSALM, psalmImgIcon);
-        JLabel ripperImgLabel = getImgLabel(GameCharacter.Character.RIPPER, ripperImgIcon);
-        JLabel veyrionImgLabel = getImgLabel(GameCharacter.Character.VEYRION, veyrionImgIcon);
-        JLabel zenStreamImgLabel = getImgLabel(GameCharacter.Character.ZENSTREAM, zenStreamImgIcon);
+        GameCharacter[] characters = {
+                new Aero(), new Kaelis(), new Kangel(),
+                new Kayden(), new Maelor(), new Psalm(),
+                new Ripper(), new Veyrion(), new ZenStream()
+        };
 
         JPanel wrapperPanel = new JPanel(new GridLayout(3,3));
+        wrapperPanel.setOpaque(false);
 
-        wrapperPanel.add(aeroImgLabel);
-        wrapperPanel.add(kaelisImgLabel);
-        wrapperPanel.add(kangelImgLabel);
-        wrapperPanel.add(kaydenImgLabel);
-        wrapperPanel.add(maelorImgLabel);
-        wrapperPanel.add(psalmImgLabel);
-        wrapperPanel.add(ripperImgLabel);
-        wrapperPanel.add(veyrionImgLabel);
-        wrapperPanel.add(zenStreamImgLabel);
-
+        for(GameCharacter character : characters){
+            wrapperPanel.add(createClickableCharacterPanel(character));
+        }
 
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -116,35 +85,29 @@ public class PVPCharacterSelectScene extends JPanel {
     }
 
 
-    private JLabel getImgLabel(GameCharacter.Character characterName, ImageIcon imgIcon) {
-        JLabel imgLabel = new JLabel(imgIcon);
-        imgLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
-        imgLabel.setForeground(Color.WHITE);
-        final GameCharacter chosenCharacter = switch (characterName){
-            case AERO -> new Aero();
-            case KAELIS -> new Kaelis();
-            case KANGEL -> new Kangel();
-            case KAYDEN -> new Kayden();
-            case MAELOR -> new Maelor();
-            case PSALM -> new Psalm();
-            case RIPPER -> new Ripper();
-            case VEYRION -> new Veyrion( );
-            case ZENSTREAM -> new ZenStream();
-            default -> null;
-        };
-        imgLabel.addMouseListener(new MouseAdapter(){
+    private ImageIcon getCharacterImageIcon(String path){
+        return new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource(path))).getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
+    }
+
+    private JPanel createClickableCharacterPanel(GameCharacter character){
+        JPanel newCharacterPanel = new JPanel(new BorderLayout());
+        newCharacterPanel.add(new JLabel(getCharacterImageIcon(character.getImagePath())), BorderLayout.CENTER);
+        newCharacterPanel.add(new JLabel(character.getName()), BorderLayout.SOUTH);
+        newCharacterPanel.setOpaque(false);
+
+        newCharacterPanel.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e){
                 if(!player1HasChosen[0]){
                     player1HasChosen[0] = true;
-                    player1ChosenCharacter = chosenCharacter;
+                    player1ChosenCharacter = character;
                     characterSelectLabel.setText("Player 2 Choose a Character");
                 }
                 else {
                     player2HasChosen[0] = true;
-                    player2ChosenCharacter = chosenCharacter;
+                    player2ChosenCharacter = character;
                     if(player1ChosenCharacter == player2ChosenCharacter) { // resolves duplicate character problems
-                        player2ChosenCharacter = chosenCharacter.clone();
+                        player2ChosenCharacter = character.clone();
                         player2ChosenCharacter.removeAllSkills();
                         for(Skill skill : player1ChosenCharacter.getSkills()){
                             player2ChosenCharacter.addNewSkill(skill.clone());
@@ -155,13 +118,7 @@ public class PVPCharacterSelectScene extends JPanel {
                 }
             }
         });
-        imgLabel.setPreferredSize(new Dimension(180,180));
-        return imgLabel;
-    }
-
-
-    private ImageIcon getCharacterImageIcon(String path){
-        return new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource(path))).getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH));
+        return newCharacterPanel;
     }
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
@@ -171,6 +128,4 @@ public class PVPCharacterSelectScene extends JPanel {
         button.setFocusPainted(false);
         return button;
     }
-
-
 }

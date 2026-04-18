@@ -30,4 +30,8 @@ public class Maelor extends GameCharacter{
     public GameCharacter clone(){
         return new Maelor(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
     }
+    @Override
+    public String getImagePath(){
+        return "/resources/Maelor.png";
+    }
 }

@@ -31,4 +31,8 @@ public class Kaelis extends GameCharacter{
     public GameCharacter clone(){
         return new Kaelis(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
     }
+    @Override
+    public String getImagePath(){
+        return "/resources/Kaelis.png";
+    }
 }

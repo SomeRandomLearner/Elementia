@@ -29,4 +29,8 @@ public class Psalm extends GameCharacter{
     public GameCharacter clone(){
         return new Psalm(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
     }
+    @Override
+    public String getImagePath(){
+        return "/resources/Psalm.png";
+    }
 }

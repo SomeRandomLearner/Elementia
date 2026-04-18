@@ -30,4 +30,8 @@ public class Veyrion extends GameCharacter{
     public GameCharacter clone(){
         return new Veyrion(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
     }
+    @Override
+    public String getImagePath(){
+        return "/resources/Veyrion.png";
+    }
 }

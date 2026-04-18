@@ -33,5 +33,8 @@ public class Aero extends GameCharacter{
         return new Aero();
     }
 
-
+    @Override
+    public String getImagePath(){
+        return "/resources/Aero.png";
+    }
 }

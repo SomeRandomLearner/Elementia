@@ -199,6 +199,8 @@ public abstract class GameCharacter {
         setCurrentMana(Math.min(currentMana + manaRecovery, maxMana));
     }
 
+    public abstract String getImagePath();
+
     public void setCharacterImage(BufferedImage characterImage) {
         this.characterImage = characterImage;
     }
