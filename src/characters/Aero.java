@@ -14,6 +14,7 @@ public class Aero extends GameCharacter{
         super.addNewSkill(SkillRegistry.getSkill("cyclone_fury"));
         super.addNewSkill(SkillRegistry.getSkill("aether_guard"));
         super.setCharacterImage("/resources/Aero.png");
+        this.element = "Wind";
         ImageIcon[] animationFrames = new ImageIcon[3];
         animationFrames[0] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/air1.png"))).getImage());
         animationFrames[1] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/air2.png"))).getImage());

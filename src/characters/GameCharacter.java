@@ -12,6 +12,8 @@ import java.util.Random;
 
 public abstract class GameCharacter {
     private String name;
+    protected String element;
+    protected String imagePath;
     private int currentHealth;
     private int maxHealth;
     private int currentMana;
@@ -40,6 +42,17 @@ public abstract class GameCharacter {
     }
 
 
+    public String getName() {
+        return name;
+    }
+
+    public String getElement() {
+        return element;
+    }
+
+    public int getCurrentHP() {
+        return currentHealth;
+    }
     public boolean useSkill(Skill skill, GameCharacter target) {
         boolean skillCasted = false;
         if (skill == null || target == null) return false;
@@ -135,17 +148,11 @@ public abstract class GameCharacter {
         return this.characterImage;
     }
 
-    public String getName() {
-        return name;
-    }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public int getCurrentHP() {
-        return currentHealth;
-    }
 
     public void setCurrentHP(int currentHealth) { this.currentHealth = currentHealth; }
 
@@ -199,7 +206,9 @@ public abstract class GameCharacter {
         setCurrentMana(Math.min(currentMana + manaRecovery, maxMana));
     }
 
-    public abstract String getImagePath();
+    public String getImagePath() {
+        return imagePath;
+    }
 
     public void setCharacterImage(BufferedImage characterImage) {
         this.characterImage = characterImage;

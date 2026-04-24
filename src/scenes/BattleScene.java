@@ -41,7 +41,7 @@ public class BattleScene extends JPanel {
         setLayout(new BorderLayout());
         levelSelect = frame.getLevelSelect();
         levelNumber = levelSelect.getSelectedLevel();
-        int levelBackgroundNumber = levelNumber % 6; // only 5 available backgrounds
+        int levelBackgroundNumber = levelNumber % 6;
         if(levelNumber > 5) levelBackgroundNumber++;
 
         try {

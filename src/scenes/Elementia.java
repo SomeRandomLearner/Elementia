@@ -10,7 +10,7 @@ public class Elementia extends JFrame{
     private ModeSelectScene modeSelect;
 
     // Arcade Mode
-    private CharacterSelectScene characterSelect;
+    private ArcadeCharacterSelectScene characterSelect;
     private LevelSelectScene levelSelect;
     private BattleScene battle;
 
@@ -20,14 +20,14 @@ public class Elementia extends JFrame{
     private PVPBattleScene pvpBattle;
 
     public Elementia() {
-        setTitle("Elementia");
+        setTitle("ELEMENTIA");
         setSize(1000, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         mainMenu = new MainMenuScene(this);
         modeSelect = new ModeSelectScene(this);
-        characterSelect = new CharacterSelectScene(this);
+        characterSelect = new ArcadeCharacterSelectScene(this);
         levelSelect = new LevelSelectScene(this);
         battle = new BattleScene(this);
         pvpCharacterSelect = new PVPCharacterSelectScene(this);
@@ -53,8 +53,6 @@ public class Elementia extends JFrame{
     public void showScreen(String name) {
         layout.show(container, name);
     }
-
-    public void addCharacterDisplayScene(CharacterInfo ChInfo){ container.add(new CharacterDisplayScene(this, ChInfo), "CharacterDisplay"); }
 
     public void addBattleScene(){
         container.add(new BattleScene(this), "Battle");
