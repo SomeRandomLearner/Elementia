@@ -1,4 +1,6 @@
 package scenes;
+import logic.CharacterInfo;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -20,8 +22,9 @@ public class Elementia extends JFrame{
     private PVPBattleScene pvpBattle;
 
     public Elementia() {
+        int width =  1200, height = 800;
         setTitle("ELEMENTIA");
-        setSize(1000, 800);
+        setMinimumSize(new Dimension(width, height));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
