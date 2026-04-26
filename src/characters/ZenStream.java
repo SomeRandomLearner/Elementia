@@ -9,10 +9,12 @@ import java.util.Objects;
 public class ZenStream extends GameCharacter{
     public ZenStream(int maxHealth, int maxMana, int defense, int manaRecovery) {
         super("ZenStream", maxHealth, maxMana, defense, manaRecovery);
-        super.addNewSkill(SkillRegistry.getSkill("sling_water"));
-        super.addNewSkill(SkillRegistry.getSkill("liquify"));
-        super.addNewSkill(SkillRegistry.getSkill("water_takeover"));
-        super.setCharacterImage("/resources/ZenStream.png");
+        addNewSkill(SkillRegistry.getSkill("sling_water"));
+        addNewSkill(SkillRegistry.getSkill("liquify"));
+        addNewSkill(SkillRegistry.getSkill("water_takeover"));
+        setCharacterImage("/resources/ZenStream.png");
+        this.element = "Water";
+
         ImageIcon[] animationFrames = new ImageIcon[3];
         animationFrames[0] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/water1.png"))).getImage());
         animationFrames[1] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/water2.png"))).getImage());

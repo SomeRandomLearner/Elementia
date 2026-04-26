@@ -9,10 +9,12 @@ import java.util.Objects;
 public class Kaelis extends GameCharacter{
     public Kaelis(int maxHealth, int maxMana, int defense, int manaRecovery) {
         super("Kaelis", maxHealth, maxMana, defense, manaRecovery);
-        super.addNewSkill(SkillRegistry.getSkill("wolf_call"));
-        super.addNewSkill(SkillRegistry.getSkill("hawk_sight"));
-        super.addNewSkill(SkillRegistry.getSkill("beast_surge"));
-        super.setCharacterImage("/resources/Kaelis.png");
+        addNewSkill(SkillRegistry.getSkill("wolf_call"));
+        addNewSkill(SkillRegistry.getSkill("hawk_sight"));
+        addNewSkill(SkillRegistry.getSkill("beast_surge"));
+        setCharacterImage("/resources/Kaelis.png");
+        this.element = "Beast";
+
         ImageIcon[] animationFrames = new ImageIcon[3];
         animationFrames[0] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/beast1.png"))).getImage());
         animationFrames[1] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/beast2.png"))).getImage());

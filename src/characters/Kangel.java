@@ -9,10 +9,12 @@ import java.util.Objects;
 public class Kangel extends GameCharacter {
     public Kangel(int maxHealth, int maxMana, int defense, int manaRecovery) {
         super("Kangel", maxHealth, maxMana, defense, manaRecovery);
-        super.addNewSkill(SkillRegistry.getSkill("blood_bind"));
-        super.addNewSkill(SkillRegistry.getSkill("crimson_spear"));
-        super.addNewSkill(SkillRegistry.getSkill("life_drain"));
-        super.setCharacterImage("/resources/Kangel.png");
+        addNewSkill(SkillRegistry.getSkill("blood_bind"));
+        addNewSkill(SkillRegistry.getSkill("crimson_spear"));
+        addNewSkill(SkillRegistry.getSkill("life_drain"));
+        setCharacterImage("/resources/Kangel.png");
+        this.element = "Blood";
+
         ImageIcon[] animationFrames = new ImageIcon[3];
         animationFrames[0] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/blood1.png"))).getImage());
         animationFrames[1] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/blood2.png"))).getImage());

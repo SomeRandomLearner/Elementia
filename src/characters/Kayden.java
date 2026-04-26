@@ -10,10 +10,12 @@ public class Kayden extends GameCharacter{
 
     public Kayden(int maxHealth, int maxMana, int defense, int manaRecovery) {
         super("Kayden", maxHealth, maxMana, defense, manaRecovery);
-        super.addNewSkill(SkillRegistry.getSkill("super_speed"));
-        super.addNewSkill(SkillRegistry.getSkill("lightning_strike"));
-        super.addNewSkill(SkillRegistry.getSkill("force_control"));
-        super.setCharacterImage("/resources/Kayden.png");
+        addNewSkill(SkillRegistry.getSkill("super_speed"));
+        addNewSkill(SkillRegistry.getSkill("lightning_strike"));
+        addNewSkill(SkillRegistry.getSkill("force_control"));
+        setCharacterImage("/resources/Kayden.png");
+        this.element = "Lightning";
+
         ImageIcon[] animationFrames = new ImageIcon[3];
         animationFrames[0] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/lightning1.png"))).getImage());
         animationFrames[1] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/lightning2.png"))).getImage());

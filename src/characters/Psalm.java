@@ -9,9 +9,11 @@ import java.util.Objects;
 public class Psalm extends GameCharacter{
     public Psalm(int maxHealth, int maxMana, int defense, int manaRecovery) {
         super("Psalm", maxHealth, maxMana, defense, manaRecovery);
-        super.addNewSkill(SkillRegistry.getSkill("rapid_punch"));
-        super.addNewSkill(SkillRegistry.getSkill("healing_fan"));
-        super.addNewSkill(SkillRegistry.getSkill("fire_kick"));
+        addNewSkill(SkillRegistry.getSkill("rapid_punch"));
+        addNewSkill(SkillRegistry.getSkill("healing_fan"));
+        addNewSkill(SkillRegistry.getSkill("fire_kick"));
+        this.element = "Fire";
+
         ImageIcon[] animationFrames = new ImageIcon[3];
         animationFrames[0] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/fire1.png"))).getImage());
         animationFrames[1] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/fire2.png"))).getImage());

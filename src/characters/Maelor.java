@@ -9,10 +9,12 @@ import java.util.Objects;
 public class Maelor extends GameCharacter{
     public Maelor(int maxHealth, int maxMana, int defense, int manaRecovery) {
         super("Maelor", maxHealth, maxMana, defense, manaRecovery);
-        super.addNewSkill(SkillRegistry.getSkill("magnetic_pull"));
-        super.addNewSkill(SkillRegistry.getSkill("repulse_field"));
-        super.addNewSkill(SkillRegistry.getSkill("iron_storm"));
-        super.setCharacterImage("/resources/Maelor.png");
+        addNewSkill(SkillRegistry.getSkill("magnetic_pull"));
+        addNewSkill(SkillRegistry.getSkill("repulse_field"));
+        addNewSkill(SkillRegistry.getSkill("iron_storm"));
+        setCharacterImage("/resources/Maelor.png");
+        this.element = "Magnetism";
+
         ImageIcon[] animationFrames = new ImageIcon[3];
         animationFrames[0] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/magnet1.png"))).getImage());
         animationFrames[1] = new ImageIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/effects/magnet2.png"))).getImage());
