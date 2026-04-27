@@ -1,6 +1,8 @@
 package scenes;
 
 
+import logic.SoundPlayer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -22,6 +24,7 @@ public class MainMenuScene extends JPanel {
         backgroundLabel = new JLabel(new ImageIcon(originalBackground.getScaledInstance(width, height, Image.SCALE_SMOOTH)));
         backgroundLabel.setBounds(0, 0, width, height);
 
+        SoundPlayer.playSound("/resources/sounds/bg_music.wav", true);
 
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setBounds(0, 0, width, height);
@@ -106,7 +109,8 @@ public class MainMenuScene extends JPanel {
                 "Maria Mie Cadungog\n" +
                 "Psalmist Mae Guiroy\n" +
                 "Vince Jayson\n\n\n" +
-                "Basic Attack Sound by freesound_CrunchpixStudio");
+                "Basic Attack Sound by freesound_CrunchpixStudio" +
+                "Background Music by RoyaltyFreeMusicStudio");
         return creditsTextArea;
     }
 
