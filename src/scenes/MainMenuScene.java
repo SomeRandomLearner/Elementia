@@ -97,7 +97,16 @@ public class MainMenuScene extends JPanel {
         creditsTextArea.setLineWrap(true);
         creditsTextArea.setWrapStyleWord(true);
         creditsTextArea.setMargin(new Insets(5, 5, 5, 5));
-        creditsTextArea.setText("This game is non-commercial and for educational purposes only\nContributors:\nJoshua Raagas\nKaizen Gabriel Guiroy\nKangel Hermosilla\nMaria Mie Cadungog\nPsalmist Mae Guiroy\nVince Jayson\n\n\nBasic Attack Sound by freesound_CrunchpixStudio");
+        creditsTextArea.setText(
+                "This game is non-commercial and for educational purposes only\n" +
+                "Contributors:\n" +
+                "Joshua Raagas\n" +
+                "Kaizen Gabriel Guiroy\n" +
+                "Kangel Hermosilla\n" +
+                "Maria Mie Cadungog\n" +
+                "Psalmist Mae Guiroy\n" +
+                "Vince Jayson\n\n\n" +
+                "Basic Attack Sound by freesound_CrunchpixStudio");
         return creditsTextArea;
     }
 
