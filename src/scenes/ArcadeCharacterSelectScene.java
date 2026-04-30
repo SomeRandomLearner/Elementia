@@ -1,6 +1,7 @@
 package scenes;
 
 import characters.*;
+import utils.Utility;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,9 +10,6 @@ import java.awt.event.MouseEvent;
 import java.util.Objects;
 
 public class ArcadeCharacterSelectScene extends JPanel {
-
-    private Font normalFont = new Font("Times New Roman", Font.PLAIN, 30);
-
     private final ImageIcon aeroImgIcon;
     private final ImageIcon kaelisImgIcon;
     private final ImageIcon kangelImgIcon;
@@ -124,7 +122,7 @@ public class ArcadeCharacterSelectScene extends JPanel {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setOpaque(false);
 
-        confirmButton = createStyledButton("Confirm");
+        confirmButton = Utility.createButton("Confirm");
         confirmButton.setEnabled(false);
 
         confirmButton.addActionListener(e -> {
@@ -133,7 +131,7 @@ public class ArcadeCharacterSelectScene extends JPanel {
             frame.showScreen("LevelSelect");
         });
 
-        JButton backBtn = createStyledButton("Return to Main Menu");
+        JButton backBtn = Utility.createButton("Return to Main Menu");
         backBtn.addActionListener(e -> frame.showScreen("MainMenu"));
 
         bottomPanel.add(confirmButton);
@@ -243,15 +241,6 @@ public class ArcadeCharacterSelectScene extends JPanel {
                         Objects.requireNonNull(getClass().getResource(path))
                 ).getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH)
         );
-    }
-
-    private JButton createStyledButton(String text) {
-        JButton button = new JButton(text);
-        button.setBackground(Color.BLACK);
-        button.setForeground(Color.WHITE);
-        button.setFont(normalFont);
-        button.setFocusPainted(false);
-        return button;
     }
 
     @Override

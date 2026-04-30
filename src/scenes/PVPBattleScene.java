@@ -6,7 +6,7 @@ import logic.Skill;
 import logic.BattleEventListener;
 import logic.BattleLogic;
 import logic.TurnResult;
-import logic.Utility;
+import utils.Utility;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

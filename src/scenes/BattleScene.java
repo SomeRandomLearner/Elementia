@@ -3,7 +3,7 @@ package scenes;
 import characters.*;
 import logic.BattleLog;
 import logic.Skill;
-import logic.Utility;
+import utils.Utility;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

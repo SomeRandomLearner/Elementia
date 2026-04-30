@@ -1,5 +1,7 @@
 package scenes;
 
+import utils.Utility;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -11,7 +13,6 @@ public class PVPStageSelectScene extends JPanel {
 
     private Image originalBackground;
     private final JButton confirmButton;
-    private final Font normalFont = new Font("Times New Roman", Font.PLAIN, 30);
     private int choice;
 
     public PVPStageSelectScene(Elementia frame) {
@@ -66,7 +67,7 @@ public class PVPStageSelectScene extends JPanel {
         gbc.gridy = 1;
         add(wrapperPanel, gbc);
 
-        confirmButton = createStyledButton("Confirm");
+        confirmButton = Utility.createButton("Confirm");
         confirmButton.setEnabled(false);
 
         confirmButton.addActionListener(e -> {
@@ -78,7 +79,7 @@ public class PVPStageSelectScene extends JPanel {
         gbc.gridy = 2;
         add(confirmButton, gbc);
 
-        JButton backBtn = createStyledButton("Go Back");
+        JButton backBtn = Utility.createButton("Go Back");
         backBtn.addActionListener(e -> frame.showScreen("PVPCharacterSelect"));
 
         gbc.gridy = 3;
@@ -93,14 +94,5 @@ public class PVPStageSelectScene extends JPanel {
         if (originalBackground != null) {
             g.drawImage(originalBackground, 0, 0, getWidth(), getHeight(), this);
         }
-    }
-
-    private JButton createStyledButton(String text) {
-        JButton button = new JButton(text);
-        button.setBackground(Color.BLACK);
-        button.setForeground(Color.WHITE);
-        button.setFont(normalFont);
-        button.setFocusPainted(false);
-        return button;
     }
 }

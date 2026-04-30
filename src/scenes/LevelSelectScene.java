@@ -3,15 +3,10 @@ package scenes;
 import characters.*;
 import characters.Teams;
 import characters.ZenStream;
-import logic.Utility;
+import utils.Utility;
 
 import javax.swing.*;
 
-import characters.*;
-import characters.Teams;
-import logic.Utility;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +14,6 @@ import java.util.Random;
 import java.util.Objects;
 
 public class LevelSelectScene extends JPanel{
-
     private int selectedLevel = 1;
     private int completedLevels = 0;
 

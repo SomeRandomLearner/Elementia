@@ -2,6 +2,7 @@ package scenes;
 
 
 import logic.SoundPlayer;
+import utils.Utility;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,10 +10,8 @@ import java.awt.event.*;
 import java.net.URL;
 
 public class MainMenuScene extends JPanel {
-    Container con;
     JPanel titleNamePanel, buttonPanel, creditsPanel;
     JLabel titleNameLabel, backgroundLabel;
-    Font normalFont = new Font("Times New Roman", Font.PLAIN, 30);
     JButton startButton, exitButton, creditsButton;
     Image originalBackground;
     int width = 620, height = 1000;
@@ -53,7 +52,7 @@ public class MainMenuScene extends JPanel {
         creditsTextArea.setAlignmentX(Component.CENTER_ALIGNMENT);
         creditsPanel.add(creditsTextArea);
 
-        JButton closeButton = createStyledButton("Return");
+        JButton closeButton = Utility.createButton("Return");
         closeButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 
@@ -61,13 +60,13 @@ public class MainMenuScene extends JPanel {
         creditsPanel.setVisible(false);
         creditsPanel.add(closeButton);
 
-        startButton = createStyledButton("START");
+        startButton = Utility.createButton("START");
         startButton.addActionListener(e -> frame.showScreen("ModeSelect"));
 
-        creditsButton = createStyledButton("CREDITS");
+        creditsButton = Utility.createButton("CREDITS");
         creditsButton.addActionListener(e -> creditsPanel.setVisible(true));
 
-        exitButton = createStyledButton("EXIT");
+        exitButton = Utility.createButton("EXIT");
         exitButton.addActionListener(e -> System.exit(0));
 
         buttonPanel.add(startButton);
@@ -137,14 +136,4 @@ public class MainMenuScene extends JPanel {
         frame.revalidate();
         frame.repaint();
     }
-
-    private JButton createStyledButton(String text) {
-        JButton button = new JButton(text);
-        button.setBackground(Color.BLACK);
-        button.setForeground(Color.WHITE);
-        button.setFont(normalFont);
-        button.setFocusPainted(false);
-        return button;
-    }
-
 }

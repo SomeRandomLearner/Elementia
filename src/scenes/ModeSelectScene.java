@@ -1,15 +1,14 @@
 package scenes;
 
+import utils.Utility;
+
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 import java.util.Objects;
 
 public class ModeSelectScene extends JPanel {
-
     private Image backgroundImage;
-    private Font normalFont = new Font("Times New Roman", Font.PLAIN, 30);
-
     public ModeSelectScene(Elementia frame) {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -27,10 +26,10 @@ public class ModeSelectScene extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 0));
         buttonPanel.setOpaque(false);
 
-        JButton arcadeButton = createStyledButton("Arcade");
+        JButton arcadeButton = Utility.createButton("Arcade");
         arcadeButton.addActionListener(e -> frame.showScreen("CharacterSelect"));
 
-        JButton pvpButton = createStyledButton("Player vs Player");
+        JButton pvpButton = Utility.createButton("Player vs Player");
         pvpButton.addActionListener(e -> frame.showScreen("PVPCharacterSelect"));
 
         buttonPanel.add(arcadeButton);
@@ -49,14 +48,5 @@ public class ModeSelectScene extends JPanel {
         if (backgroundImage != null) {
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
-    }
-
-    private JButton createStyledButton(String text) {
-        JButton button = new JButton(text);
-        button.setBackground(Color.BLACK);
-        button.setForeground(Color.WHITE);
-        button.setFont(normalFont);
-        button.setFocusPainted(false);
-        return button;
     }
 }

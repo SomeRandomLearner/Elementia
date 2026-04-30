@@ -2,6 +2,7 @@ package scenes;
 
 import characters.*;
 import logic.BattleLogic;
+import utils.Utility;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,7 +77,7 @@ public class PVPCharacterSelectScene extends JPanel {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setOpaque(false);
 
-        confirmButton = createStyledButton("Confirm");
+        confirmButton = Utility.createButton("Confirm");
         confirmButton.setEnabled(false);
 
         confirmButton.addActionListener(e -> {
@@ -91,7 +92,7 @@ public class PVPCharacterSelectScene extends JPanel {
             frame.showScreen("PVPStageSelect");
         });
 
-        JButton backBtn = createStyledButton("Return to Main Menu");
+        JButton backBtn = Utility.createButton("Return to Main Menu");
         backBtn.addActionListener(e -> frame.showScreen("MainMenu"));
 
         bottomPanel.add(confirmButton);
@@ -324,16 +325,6 @@ public class PVPCharacterSelectScene extends JPanel {
                         Objects.requireNonNull(getClass().getResource(path))
                 ).getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH)
         );
-    }
-
-
-    private JButton createStyledButton(String text) {
-        JButton button = new JButton(text);
-        button.setBackground(Color.BLACK);
-        button.setForeground(Color.WHITE);
-        button.setFont(normalFont);
-        button.setFocusPainted(false);
-        return button;
     }
 
     @Override

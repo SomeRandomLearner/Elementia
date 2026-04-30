@@ -1,4 +1,4 @@
-package logic;
+package utils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,16 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Utility {
-    public static JPanel createScene(String text, Color bg) {
-        JPanel panel = new JPanel(new BorderLayout());
-        JLabel label = new JLabel(text, SwingConstants.CENTER);
-        label.setForeground(Color.WHITE);
-        label.setFont(new Font("Arial", Font.BOLD, 28));
-        panel.setBackground(bg);
-        panel.add(label, BorderLayout.CENTER);
-        return panel;
-    }
-
+    private static final Font normalFont = new Font("Times New Roman", Font.PLAIN, 30);
     public static JButton createButton(String text) {
         JButton btn = new JButton(text);
         btn.setFocusPainted(false);
@@ -23,8 +14,8 @@ public class Utility {
         btn.setContentAreaFilled(true);
         btn.setForeground(Color.WHITE);
         btn.setBackground(Color.BLACK);
-        btn.setFont(btn.getFont().deriveFont(Font.BOLD, 16f));
-        btn.setPreferredSize(new Dimension(150, 40));
+        btn.setFont(normalFont);
+        btn.setMinimumSize(new Dimension(150, 40));
 
         final Color defaultColor = Color.BLACK;
         final Color hoverColor = new Color(70, 70, 70);
