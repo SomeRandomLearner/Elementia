@@ -1,5 +1,4 @@
 package scenes;
-import logic.CharacterInfo;
 
 import javax.swing.*;
 import java.awt.*;
