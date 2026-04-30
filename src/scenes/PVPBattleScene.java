@@ -24,8 +24,11 @@ public class PVPBattleScene extends JPanel {
     private JPanel topRightPanel;
     private JPanel player1SkillPanel;
     private JPanel player2SkillPanel;
+    private JPanel timerPanel;
+
     private JLabel currentTurnLabel;
     private JLabel winCounterLabel;
+    private JLabel timerLabel;
 
     private Font normalFont = new Font("Times New Roman", Font.PLAIN, 32);
     private ImageIcon bgIcon = null;
@@ -36,7 +39,7 @@ public class PVPBattleScene extends JPanel {
     private int gameWinner;
     private boolean hasGameEnded;
 
-    private final int height = 1000, width = 600;
+    private int timerCount;
     public PVPBattleScene(Elementia frame) {
         bgIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/LevelBackgrounds/Level1Background.png"))); // default background image
         bgImage = bgIcon.getImage();
@@ -45,19 +48,20 @@ public class PVPBattleScene extends JPanel {
         wrapperPanel.setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
         wrapperPanel.setOpaque(false); // must be set to false in order to remove grey background of the panel.
 
+        timerLabel = initTimerLabel();
+
         topPanel = new JPanel(new GridLayout(1,3));
         topPanel.setPreferredSize(new Dimension(0, 60));
         topPanel.setOpaque(false);
         centerPanel = new JPanel(new GridLayout(1,2));
         centerPanel.setOpaque(false);
         bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setPreferredSize(new Dimension(0, 100));
         bottomPanel.setOpaque(false);
 
         topLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 6));
         topLeftPanel.setOpaque(false);
         topCenterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
-        topCenterPanel.setOpaque(false);
+//        topCenterPanel.setOpaque(false);
         topRightPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
         topRightPanel.setOpaque(false);
         JPanel leftWrapperPanel = new JPanel(new GridBagLayout());
@@ -88,7 +92,12 @@ public class PVPBattleScene extends JPanel {
         centerPanel.add(leftWrapperPanel);
         centerPanel.add(rightWrapperPanel);
 
+        timerPanel = new JPanel(new FlowLayout());
+        timerPanel.setOpaque(false);
+        timerPanel.add(timerLabel);
+
         bottomPanel.add(player1SkillPanel, BorderLayout.WEST);
+        bottomPanel.add(timerPanel, BorderLayout.CENTER);
         bottomPanel.add(player2SkillPanel, BorderLayout.EAST);
 
         JButton backBtn = Utility.createButton("Back");
@@ -100,6 +109,7 @@ public class PVPBattleScene extends JPanel {
         currentTurnLabel.setFont(normalFont);
 
         topLeftPanel.add(backBtn);
+        topCenterPanel.setBackground(Color.BLACK);
         topCenterPanel.add(currentTurnLabel);
 
         winCounterLabel = new JLabel("0 / 0"); // starts at zero for now
@@ -116,6 +126,12 @@ public class PVPBattleScene extends JPanel {
 
         add(wrapperPanel);
         repaint();
+    }
+
+    private JLabel initTimerLabel() {
+        JLabel label = new JLabel();
+        label.setFont(normalFont);
+        return label;
     }
 
     @Override
@@ -192,6 +208,23 @@ public class PVPBattleScene extends JPanel {
                 }
                 rightPanel.repaint();
                 leftPanel.repaint();
+
+                timerCount = 4;
+                timerLabel.setText(String.valueOf(timerCount));
+                if(currentPlayerTurn == 1) timerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+                else timerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+                Timer timer = new Timer(1000, e -> {
+                    if(timerCount > 0){
+                        timerCount--;
+                        timerLabel.setText(String.valueOf(timerCount));
+                    }
+                    else{
+                        ((Timer)e.getSource()).stop();
+                        battleLogic.nextTurn();
+                    }
+                });
+                timer.start();
+
             }
 
             @Override

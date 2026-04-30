@@ -11,10 +11,12 @@ import java.net.URL;
 
 public class MainMenuScene extends JPanel {
     JPanel titleNamePanel, buttonPanel, creditsPanel;
-    JLabel titleNameLabel, backgroundLabel;
+    JLabel backgroundLabel;
     JButton startButton, exitButton, creditsButton;
     Image originalBackground;
     int width = 620, height = 1000;
+
+    private int count = 3;
     public MainMenuScene(Elementia frame) {
         URL bgPath = getClass().getResource("/resources/ELEMENTIA.png");
         assert bgPath != null : "Menu Bar not found";
@@ -31,9 +33,6 @@ public class MainMenuScene extends JPanel {
 
         titleNamePanel = new JPanel();
         titleNamePanel.setOpaque(false);
-        titleNameLabel = new JLabel("ELEMENTIA");
-        titleNameLabel.setForeground(Color.WHITE);
-        titleNamePanel.add(titleNameLabel);
         layeredPane.add(titleNamePanel, Integer.valueOf(1));
 
         buttonPanel = new JPanel(new GridLayout(3, 1, 0, 20));

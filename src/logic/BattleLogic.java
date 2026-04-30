@@ -247,4 +247,9 @@ public class BattleLogic {
     public List<GameCharacter> getActivePlayer2Team() {
         return activePlayer2Team;
     }
+
+    public void nextTurn(){
+        currentCharacterTurn++;
+        startTurn();
+    }
 }
