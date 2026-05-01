@@ -24,6 +24,7 @@ public class Elementia extends JFrame{
         int width =  1200, height = 800;
         setTitle("ELEMENTIA");
         setMinimumSize(new Dimension(width, height));
+        setExtendedState(Frame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 

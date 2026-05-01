@@ -39,13 +39,15 @@ public class PVPBattleScene extends JPanel {
     private int gameWinner;
     private boolean hasGameEnded;
 
+    private Timer timer;
     private int timerCount;
     public PVPBattleScene(Elementia frame) {
+        setLayout(new BorderLayout());
+
         bgIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/LevelBackgrounds/Level1Background.png"))); // default background image
         bgImage = bgIcon.getImage();
 
         JPanel wrapperPanel = new JPanel(new BorderLayout());
-        wrapperPanel.setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
         wrapperPanel.setOpaque(false); // must be set to false in order to remove grey background of the panel.
 
         timerLabel = initTimerLabel();
@@ -60,7 +62,7 @@ public class PVPBattleScene extends JPanel {
 
         topLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 6));
         topLeftPanel.setOpaque(false);
-        topCenterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        topCenterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
 //        topCenterPanel.setOpaque(false);
         topRightPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
         topRightPanel.setOpaque(false);
@@ -213,7 +215,13 @@ public class PVPBattleScene extends JPanel {
                 timerLabel.setText(String.valueOf(timerCount));
                 if(currentPlayerTurn == 1) timerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
                 else timerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-                Timer timer = new Timer(1000, e -> {
+
+                timerPanel.revalidate();
+
+                if (timer != null && timer.isRunning()) {
+                    timer.stop();
+                }
+                timer = new Timer(1000, e -> {
                     if(timerCount > 0){
                         timerCount--;
                         timerLabel.setText(String.valueOf(timerCount));
@@ -229,6 +237,9 @@ public class PVPBattleScene extends JPanel {
 
             @Override
             public void onAttackResolved(TurnResult result) {
+                if (timer != null && timer.isRunning()) {
+                    timer.stop();
+                }
                 leftPanel.revalidate();
                 rightPanel.revalidate();
                 leftPanel.repaint();
@@ -269,10 +280,11 @@ public class PVPBattleScene extends JPanel {
                 rematchBtn.addActionListener(e -> {
                     bottomPanel.removeAll();
                     bottomPanel.add(player1SkillPanel, BorderLayout.WEST);
+                    bottomPanel.add(timerPanel, BorderLayout.CENTER);
                     bottomPanel.add(player2SkillPanel, BorderLayout.EAST);
 
-                    centerPanel.revalidate();
-                    centerPanel.repaint();
+                    bottomPanel.revalidate();
+                    bottomPanel.repaint();
                     hasGameEnded = false;
                     startGame();
                 });
