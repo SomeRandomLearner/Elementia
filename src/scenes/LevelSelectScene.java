@@ -3,6 +3,7 @@ package scenes;
 import characters.*;
 import characters.Teams;
 import characters.ZenStream;
+import utils.CustomButton;
 import utils.Utility;
 
 import javax.swing.*;
@@ -18,7 +19,7 @@ public class LevelSelectScene extends JPanel{
     private int completedLevels = 0;
 
     private final HashMap<Integer, Boolean> levelStatuses;
-    private final JButton[] levelButtons;
+    private final CustomButton[] levelButtons;
 
     private Image bgImage;
 
@@ -46,7 +47,7 @@ public class LevelSelectScene extends JPanel{
         JPanel buttonPanel = new JPanel(new GridLayout(2,5,25,25));
         buttonPanel.setOpaque(false);
 
-        levelButtons = new JButton[NO_OF_LEVELS];
+        levelButtons = new CustomButton[NO_OF_LEVELS];
 
         for(int i = 0; i < NO_OF_LEVELS; i++){
 
@@ -64,7 +65,6 @@ public class LevelSelectScene extends JPanel{
 
 
         levelButtons[0].addActionListener(e -> {
-
             selectedLevel = 1;
 
             while(Teams.getAlliedTeamCount() > 1)
@@ -282,21 +282,20 @@ public class LevelSelectScene extends JPanel{
     }
 
     protected void unlockLevels(){
-
         for(int i=0;i<levelButtons.length;i++){
-
             if(i <= completedLevels){
-
                 levelButtons[i].setEnabled(true);
-                levelButtons[i].setBackground(new Color(70,170,255));
-                levelButtons[i].setForeground(Color.WHITE);
-
+                levelButtons[i].setDefaultBackgroundColor(new Color(0, 0, 139));
+                levelButtons[i].setDefaultForegroundColor(Color.WHITE);
+                levelButtons[i].setHoverColor(new Color(70,170,255));
+                levelButtons[i].setBackgroundColorToDefault();
+                levelButtons[i].setForegroundColorToDefault();
             }else{
-
                 levelButtons[i].setEnabled(false);
-                levelButtons[i].setBackground(new Color(70,70,70));
-                levelButtons[i].setForeground(Color.LIGHT_GRAY);
-
+                levelButtons[i].setDefaultBackgroundColor(new Color(70, 70, 70));
+                levelButtons[i].setDefaultForegroundColor(Color.GRAY);
+                levelButtons[i].setBackgroundColorToDefault();
+                levelButtons[i].setForegroundColorToDefault();
             }
         }
     }

@@ -38,7 +38,6 @@ public class PVPBattleScene extends JPanel {
     private GameCharacter selectedTarget;
 
     private int roundNumber;
-
     private int roundWinner;
     private boolean hasRoundEnded;
     private int gameWinner;
