@@ -36,6 +36,11 @@ public class PVPBattleScene extends JPanel {
 
     private BattleLogic battleLogic;
     private GameCharacter selectedTarget;
+
+    private int roundNumber;
+
+    private int roundWinner;
+    private boolean hasRoundEnded;
     private int gameWinner;
     private boolean hasGameEnded;
 
@@ -142,19 +147,18 @@ public class PVPBattleScene extends JPanel {
         if (bgImage != null) g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), null);
 
         if (hasGameEnded) {
-            g.setFont(new Font("Times New Roman", Font.BOLD, 60));
-            g.setColor(Color.WHITE);
-            String text = "Player " + gameWinner + " Wins!";
-            FontMetrics metrics = g.getFontMetrics(g.getFont());
-            int x = (getWidth() - metrics.stringWidth(text)) / 2;
-            int y = (getHeight() - metrics.getHeight()) / 2 + metrics.getAscent();
-            g.drawString(text, x, y);
+            displayMessage(g, "Player " + gameWinner + " Wins!");
+        }
+        else if(hasRoundEnded) {
+            displayMessage(g, "Player " + roundWinner + " Wins Round " + roundNumber);
         }
     }
 
 
     public void startGame(){
         winCounterLabel.setText("0 / 0");
+        roundNumber = 1;
+        hasRoundEnded = false;
         hasGameEnded = false;
         selectedTarget = null;
         displayCharacterViews();
@@ -253,10 +257,25 @@ public class PVPBattleScene extends JPanel {
 
             @Override
             public void onRoundEnded(int winningPlayer) {
+                roundWinner = winningPlayer;
+                hasRoundEnded = true;
                 winCounterLabel.setText(battleLogic.getWinCount(1) + " / " + battleLogic.getWinCount(2));
+
+
                 topPanel.repaint();
                 centerPanel.revalidate();
                 centerPanel.repaint();
+
+                repaint();
+                Timer roundMessageTimer;
+
+                roundMessageTimer = new Timer(2000, e -> {
+                    roundNumber++;
+                    hasRoundEnded = false;
+                    repaint();
+                    ((Timer)e.getSource()).stop();
+                });
+                roundMessageTimer.start();
             }
 
             @Override
@@ -383,4 +402,12 @@ public class PVPBattleScene extends JPanel {
         this.battleLogic = battleLogic;
     }
 
+    private void displayMessage(Graphics g, String message){
+        g.setFont(new Font("Times New Roman", Font.BOLD, 48));
+        g.setColor(Color.WHITE);
+        FontMetrics metrics = g.getFontMetrics(g.getFont());
+        int x = (getWidth() - metrics.stringWidth(message)) / 2;
+        int y = (getHeight() - metrics.getHeight()) / 2 + metrics.getAscent();
+        g.drawString(message, x, y);
+    }
 }
