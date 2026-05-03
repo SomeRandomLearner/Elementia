@@ -94,8 +94,8 @@ public class PVPCharacterSelectScene extends JPanel {
         JButton backButton = Utility.createButton("Return to Main Menu");
         backButton.addActionListener(e -> frame.showScreen("MainMenu"));
 
-        bottomPanel.add(confirmButton);
         bottomPanel.add(backButton);
+        bottomPanel.add(confirmButton);
 
         add(bottomPanel, BorderLayout.SOUTH);
     }
