@@ -210,22 +210,6 @@ public class PVPBattleScene extends AbstractBattleScene {
         }
     }
 
-//    private JButton getJButton(GameCharacter currentCharacter, Skill skill) {
-//        JButton skillButton = new JButton(skill.getName());
-//        skillButton.setFocusPainted(false);
-//        skillButton.setBackground(new Color(70, 110, 220));
-//        skillButton.setForeground(Color.WHITE);
-//        if (currentCharacter.getCurrentMana() < skill.getManaCost() || skill.getCooldown() > skill.getCooldownTimer()) {
-//            skillButton.setEnabled(false);
-//            skillButton.setBackground(Color.DARK_GRAY);
-//            if(skill.getCooldown() > skill.getCooldownTimer()) skillButton.setText(skill.getName() + " " + (skill.getCooldown() - skill.getCooldownTimer()));
-//        }
-//        skillButton.addActionListener(e -> {
-//
-//            battleLogic.setSelectedSkill(skill);
-//        });
-//        return skillButton;
-//    }
 
     public void setPVPBattleSceneBackground(int backgroundNumber){
         ImageIcon newIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/LevelBackgrounds/Level" + backgroundNumber + "Background.png")));

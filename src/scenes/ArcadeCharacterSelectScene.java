@@ -36,7 +36,6 @@ public class ArcadeCharacterSelectScene extends JPanel {
     private JLabel skill3;
 
     public ArcadeCharacterSelectScene(Elementia frame) {
-
         setLayout(new BorderLayout());
 
         bgImage = new ImageIcon(

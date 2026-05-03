@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class LevelSelectScene extends JPanel{
-    private int selectedLevel = 1;
     private int completedLevels = 0;
     private GameCharacter selectedCharacter = null;
 
@@ -106,10 +105,6 @@ public class LevelSelectScene extends JPanel{
         backButton.addActionListener(e -> frame.showScreen("ArcadeCharacterSelect"));
 
         add(backButton, BorderLayout.SOUTH);
-    }
-
-    public int getSelectedLevel(){
-        return selectedLevel;
     }
 
     public void incrementCompletedLevels(){

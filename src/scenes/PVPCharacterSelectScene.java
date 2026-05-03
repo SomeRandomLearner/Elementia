@@ -11,9 +11,6 @@ import java.awt.event.MouseEvent;
 import java.util.Objects;
 
 public class PVPCharacterSelectScene extends JPanel {
-
-    private Font normalFont = new Font("Times New Roman", Font.PLAIN, 30);
-
     private GameCharacter player1ChosenCharacter;
     private GameCharacter player2ChosenCharacter;
 
