@@ -163,26 +163,29 @@ public class BattleLogic {
         activePlayer1Team.clear();
         activePlayer2Team.clear();
 
-        int count = 0;
-        for(GameCharacter character : player1Team){
-            activePlayer1Team.add(character.clone());
-            if(resetSkills){
-                for(Skill skill : activePlayer1Team.get(count++).getSkills()){
-                    skill.resetCooldownTimer();
+        int count;
+        if(!player1Team.isEmpty()) {
+            count = 0;
+            for (GameCharacter character : player1Team) {
+                activePlayer1Team.add(character.clone());
+                if (resetSkills) {
+                    for (Skill skill : activePlayer1Team.get(count++).getSkills()) {
+                        skill.resetCooldownTimer();
+                    }
                 }
             }
         }
-
-        count = 0;
-        for(GameCharacter character : player2Team){
-            activePlayer2Team.add(character.clone());
-            if(resetSkills){
-                for(Skill skill : activePlayer2Team.get(count++).getSkills()){
-                    skill.resetCooldownTimer();
+        if(!player2Team.isEmpty()) {
+            count = 0;
+            for (GameCharacter character : player2Team) {
+                activePlayer2Team.add(character.clone());
+                if (resetSkills) {
+                    for (Skill skill : activePlayer2Team.get(count++).getSkills()) {
+                        skill.resetCooldownTimer();
+                    }
                 }
             }
         }
-
     }
 
     public void addToTeam(int playerNumber, GameCharacter character){

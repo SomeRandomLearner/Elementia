@@ -12,8 +12,8 @@ import java.util.Objects;
 
 public class PVPStageSelectScene extends JPanel {
 
-    private Image originalBackground;
-    private final JButton confirmButton;
+    private Image originalBackground = null;
+    private JButton confirmButton = Utility.createButton("Confirm");
     private int choice;
 
     public PVPStageSelectScene(Elementia frame) {
@@ -71,17 +71,21 @@ public class PVPStageSelectScene extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.setOpaque(false);
 
-        JButton backBtn = Utility.createButton("Go Back");
-        backBtn.addActionListener(e -> frame.showScreen("PVPCharacterSelect"));
-        buttonPanel.add(backBtn, gbc);
+        JButton backButton = Utility.createButton("Go Back");
+        backButton.addActionListener(e -> {
+            confirmButton.setEnabled(false);
+            frame.showScreen("PVPCharacterSelect");
+        });
+        buttonPanel.add(backButton, gbc);
 
-        confirmButton = Utility.createButton("Confirm");
+
         confirmButton.setEnabled(false);
 
         confirmButton.addActionListener(e -> {
             frame.getPVPBattle().setPVPBattleSceneBackground(choice);
             frame.getPVPBattle().startGame();
             frame.showScreen("PVPBattle");
+            confirmButton.setEnabled(false);
         });;
 
         buttonPanel.add(confirmButton);
