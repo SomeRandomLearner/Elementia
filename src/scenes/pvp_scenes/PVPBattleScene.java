@@ -1,5 +1,7 @@
-package scenes;
+package scenes.pvp_scenes;
 
+import scenes.AbstractBattleScene;
+import scenes.Elementia;
 import utils.CharacterView;
 import characters.GameCharacter;
 import logic.Skill;
@@ -17,7 +19,7 @@ public class PVPBattleScene extends AbstractBattleScene {
     public PVPBattleScene(Elementia frame) {
         super(frame);
 
-        backBtn.addActionListener(e -> {
+        backButton.addActionListener(e -> {
 //            battleLogic.resetCharacterChoices();
             frame.showScreen("PVPCharacterSelect");
         });
@@ -218,7 +220,7 @@ public class PVPBattleScene extends AbstractBattleScene {
     }
 
     @Override
-    protected void displayCharacterViews(){
+    public void displayCharacterViews(){
         leftPanel.removeAll();
         rightPanel.removeAll();
 

@@ -1,5 +1,6 @@
-package scenes;
+package scenes.pvp_scenes;
 
+import scenes.Elementia;
 import utils.Utility;
 
 import javax.swing.*;

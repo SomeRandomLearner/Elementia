@@ -30,7 +30,7 @@ public abstract class AbstractBattleScene extends JPanel {
     protected JLabel winCounterLabel;
     protected JLabel timerLabel;
 
-    protected JButton backBtn;
+    protected JButton backButton;
 
     protected Font normalFont = new Font("Times New Roman", Font.PLAIN, 32);
     protected ImageIcon bgIcon = null;
@@ -110,12 +110,12 @@ public abstract class AbstractBattleScene extends JPanel {
         bottomPanel.add(timerPanel, BorderLayout.CENTER);
         bottomPanel.add(player2SkillPanel, BorderLayout.EAST);
 
-        backBtn = Utility.createButton("Back");
+        backButton = Utility.createButton("Back");
 
         currentTurnLabel = new JLabel();
         currentTurnLabel.setFont(normalFont);
 
-        topLeftPanel.add(backBtn);
+        topLeftPanel.add(backButton);
         topCenterPanel.setBackground(Color.BLACK);
         topCenterPanel.add(currentTurnLabel);
 
@@ -199,7 +199,7 @@ public abstract class AbstractBattleScene extends JPanel {
         repaint();
     }
 
-    protected void displayCharacterViews(){
+    public void displayCharacterViews(){
         leftPanel.removeAll();
         rightPanel.removeAll();
 

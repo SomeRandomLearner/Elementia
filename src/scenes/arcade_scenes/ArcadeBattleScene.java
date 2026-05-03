@@ -1,4 +1,4 @@
-package scenes;
+package scenes.arcade_scenes;
 
 import characters.GameCharacter;
 import logic.BattleEventListener;
@@ -6,6 +6,8 @@ import logic.Skill;
 import logic.TurnResult;
 import logic.Level;
 import logic.LevelManager;
+import scenes.AbstractBattleScene;
+import scenes.Elementia;
 import utils.Utility;
 
 import javax.swing.*;
@@ -16,7 +18,7 @@ import java.util.Random;
 public class ArcadeBattleScene extends AbstractBattleScene {
     public ArcadeBattleScene(Elementia frame){
         super(frame);
-        backBtn.addActionListener(e -> {
+        backButton.addActionListener(e -> {
             repaint();
             if(hasGameEnded){
                 bottomPanel.removeAll();

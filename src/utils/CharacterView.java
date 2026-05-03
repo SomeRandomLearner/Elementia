@@ -1,6 +1,7 @@
 package utils;
 
 import characters.GameCharacter;
+import logic.Skill;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,9 +13,14 @@ public class CharacterView extends JPanel {
     private final GameCharacter character;
     private OnClickListener clickListener;
     private boolean isHovered = false;
+    private onAttackListener attackListener;
 
     public interface OnClickListener {
         void onClick(GameCharacter character);
+    }
+    
+    public interface onAttackListener {
+        void onAttack(Skill selectedSkill);
     }
 
     public CharacterView(GameCharacter character) {
@@ -49,6 +55,10 @@ public class CharacterView extends JPanel {
 
     public void setClickListener(OnClickListener listener) {
         this.clickListener = listener;
+    }
+
+    public void setAttackListener(onAttackListener listener) {
+        this.attackListener = listener;
     }
 
     public GameCharacter getCharacter() {

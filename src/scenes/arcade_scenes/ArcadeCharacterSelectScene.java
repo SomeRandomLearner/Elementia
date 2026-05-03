@@ -1,7 +1,8 @@
-package scenes;
+package scenes.arcade_scenes;
 
 import characters.*;
 import logic.LevelManager;
+import scenes.Elementia;
 import utils.Utility;
 
 import javax.swing.*;

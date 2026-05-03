@@ -1,5 +1,12 @@
 package scenes;
 
+import scenes.arcade_scenes.ArcadeBattleScene;
+import scenes.arcade_scenes.ArcadeCharacterSelectScene;
+import scenes.arcade_scenes.LevelSelectScene;
+import scenes.pvp_scenes.PVPBattleScene;
+import scenes.pvp_scenes.PVPCharacterSelectScene;
+import scenes.pvp_scenes.PVPStageSelectScene;
+
 import javax.swing.*;
 import java.awt.*;
 

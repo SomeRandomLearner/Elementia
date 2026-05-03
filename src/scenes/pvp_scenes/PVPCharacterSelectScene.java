@@ -1,7 +1,8 @@
-package scenes;
+package scenes.pvp_scenes;
 
 import characters.*;
 import logic.BattleLogic;
+import scenes.Elementia;
 import utils.Utility;
 
 import javax.swing.*;

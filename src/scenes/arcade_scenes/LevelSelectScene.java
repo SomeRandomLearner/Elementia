@@ -1,7 +1,8 @@
-package scenes;
+package scenes.arcade_scenes;
 
 import characters.*;
 import logic.BattleLogic;
+import scenes.Elementia;
 import utils.CustomButton;
 import logic.LevelManager;
 import utils.Utility;
