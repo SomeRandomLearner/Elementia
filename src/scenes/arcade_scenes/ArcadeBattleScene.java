@@ -35,6 +35,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
 
     @Override
     public void startGame(){
+        setBattleSceneBackground((LevelManager.getCurrentLevelNumber() % 5) + 1); // sets background to background 1-5
         winCounterLabel.setText("0 / 0");
         roundNumber = 1;
         hasRoundEnded = false;
