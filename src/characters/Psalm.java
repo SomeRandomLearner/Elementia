@@ -9,6 +9,7 @@ import java.util.Objects;
 public class Psalm extends GameCharacter{
     public Psalm(int maxHealth, int maxMana, int defense, int manaRecovery) {
         super("Psalm", maxHealth, maxMana, defense, manaRecovery);
+        setCharacterId(6);
         addNewSkill(SkillRegistry.getSkill("rapid_punch"));
         addNewSkill(SkillRegistry.getSkill("healing_fan"));
         addNewSkill(SkillRegistry.getSkill("fire_kick"));

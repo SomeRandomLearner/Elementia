@@ -11,9 +11,9 @@ public class Elementia extends JFrame{
     private ModeSelectScene modeSelect;
 
     // Arcade Mode
-    private ArcadeCharacterSelectScene characterSelect;
+    private ArcadeCharacterSelectScene arcadeCharacterSelect;
     private LevelSelectScene levelSelect;
-    private BattleScene battle;
+    private ArcadeBattleScene arcadeBattle;
 
     // PVP Mode
     private PVPCharacterSelectScene pvpCharacterSelect;
@@ -30,17 +30,19 @@ public class Elementia extends JFrame{
 
         mainMenu = new MainMenuScene(this);
         modeSelect = new ModeSelectScene(this);
-        characterSelect = new ArcadeCharacterSelectScene(this);
+        arcadeCharacterSelect = new ArcadeCharacterSelectScene(this);
         levelSelect = new LevelSelectScene(this);
-        battle = new BattleScene(this);
+        arcadeBattle = new ArcadeBattleScene(this);
         pvpCharacterSelect = new PVPCharacterSelectScene(this);
         pvpStageSelect = new PVPStageSelectScene(this);
         pvpBattle = new PVPBattleScene(this);
 
         container.add(mainMenu, "MainMenu");
         container.add(modeSelect, "ModeSelect");
-        container.add(characterSelect, "CharacterSelect");
+        container.add(arcadeCharacterSelect, "ArcadeCharacterSelect");
         container.add(levelSelect, "LevelSelect");
+        container.add(arcadeBattle, "Battle");
+
 
         container.add(pvpCharacterSelect, "PVPCharacterSelect");
         container.add(pvpStageSelect, "PVPStageSelect");
@@ -57,15 +59,11 @@ public class Elementia extends JFrame{
         layout.show(container, name);
     }
 
-    public void addBattleScene(){
-        container.add(new BattleScene(this), "Battle");
-    }
-
     public ModeSelectScene getModeSelect() { return modeSelect; }
 
     public LevelSelectScene getLevelSelect() { return levelSelect; }
 
-    public BattleScene getBattle() { return battle; }
+    public BattleScene getArcadeBattle() { return arcadeBattle; }
 
     public PVPCharacterSelectScene getPVPCharacterSelect() { return pvpCharacterSelect; }
 

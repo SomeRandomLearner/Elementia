@@ -30,6 +30,11 @@ public class BattleLogic {
     private int previousRoundWinner;
 
     private BattleEventListener battleEventListener;
+    private boolean isPVP;
+
+    public BattleLogic(boolean isPVP){
+        this.isPVP = isPVP;
+    }
 
     public void startGame(){
         previousRoundWinner = 0;
@@ -39,10 +44,13 @@ public class BattleLogic {
     }
 
     private void startRound(){
-        switch (previousRoundWinner){
+        switch (previousRoundWinner) {
             case player1 -> currentPlayerTurn = player2;
             case player2 -> currentPlayerTurn = player1;
-            default -> currentPlayerTurn = new Random().nextBoolean() ? player1 : player2; // The first player is random.
+            default -> {
+                if (isPVP) currentPlayerTurn = new Random().nextBoolean() ? player1 : player2; // The first player is random.
+                else currentPlayerTurn = player1; // The human player is prioritized since they can keep rerolling their turn anyway.
+            }
         }
 
         resetActiveTeams(false);
@@ -251,5 +259,9 @@ public class BattleLogic {
     public void nextTurn(){
         currentCharacterTurn++;
         startTurn();
+    }
+
+    public boolean getIsPVP(){
+        return isPVP;
     }
 }

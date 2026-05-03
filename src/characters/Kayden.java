@@ -10,6 +10,7 @@ public class Kayden extends GameCharacter{
 
     public Kayden(int maxHealth, int maxMana, int defense, int manaRecovery) {
         super("Kayden", maxHealth, maxMana, defense, manaRecovery);
+        setCharacterId(4);
         addNewSkill(SkillRegistry.getSkill("super_speed"));
         addNewSkill(SkillRegistry.getSkill("lightning_strike"));
         addNewSkill(SkillRegistry.getSkill("force_control"));

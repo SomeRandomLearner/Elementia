@@ -9,6 +9,7 @@ import java.util.Objects;
 public class Kaelis extends GameCharacter{
     public Kaelis(int maxHealth, int maxMana, int defense, int manaRecovery) {
         super("Kaelis", maxHealth, maxMana, defense, manaRecovery);
+        setCharacterId(2);
         addNewSkill(SkillRegistry.getSkill("wolf_call"));
         addNewSkill(SkillRegistry.getSkill("hawk_sight"));
         addNewSkill(SkillRegistry.getSkill("beast_surge"));

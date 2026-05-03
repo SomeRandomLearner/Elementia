@@ -9,6 +9,7 @@ import java.util.Objects;
 public class Kangel extends GameCharacter {
     public Kangel(int maxHealth, int maxMana, int defense, int manaRecovery) {
         super("Kangel", maxHealth, maxMana, defense, manaRecovery);
+        setCharacterId(3);
         addNewSkill(SkillRegistry.getSkill("blood_bind"));
         addNewSkill(SkillRegistry.getSkill("crimson_spear"));
         addNewSkill(SkillRegistry.getSkill("life_drain"));

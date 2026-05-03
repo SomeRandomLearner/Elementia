@@ -9,6 +9,7 @@ import java.util.Objects;
 public class Maelor extends GameCharacter{
     public Maelor(int maxHealth, int maxMana, int defense, int manaRecovery) {
         super("Maelor", maxHealth, maxMana, defense, manaRecovery);
+        setCharacterId(5);
         addNewSkill(SkillRegistry.getSkill("magnetic_pull"));
         addNewSkill(SkillRegistry.getSkill("repulse_field"));
         addNewSkill(SkillRegistry.getSkill("iron_storm"));

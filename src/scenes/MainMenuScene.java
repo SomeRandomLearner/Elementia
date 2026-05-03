@@ -100,6 +100,7 @@ public class MainMenuScene extends JPanel {
         creditsTextArea.setMargin(new Insets(5, 5, 5, 5));
         creditsTextArea.setText(
                 "This game is non-commercial and for educational purposes only\n" +
+                "This game uses ai-generated images\n" +
                 "Contributors:\n" +
                 "Joshua Raagas\n" +
                 "Kaizen Gabriel Guiroy\n" +
@@ -107,7 +108,7 @@ public class MainMenuScene extends JPanel {
                 "Maria Mie Cadungog\n" +
                 "Psalmist Mae Guiroy\n" +
                 "Vince Jayson\n\n\n" +
-                "Basic Attack Sound by freesound_CrunchpixStudio" +
+                "Basic Attack Sound by freesound_CrunchpixStudio\n" +
                 "Background Music by RoyaltyFreeMusicStudio");
         return creditsTextArea;
     }

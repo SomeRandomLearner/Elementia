@@ -67,6 +67,13 @@ public class PVPStageSelectScene extends JPanel {
         gbc.gridy = 1;
         add(wrapperPanel, gbc);
 
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.setOpaque(false);
+
+        JButton backBtn = Utility.createButton("Go Back");
+        backBtn.addActionListener(e -> frame.showScreen("PVPCharacterSelect"));
+        buttonPanel.add(backBtn, gbc);
+
         confirmButton = Utility.createButton("Confirm");
         confirmButton.setEnabled(false);
 
@@ -74,16 +81,11 @@ public class PVPStageSelectScene extends JPanel {
             frame.getPVPBattle().setPVPBattleSceneBackground(choice);
             frame.getPVPBattle().startGame();
             frame.showScreen("PVPBattle");
-        });
+        });;
 
+        buttonPanel.add(confirmButton);
         gbc.gridy = 2;
-        add(confirmButton, gbc);
-
-        JButton backBtn = Utility.createButton("Go Back");
-        backBtn.addActionListener(e -> frame.showScreen("PVPCharacterSelect"));
-
-        gbc.gridy = 3;
-        add(backBtn, gbc);
+        add(buttonPanel, gbc);
     }
 
 

@@ -1,22 +1,21 @@
 package scenes;
 
 import characters.*;
-import characters.Teams;
-import characters.ZenStream;
+import logic.BattleLogic;
 import utils.CustomButton;
+import utils.LevelManager;
 import utils.Utility;
 
 import javax.swing.*;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 import java.util.Objects;
 
 public class LevelSelectScene extends JPanel{
     private int selectedLevel = 1;
     private int completedLevels = 0;
+    private GameCharacter selectedCharacter = null;
 
     private final HashMap<Integer, Boolean> levelStatuses;
     private final CustomButton[] levelButtons;
@@ -24,7 +23,6 @@ public class LevelSelectScene extends JPanel{
     private Image bgImage;
 
     public LevelSelectScene(Elementia frame) {
-
         final byte NO_OF_LEVELS = 10;
 
         bgImage = new ImageIcon(
@@ -50,207 +48,52 @@ public class LevelSelectScene extends JPanel{
         levelButtons = new CustomButton[NO_OF_LEVELS];
 
         for(int i = 0; i < NO_OF_LEVELS; i++){
-
             levelButtons[i] = Utility.createButton("" + (i+1));
-
             levelButtons[i].setPreferredSize(new Dimension(120,120));
-
             levelButtons[i].setFont(new Font("Arial", Font.BOLD,18));
             levelButtons[i].setFocusPainted(false);
 
+            int levelNumber = i + 1;
+            levelButtons[i].addActionListener(e -> {
+                if (selectedCharacter == null){
+                    System.out.println("ERROR in level select");
+                    return;
+                }
+                LevelManager.setCurrentLevelNumber(levelNumber);
+
+                boolean isPVP = false;
+                BattleLogic battleLogic = new BattleLogic(isPVP);
+                battleLogic.resetCharacterChoices();
+                battleLogic.addToTeam(1, selectedCharacter);
+                battleLogic.addAllToTeam(2, (LevelManager.getCurrentLevel()).getEnemyTeam());
+
+                frame.getArcadeBattle().setBattleLogic(battleLogic);
+                frame.getArcadeBattle().displayCharacterViews();
+                frame.getArcadeBattle().startGame();
+                frame.showScreen("Battle");
+            });
             buttonPanel.add(levelButtons[i]);
         }
 
         unlockLevels();
 
 
-        levelButtons[0].addActionListener(e -> {
-            selectedLevel = 1;
+//        levelButtons[0].addActionListener(e -> {
+//            selectedLevel = 1;
+//
+//            while(Teams.getAlliedTeamCount() > 1)
+//                Teams.popAlliedTeam();
+//
+//            if(Teams.getEnemyTeamCount() > 0)
+//                Teams.clearEnemyTeam();
+//
+//            Teams.addToEnemyTeam(new ZenStream());
+//
+//            frame.addBattleScene();
+//            frame.showScreen("Battle");
+//        });
+//
 
-            while(Teams.getAlliedTeamCount() > 1)
-                Teams.popAlliedTeam();
-
-            if(Teams.getEnemyTeamCount() > 0)
-                Teams.clearEnemyTeam();
-
-            Teams.addToEnemyTeam(new ZenStream());
-
-            frame.addBattleScene();
-            frame.showScreen("Battle");
-        });
-
-
-
-        levelButtons[1].addActionListener(e -> {
-
-            selectedLevel = 2;
-
-            while(Teams.getAlliedTeamCount() > 1)
-                Teams.popAlliedTeam();
-
-            if(Teams.getEnemyTeamCount() > 0)
-                Teams.clearEnemyTeam();
-
-            Teams.addToEnemyTeam(new Ripper());
-
-            frame.addBattleScene();
-            frame.showScreen("Battle");
-        });
-
-
-        levelButtons[2].addActionListener(e -> {
-
-            selectedLevel = 3;
-
-            while(Teams.getAlliedTeamCount() > 1)
-                Teams.popAlliedTeam();
-
-            if(Teams.getEnemyTeamCount() > 0)
-                Teams.clearEnemyTeam();
-
-            Teams.addToEnemyTeam(new Aero());
-
-            frame.addBattleScene();
-            frame.showScreen("Battle");
-        });
-
-
-
-        levelButtons[3].addActionListener(e -> {
-
-            selectedLevel = 4;
-
-            while(Teams.getAlliedTeamCount() > 1)
-                Teams.popAlliedTeam();
-
-            if(Teams.getEnemyTeamCount() > 0)
-                Teams.clearEnemyTeam();
-
-            Teams.addToEnemyTeam(new Psalm());
-
-            frame.addBattleScene();
-            frame.showScreen("Battle");
-        });
-
-
-
-        levelButtons[4].addActionListener(e -> {
-
-            selectedLevel = 5;
-
-            while(Teams.getAlliedTeamCount() > 1)
-                Teams.popAlliedTeam();
-
-            if(Teams.getEnemyTeamCount() > 0)
-                Teams.clearEnemyTeam();
-
-            Teams.addToEnemyTeam(new Kaelis());
-
-            frame.addBattleScene();
-            frame.showScreen("Battle");
-        });
-
-
-
-        levelButtons[5].addActionListener(e -> {
-
-            selectedLevel = 6;
-
-            while(Teams.getAlliedTeamCount() > 1)
-                Teams.popAlliedTeam();
-
-            if(Teams.getEnemyTeamCount() > 0)
-                Teams.clearEnemyTeam();
-
-            Teams.addToEnemyTeam(new Kangel());
-
-            frame.addBattleScene();
-            frame.showScreen("Battle");
-        });
-
-
-
-        levelButtons[6].addActionListener(e -> {
-
-            selectedLevel = 7;
-
-            while(Teams.getAlliedTeamCount() > 1)
-                Teams.popAlliedTeam();
-
-            if(Teams.getEnemyTeamCount() > 0)
-                Teams.clearEnemyTeam();
-
-            Teams.addToEnemyTeam(new Maelor());
-
-            frame.addBattleScene();
-            frame.showScreen("Battle");
-        });
-
-
-        levelButtons[7].addActionListener(e -> {
-
-            selectedLevel = 8;
-
-            while(Teams.getAlliedTeamCount() > 1)
-                Teams.popAlliedTeam();
-
-            if(Teams.getEnemyTeamCount() > 0)
-                Teams.clearEnemyTeam();
-
-            Teams.addToEnemyTeam(new Veyrion());
-
-            frame.addBattleScene();
-            frame.showScreen("Battle");
-        });
-
-
-
-        levelButtons[8].addActionListener(e -> {
-
-            selectedLevel = 9;
-
-            while(Teams.getAlliedTeamCount() > 1)
-                Teams.popAlliedTeam();
-
-            if(Teams.getEnemyTeamCount() > 0)
-                Teams.clearEnemyTeam();
-
-            Teams.addToEnemyTeam(new Kayden());
-
-            frame.addBattleScene();
-            frame.showScreen("Battle");
-        });
-
-
-        levelButtons[9].addActionListener(e -> {
-
-            selectedLevel = 10;
-
-            while(Teams.getAlliedTeamCount() > 1)
-                Teams.popAlliedTeam();
-
-            ArrayList<GameCharacter> availableCharacters = GameCharacter.getAllCharacters();
-
-            for(GameCharacter character : Teams.getAlliedTeam()){
-                availableCharacters.remove(character);
-            }
-
-            while(Teams.getAlliedTeamCount() < 3){
-                int randomInt = new Random().nextInt(availableCharacters.size());
-                Teams.addToAlliedTeam(availableCharacters.get(randomInt));
-            }
-
-            if(Teams.getEnemyTeamCount() > 0)
-                Teams.clearEnemyTeam();
-
-            while(Teams.getEnemyTeamCount() < 3){
-                int randomInt = new Random().nextInt(availableCharacters.size());
-                Teams.addToEnemyTeam(availableCharacters.get(randomInt));
-            }
-
-            frame.addBattleScene();
-            frame.showScreen("Battle");
-        });
 
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setOpaque(false);
@@ -260,7 +103,7 @@ public class LevelSelectScene extends JPanel{
 
         JButton backButton = Utility.createButton("Back");
 
-        backButton.addActionListener(e -> frame.showScreen("CharacterSelect"));
+        backButton.addActionListener(e -> frame.showScreen("ArcadeCharacterSelect"));
 
         add(backButton, BorderLayout.SOUTH);
     }
@@ -300,6 +143,9 @@ public class LevelSelectScene extends JPanel{
         }
     }
 
+    public void setSelectedCharacter(GameCharacter character){
+        this.selectedCharacter = character;
+    }
     @Override
     protected void paintComponent(Graphics g){
 

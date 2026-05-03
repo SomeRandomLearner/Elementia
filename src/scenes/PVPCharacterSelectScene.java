@@ -28,10 +28,12 @@ public class PVPCharacterSelectScene extends JPanel {
 
     private Image bgImage;
 
+    BattleLogic battleLogic;
     public PVPCharacterSelectScene(Elementia frame) {
-
         setLayout(new BorderLayout());
 
+        boolean isPVP = true;
+        battleLogic = new BattleLogic(isPVP);
         bgImage = new ImageIcon(
                 Objects.requireNonNull(getClass().getResource("/resources/CharacterSelectBG.png"))
         ).getImage();
@@ -81,22 +83,21 @@ public class PVPCharacterSelectScene extends JPanel {
         confirmButton.setEnabled(false);
 
         confirmButton.addActionListener(e -> {
-
-            BattleLogic battleLogic = new BattleLogic();
             battleLogic.resetCharacterChoices();
 
             battleLogic.addToTeam(1, player1ChosenCharacter);
             battleLogic.addToTeam(2, player2ChosenCharacter);
 
+            reset();
             frame.getPVPBattle().setBattleLogic(battleLogic);
             frame.showScreen("PVPStageSelect");
         });
 
-        JButton backBtn = Utility.createButton("Return to Main Menu");
-        backBtn.addActionListener(e -> frame.showScreen("MainMenu"));
+        JButton backButton = Utility.createButton("Return to Main Menu");
+        backButton.addActionListener(e -> frame.showScreen("MainMenu"));
 
         bottomPanel.add(confirmButton);
-        bottomPanel.add(backBtn);
+        bottomPanel.add(backButton);
 
         add(bottomPanel, BorderLayout.SOUTH);
     }
@@ -127,6 +128,8 @@ public class PVPCharacterSelectScene extends JPanel {
 
                 if (isDuplicate(character)) {
                     showPlayer2Warning("CHARACTER HAS ALREADY BEEN SELECTED!");
+                    player2ChosenCharacter = null;
+                    player2HasChosen = false;
                     clearPreview(player2Preview);
                     return;
                 }
@@ -151,7 +154,6 @@ public class PVPCharacterSelectScene extends JPanel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-
                 if (!player1HasChosen) {
 
                     player1ChosenCharacter = character;
@@ -333,5 +335,13 @@ public class PVPCharacterSelectScene extends JPanel {
         if (bgImage != null) {
             g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
         }
+    }
+
+    private void reset(){
+        player1ChosenCharacter = player2ChosenCharacter = null;
+        player1HasChosen = player2HasChosen = false;
+        clearPreview(player1Preview);
+        clearPreview(player2Preview);
+        confirmButton.setEnabled(false);
     }
 }

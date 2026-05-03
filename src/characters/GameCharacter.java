@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class GameCharacter {
+    private int characterId;
     private String name;
     protected String element;
     protected String imagePath;
@@ -132,6 +133,7 @@ public abstract class GameCharacter {
     }
 
     public enum Character{
+        UNKNOWN,
         AERO,
         KAELIS,
         KANGEL,
@@ -256,4 +258,11 @@ public abstract class GameCharacter {
         this.y = y;
     }
 
+    public int getCharacterId() {
+        return characterId;
+    }
+
+    public void setCharacterId(int id){
+        this.characterId = id;
+    }
 }

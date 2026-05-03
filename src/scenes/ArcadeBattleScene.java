@@ -1,39 +1,34 @@
 package scenes;
 
-import characters.CharacterView;
 import characters.GameCharacter;
-import logic.Skill;
 import logic.BattleEventListener;
-import logic.BattleLogic;
+import logic.Skill;
 import logic.TurnResult;
+import utils.Level;
+import utils.LevelManager;
 import utils.Utility;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.Objects;
+import java.util.Random;
 
-public class PVPBattleScene extends BattleScene {
-    public PVPBattleScene(Elementia frame) {
+public class ArcadeBattleScene extends BattleScene{
+    public ArcadeBattleScene(Elementia frame){
         super(frame);
-
         backBtn.addActionListener(e -> {
-//            battleLogic.resetCharacterChoices();
-            frame.showScreen("PVPCharacterSelect");
+            repaint();
+            if(hasGameEnded){
+                bottomPanel.removeAll();
+                bottomPanel.add(player1SkillPanel, BorderLayout.WEST);
+                bottomPanel.add(timerPanel, BorderLayout.CENTER);
+
+                bottomPanel.revalidate();
+                bottomPanel.repaint();
+                hasGameEnded = false;
+            }
+            frame.showScreen("LevelSelect");
         });
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (bgImage != null) g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), null);
-
-        if (hasGameEnded) {
-            displayMessage(g, "Player " + gameWinner + " Wins!");
-        }
-        else if(hasRoundEnded) {
-            displayMessage(g, "Player " + roundWinner + " Wins Round " + roundNumber);
-        }
     }
 
     @Override
@@ -52,12 +47,11 @@ public class PVPBattleScene extends BattleScene {
         battleLogic.setBattleEventListener(new BattleEventListener() {
             @Override
             public void onTurnStarted(int currentPlayerTurn, GameCharacter currentCharacter) {
-                currentTurnLabel.setText("Player " + currentPlayerTurn + "'s Turn");
                 if(currentPlayerTurn == 1){
+                    currentTurnLabel.setText("Your Turn!");
                     currentTurnLabel.setForeground(Color.RED);
 
                     player1SkillPanel.setVisible(true);
-                    player2SkillPanel.setVisible(false);
 
                     player1SkillPanel.removeAll();
                     for(Skill skill : currentCharacter.getSkills()){
@@ -69,19 +63,33 @@ public class PVPBattleScene extends BattleScene {
                     player1SkillPanel.repaint();
                 }
                 else{
+                    Timer enemyTurnTimer = new Timer(2000, e -> {
+                        Random random = new Random();
+                        selectedTarget = battleLogic.getActivePlayer1Team().get(random.nextInt(battleLogic.getActivePlayer1Team().size()));
+                        battleLogic.setTargetCharacter(selectedTarget);
+
+                        Skill[] validSkills = new Skill[3];
+                        int count = 0;
+                        for(Skill skill: currentCharacter.getSkills()){
+                            if(skill.isOnCooldown()) continue;
+                            if(currentCharacter.getCurrentMana() >= skill.getManaCost()){
+                                validSkills[count++] = skill;
+                            }
+                        }
+
+                        Skill selectedSkill = validSkills[random.nextInt(count)];
+                        battleLogic.setSelectedSkill(selectedSkill);
+                        leftPanel.setSelectedSkill(selectedSkill);
+
+                        battleLogic.currentCharacterUseSkillOnTarget();
+                        leftPanel.playSkillAnimation();
+
+                        ((Timer)e.getSource()).stop();
+                    });
+                    enemyTurnTimer.start();
+                    currentTurnLabel.setText("Enemies' Turn!");
                     currentTurnLabel.setForeground(Color.BLUE);
-
-                    player2SkillPanel.setVisible(true);
                     player1SkillPanel.setVisible(false);
-
-                    player2SkillPanel.removeAll();
-                    for(Skill skill : currentCharacter.getSkills()){
-                        if(skill == null) break;
-                        player2SkillPanel.add(getJButton(currentCharacter, skill));
-                    }
-
-                    player2SkillPanel.revalidate();
-                    player2SkillPanel.repaint();
                 }
                 bottomPanel.revalidate();
                 bottomPanel.repaint();
@@ -99,8 +107,11 @@ public class PVPBattleScene extends BattleScene {
 
                 timerCount = 4;
                 timerLabel.setText(String.valueOf(timerCount));
-                if(currentPlayerTurn == 1) timerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-                else timerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+                if(currentPlayerTurn == 1) {
+                    timerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+                    timerPanel.setVisible(true);
+                }
+                else timerPanel.setVisible(false);
 
                 timerPanel.revalidate();
 
@@ -117,7 +128,7 @@ public class PVPBattleScene extends BattleScene {
                         battleLogic.nextTurn();
                     }
                 });
-                timer.start();
+                if(currentPlayerTurn == 1) timer.start();
 
             }
 
@@ -182,7 +193,6 @@ public class PVPBattleScene extends BattleScene {
                     bottomPanel.removeAll();
                     bottomPanel.add(player1SkillPanel, BorderLayout.WEST);
                     bottomPanel.add(timerPanel, BorderLayout.CENTER);
-                    bottomPanel.add(player2SkillPanel, BorderLayout.EAST);
 
                     bottomPanel.revalidate();
                     bottomPanel.repaint();
@@ -200,68 +210,26 @@ public class PVPBattleScene extends BattleScene {
         setAllComponents(rightPanel, false);
     }
 
-
-    public static void setAllComponents(Container container, boolean setTo) {
-        for (Component component : container.getComponents()) {
-            component.setEnabled(setTo);
-            if (component instanceof Container) {
-                setAllComponents((Container) component, setTo);
-            }
-        }
-    }
-
-//    private JButton getJButton(GameCharacter currentCharacter, Skill skill) {
-//        JButton skillButton = new JButton(skill.getName());
-//        skillButton.setFocusPainted(false);
-//        skillButton.setBackground(new Color(70, 110, 220));
-//        skillButton.setForeground(Color.WHITE);
-//        if (currentCharacter.getCurrentMana() < skill.getManaCost() || skill.getCooldown() > skill.getCooldownTimer()) {
-//            skillButton.setEnabled(false);
-//            skillButton.setBackground(Color.DARK_GRAY);
-//            if(skill.getCooldown() > skill.getCooldownTimer()) skillButton.setText(skill.getName() + " " + (skill.getCooldown() - skill.getCooldownTimer()));
-//        }
-//        skillButton.addActionListener(e -> {
-//
-//            battleLogic.setSelectedSkill(skill);
-//        });
-//        return skillButton;
-//    }
-
-    public void setPVPBattleSceneBackground(int backgroundNumber){
-        ImageIcon newIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/LevelBackgrounds/Level" + backgroundNumber + "Background.png")));
-        bgImage = newIcon.getImage();
-        repaint();
-    }
-
     @Override
-    protected void displayCharacterViews(){
-        leftPanel.removeAll();
-        rightPanel.removeAll();
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (bgImage != null) g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), null);
 
-        for(GameCharacter character : battleLogic.getActivePlayer1Team()){
-            CharacterView view = new CharacterView(character);
-            view.setClickListener(e -> {
-                selectedTarget = character;
-                handleClick(selectedTarget);
-            });
-            leftPanel.add(view);
+        if (hasGameEnded) {
+            if(gameWinner == 1) {
+                displayMessage(g, "You Win!");
+                Level currentLevel = LevelManager.getCurrentLevel();
+                if(!currentLevel.getIsCleared()) {
+                    frame.getLevelSelect().incrementCompletedLevels();
+                    frame.getLevelSelect().unlockLevels();
+                    currentLevel.setIsCleared(true);
+                }
+            }
+            else displayMessage(g, "You Lose!");
         }
-        for(GameCharacter character : battleLogic.getActivePlayer2Team()){
-            CharacterView view = new CharacterView(character);
-            view.setClickListener(e -> {
-                selectedTarget = character;
-                handleClick(selectedTarget);
-            });
-            rightPanel.add(view);
+        else if(hasRoundEnded) {
+            if(roundWinner == 1) displayMessage(g, "You Win Round " + roundNumber);
+            else displayMessage(g, "You Lost Round" + roundNumber);
         }
-
-        leftPanel.revalidate();
-        leftPanel.repaint();
-        rightPanel.revalidate();
-        rightPanel.repaint();
     }
-    public void setBattleLogic(BattleLogic battleLogic) {
-        this.battleLogic = battleLogic;
-    }
-
 }

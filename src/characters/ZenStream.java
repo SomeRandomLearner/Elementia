@@ -9,6 +9,7 @@ import java.util.Objects;
 public class ZenStream extends GameCharacter{
     public ZenStream(int maxHealth, int maxMana, int defense, int manaRecovery) {
         super("ZenStream", maxHealth, maxMana, defense, manaRecovery);
+        setCharacterId(9);
         addNewSkill(SkillRegistry.getSkill("sling_water"));
         addNewSkill(SkillRegistry.getSkill("liquify"));
         addNewSkill(SkillRegistry.getSkill("water_takeover"));

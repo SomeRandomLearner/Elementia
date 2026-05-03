@@ -9,6 +9,7 @@ import java.util.Objects;
 public class Veyrion extends GameCharacter{
     public Veyrion(int maxHealth, int maxMana, int defense, int manaRecovery) {
         super("Veyrion", maxHealth, maxMana, defense, manaRecovery);
+        setCharacterId(8);
         addNewSkill(SkillRegistry.getSkill("shadow_step"));
         addNewSkill(SkillRegistry.getSkill("dark_grasp"));
         addNewSkill(SkillRegistry.getSkill("night_veil"));

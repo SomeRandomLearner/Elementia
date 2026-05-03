@@ -10,6 +10,7 @@ public class Ripper extends GameCharacter{
 
     public Ripper(int maxHealth, int maxMana, int defense, int manaRecovery) {
         super("Ripper", maxHealth, maxMana, defense, manaRecovery);
+        setCharacterId(7);
         addNewSkill(SkillRegistry.getSkill("tackle"));
         addNewSkill(SkillRegistry.getSkill("ground_slam"));
         addNewSkill(SkillRegistry.getSkill("hardening_punch"));

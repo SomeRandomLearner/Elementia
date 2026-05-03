@@ -9,6 +9,7 @@ import java.util.Objects;
 public class Aero extends GameCharacter{
     public Aero(int maxHealth, int maxMana, int defense, int manaRecovery) {
         super("Aero", maxHealth, maxMana, defense, manaRecovery);
+        setCharacterId(1);
         addNewSkill(SkillRegistry.getSkill("zephyr_splash"));
         addNewSkill(SkillRegistry.getSkill("cyclone_fury"));
         addNewSkill(SkillRegistry.getSkill("aether_guard"));

@@ -27,7 +27,7 @@ public class ModeSelectScene extends JPanel {
         buttonPanel.setOpaque(false);
 
         JButton arcadeButton = Utility.createButton("Arcade");
-        arcadeButton.addActionListener(e -> frame.showScreen("CharacterSelect"));
+        arcadeButton.addActionListener(e -> frame.showScreen("ArcadeCharacterSelect"));
 
         JButton pvpButton = Utility.createButton("Player vs Player");
         pvpButton.addActionListener(e -> frame.showScreen("PVPCharacterSelect"));

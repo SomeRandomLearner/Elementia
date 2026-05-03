@@ -75,6 +75,10 @@ public class Skill implements Cloneable{
         throw new AssertionError();
     }}
 
+    public boolean isOnCooldown(){
+        return cooldown > cooldownTimer;
+    }
+
     public void setAnimationFrames(ImageIcon[] animationFrames){
         this.animationFrames = animationFrames;
     }

@@ -1,6 +1,7 @@
 package scenes;
 
 import characters.*;
+import utils.LevelManager;
 import utils.Utility;
 
 import javax.swing.*;
@@ -126,8 +127,8 @@ public class ArcadeCharacterSelectScene extends JPanel {
         confirmButton.setEnabled(false);
 
         confirmButton.addActionListener(e -> {
-            Teams.clearAlliedTeam();
-            Teams.addToAlliedTeam(chosenCharacter);
+            frame.getLevelSelect().setSelectedCharacter(chosenCharacter);
+            LevelManager.setBossLevel(chosenCharacter);
             frame.showScreen("LevelSelect");
         });
 
@@ -185,6 +186,7 @@ public class ArcadeCharacterSelectScene extends JPanel {
                     case RIPPER -> new Ripper();
                     case VEYRION -> new Veyrion();
                     case ZENSTREAM -> new ZenStream();
+                    default -> null;
                 };
 
                 lockedCharacter = chosenCharacter;
@@ -209,6 +211,7 @@ public class ArcadeCharacterSelectScene extends JPanel {
             case RIPPER -> new Ripper();
             case VEYRION -> new Veyrion();
             case ZENSTREAM -> new ZenStream();
+            default -> null;
         };
 
         previewImage.setIcon(new ImageIcon(
