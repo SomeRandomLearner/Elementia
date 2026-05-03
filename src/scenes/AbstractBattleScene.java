@@ -9,6 +9,7 @@ import utils.Utility;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 
@@ -49,6 +50,8 @@ public abstract class AbstractBattleScene extends JPanel {
 
     protected Timer timer;
     protected int timerCount;
+
+    protected HashMap<GameCharacter, CharacterView> characterToViewMap = new HashMap<>();
 
     public AbstractBattleScene(Elementia frame) {
         this.frame = frame;
@@ -203,7 +206,7 @@ public abstract class AbstractBattleScene extends JPanel {
         repaint();
     }
 
-    public void displayCharacterViews(){
+    protected void displayCharacterViews(){
         leftPanel.removeAll();
         rightPanel.removeAll();
 
@@ -213,6 +216,7 @@ public abstract class AbstractBattleScene extends JPanel {
                 selectedTarget = character;
                 handleClick(selectedTarget);
             });
+            characterToViewMap.put(character, view);
             leftPanel.add(view);
         }
         for(GameCharacter character : battleLogic.getActivePlayer2Team()){
@@ -221,6 +225,7 @@ public abstract class AbstractBattleScene extends JPanel {
                 selectedTarget = character;
                 handleClick(selectedTarget);
             });
+            characterToViewMap.put(character, view);
             rightPanel.add(view);
         }
 

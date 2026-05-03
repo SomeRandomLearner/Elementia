@@ -230,6 +230,7 @@ public class PVPBattleScene extends AbstractBattleScene {
                 selectedTarget = character;
                 handleClick(selectedTarget);
             });
+            characterToViewMap.put(character, view);
             leftPanel.add(view);
         }
         for(GameCharacter character : battleLogic.getActivePlayer2Team()){
@@ -238,6 +239,7 @@ public class PVPBattleScene extends AbstractBattleScene {
                 selectedTarget = character;
                 handleClick(selectedTarget);
             });
+            characterToViewMap.put(character, view);
             rightPanel.add(view);
         }
 

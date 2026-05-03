@@ -68,7 +68,6 @@ public class LevelSelectScene extends JPanel{
                 battleLogic.addAllToTeam(2, (LevelManager.getCurrentLevel()).getEnemyTeam());
 
                 frame.getArcadeBattle().setBattleLogic(battleLogic);
-                frame.getArcadeBattle().displayCharacterViews();
                 frame.getArcadeBattle().startGame();
                 frame.showScreen("Battle");
             });
