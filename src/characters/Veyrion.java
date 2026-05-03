@@ -30,6 +30,12 @@ public class Veyrion extends GameCharacter{
     }
 
     @Override
+    public String getDescription() {
+        return "Veyrion, the Thunder Lord, unleashes devastating electrical storms. " +
+                "His lightning strikes with the wrath of a thousand tempests.";
+    }
+
+    @Override
     public GameCharacter clone(){
         return new Veyrion(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
     }

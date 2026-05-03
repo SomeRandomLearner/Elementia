@@ -31,6 +31,8 @@ public abstract class GameCharacter {
     private Skill[] skills = new Skill[3];
     private int skillCount = 0;
 
+    public abstract String getDescription();
+
     public GameCharacter(String name, int maxHealth, int maxMana, int defense, int manaRecovery) {
         this.name = name;
         this.maxHealth = maxHealth;

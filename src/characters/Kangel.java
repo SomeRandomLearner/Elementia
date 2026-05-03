@@ -31,6 +31,12 @@ public class Kangel extends GameCharacter {
     }
 
     @Override
+    public String getDescription() {
+        return "Kangel, the Celestial Guardian, channels divine light to protect " +
+                "and purify. Her holy powers cleanse corruption and shield the innocent.";
+    }
+
+    @Override
     public GameCharacter clone() {
         return new Kangel(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
     }

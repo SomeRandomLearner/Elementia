@@ -1,6 +1,5 @@
 package scenes;
 
-
 import logic.SoundPlayer;
 import utils.Utility;
 
@@ -9,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
 
+
 public class MainMenuScene extends JPanel {
     JPanel titleNamePanel, buttonPanel, creditsPanel;
     JLabel backgroundLabel;
@@ -16,7 +16,9 @@ public class MainMenuScene extends JPanel {
     Image originalBackground;
     int width = 620, height = 1000;
 
+
     private int count = 3;
+
     public MainMenuScene(Elementia frame) {
         URL bgPath = getClass().getResource("/resources/ELEMENTIA.png");
         assert bgPath != null : "Menu Bar not found";
@@ -100,16 +102,16 @@ public class MainMenuScene extends JPanel {
         creditsTextArea.setMargin(new Insets(5, 5, 5, 5));
         creditsTextArea.setText(
                 "This game is non-commercial and for educational purposes only\n" +
-                "This game uses ai-generated images\n" +
-                "Contributors:\n" +
-                "Joshua Raagas\n" +
-                "Kaizen Gabriel Guiroy\n" +
-                "Kangel Hermosilla\n" +
-                "Maria Mie Cadungog\n" +
-                "Psalmist Mae Guiroy\n" +
-                "Vince Jayson\n\n\n" +
-                "Basic Attack Sound by freesound_CrunchpixStudio\n" +
-                "Background Music by RoyaltyFreeMusicStudio");
+                        "This game uses ai-generated images\n" +
+                        "Contributors:\n" +
+                        "Joshua Raagas\n" +
+                        "Kaizen Gabriel Guiroy\n" +
+                        "Kangel Hermosilla\n" +
+                        "Maria Mie Cadungog\n" +
+                        "Psalmist Mae Guiroy\n" +
+                        "Vince Jayson\n\n\n" +
+                        "Basic Attack Sound by freesound_CrunchpixStudio\n" +
+                        "Background Music by RoyaltyFreeMusicStudio");
         return creditsTextArea;
     }
 
@@ -126,12 +128,12 @@ public class MainMenuScene extends JPanel {
         int buttonWidth = 200;
         int buttonHeight = 200;
         int buttonX = (width - buttonWidth) / 2;
-        int buttonY = (height - buttonHeight)/ 2 + 150;
+        int buttonY = (height - buttonHeight) / 2 + 150;
         buttonPanel.setBounds(buttonX, buttonY, buttonWidth, buttonHeight);
 
         int creditsWidth = 720;
         int creditsHeight = 400;
-        creditsPanel.setBounds((width - creditsWidth)/2, (height - creditsHeight)/2, creditsWidth, creditsHeight);
+        creditsPanel.setBounds((width - creditsWidth) / 2, (height - creditsHeight) / 2, creditsWidth, creditsHeight);
 
         frame.revalidate();
         frame.repaint();

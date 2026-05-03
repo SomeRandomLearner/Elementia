@@ -30,6 +30,12 @@ public class Maelor extends GameCharacter{
     }
 
     @Override
+    public String getDescription() {
+        return "Maelor, the Earth Warden, commands the unbreakable might of stone " +
+                "and soil. His defenses are impenetrable, his strikes devastating.";
+    }
+
+    @Override
     public GameCharacter clone(){
         return new Maelor(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
     }

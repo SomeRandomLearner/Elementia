@@ -29,6 +29,13 @@ public class ZenStream extends GameCharacter{
     public ZenStream(){
         this(80, 80, 30, 20);
     }
+
+    @Override
+    public String getDescription() {
+        return "ZenStream, the Water Sage, flows like a river through battle. " +
+                "Her fluid movements and healing waters sustain her through any conflict.";
+    }
+
     @Override
     public GameCharacter clone(){
         return new ZenStream(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());

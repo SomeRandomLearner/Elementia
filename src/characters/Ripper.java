@@ -30,6 +30,13 @@ public class Ripper extends GameCharacter{
     public Ripper(){
         this(80, 80, 30, 30);
     }
+
+    @Override
+    public String getDescription() {
+        return "Ripper, the Blood Berserker, thrives on carnage and destruction. " +
+                "His savage fury grows stronger with every wound he inflicts.";
+    }
+
     @Override
     public GameCharacter clone(){
         return new Ripper(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());

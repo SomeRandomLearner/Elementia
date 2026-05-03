@@ -31,6 +31,12 @@ public class Kaelis extends GameCharacter{
     }
 
     @Override
+    public String getDescription() {
+        return "Kaelis, the Flame Sovereign, wields fire with passionate fury. " +
+                "Her blazing attacks incinerate foes and ignite the hearts of allies.";
+    }
+
+    @Override
     public GameCharacter clone(){
         return new Kaelis(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
     }

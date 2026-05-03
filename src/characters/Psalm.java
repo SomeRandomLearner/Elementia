@@ -28,6 +28,13 @@ public class Psalm extends GameCharacter{
     public Psalm(){
         this(90, 110, 20, 10);
     }
+
+    @Override
+    public String getDescription() {
+        return "Psalm, the Arcane Scholar, weaves complex spells of pure magic. " +
+                "Her intellect and arcane mastery bend reality to her will.";
+    }
+
     @Override
     public GameCharacter clone(){
         return new Psalm(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());

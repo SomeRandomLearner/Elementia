@@ -31,6 +31,12 @@ public class Aero extends GameCharacter{
     }
 
     @Override
+    public String getDescription() {
+        return "Aero, the Wind Master, commands the tempests with unmatched grace. " +
+                "His aerial maneuvers and slicing gusts make him untouchable in battle.";
+    }
+
+    @Override
     public GameCharacter clone(){
         return new Aero();
     }

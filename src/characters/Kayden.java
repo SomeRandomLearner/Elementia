@@ -32,6 +32,12 @@ public class Kayden extends GameCharacter{
     }
 
     @Override
+    public String getDescription() {
+        return "Kayden, the Shadow Assassin, strikes from the darkness with lethal " +
+                "precision. No target escapes his silent, deadly embrace.";
+    }
+
+    @Override
     public GameCharacter clone(){
         return new Kayden(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
     }
