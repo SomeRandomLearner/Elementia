@@ -122,7 +122,7 @@ public class PVPCharacterSelectScene extends JPanel {
             public void mouseEntered(MouseEvent e) {
                 panel.setBorder(BorderFactory.createLineBorder(Color.CYAN, 2));
 
-                if (isDuplicate(character)) {
+                if (!player2HasChosen && isDuplicate(character)) {
                     showPlayer2Warning("CHARACTER HAS ALREADY BEEN SELECTED!");
                     clearPreview(player2Preview);
                     return;
@@ -144,6 +144,7 @@ public class PVPCharacterSelectScene extends JPanel {
                 } else if (!player2HasChosen) {
                     clearPreview(player2Preview);
                 }
+                clearWarning();
             }
 
             @Override
