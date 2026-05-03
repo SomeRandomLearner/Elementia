@@ -20,6 +20,9 @@ public class ArcadeBattleScene extends AbstractBattleScene {
         super(frame);
         backButton.addActionListener(e -> {
             repaint();
+            if(enemyTurnTimer != null) enemyTurnTimer.stop();
+            timer = enemyTurnTimer = null;
+
             if(hasGameEnded){
                 bottomPanel.removeAll();
                 bottomPanel.add(player1SkillPanel, BorderLayout.WEST);
@@ -66,7 +69,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                     player1SkillPanel.repaint();
                 }
                 else{
-                    Timer enemyTurnTimer = new Timer(2000, e -> {
+                    enemyTurnTimer = new Timer(2000, e -> {
                         Random random = new Random();
                         selectedTarget = battleLogic.getActivePlayer1Team().get(random.nextInt(battleLogic.getActivePlayer1Team().size()));
                         battleLogic.setTargetCharacter(selectedTarget);
@@ -192,7 +195,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 bottomPanel.removeAll();
                 bottomPanel.add(buttonWrapper, BorderLayout.CENTER);
 
-                rematchBtn.addActionListener(e -> {
+                rematchBtn.addActionListener(e -> { // switch to continue button
                     bottomPanel.removeAll();
                     bottomPanel.add(player1SkillPanel, BorderLayout.WEST);
                     bottomPanel.add(timerPanel, BorderLayout.CENTER);

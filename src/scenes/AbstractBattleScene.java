@@ -31,6 +31,7 @@ public abstract class AbstractBattleScene extends JPanel {
     protected JLabel winCounterLabel;
     protected JLabel timerLabel;
 
+    protected Timer enemyTurnTimer;
     protected JButton backButton;
 
     protected Font normalFont = new Font("Times New Roman", Font.PLAIN, 32);

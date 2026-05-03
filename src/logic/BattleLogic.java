@@ -31,12 +31,14 @@ public class BattleLogic {
 
     private BattleEventListener battleEventListener;
     private boolean isPVP;
+    private boolean hasGameEnded;
 
     public BattleLogic(boolean isPVP){
         this.isPVP = isPVP;
     }
 
     public void startGame(){
+        hasGameEnded = false;
         previousRoundWinner = 0;
         player1WinCount = player2WinCount = 0;
         resetActiveTeams(true);
@@ -73,6 +75,8 @@ public class BattleLogic {
     }
 
     private void startTurn(){
+        if(hasGameEnded) return; // prevents the match from running in the background
+
         if(currentCharacterTurn >= currentTeam.size()) {
             if (currentPlayerTurn == player1) {
                 isPlayer1FirstTurn = false;
@@ -156,6 +160,7 @@ public class BattleLogic {
 
     private void endGame(){
         int gameWinner = (player1WinCount >= 3) ? player1 : player2;
+        hasGameEnded = true;
         battleEventListener.onGameEnded(gameWinner);
     }
 
