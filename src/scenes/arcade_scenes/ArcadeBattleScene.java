@@ -8,11 +8,13 @@ import logic.Level;
 import logic.LevelManager;
 import scenes.AbstractBattleScene;
 import scenes.Elementia;
+import utils.CharacterView;
 import utils.Utility;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class ArcadeBattleScene extends AbstractBattleScene {
@@ -40,6 +42,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
     public void startGame(){
         setBattleSceneBackground((LevelManager.getCurrentLevelNumber() % 5) + 1); // sets background to background 1-5
         winCounterLabel.setText("0 / 0");
+        isFirstRound = true;
         roundNumber = 1;
         hasRoundEnded = false;
         hasGameEnded = false;
@@ -62,7 +65,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                     player1SkillPanel.removeAll();
                     for(Skill skill : currentCharacter.getSkills()){
                         if(skill == null) break;
-                        player1SkillPanel.add(getJButton(currentCharacter, skill));
+                        player1SkillPanel.add(getSkillButton(currentCharacter, skill));
                     }
 
                     player1SkillPanel.revalidate();
@@ -88,7 +91,9 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                         leftPanel.setSelectedSkill(selectedSkill);
 
                         battleLogic.currentCharacterUseSkillOnTarget();
-                        leftPanel.playSkillAnimation();
+                        CharacterView view = characterToViewMap.get(selectedTarget);
+                        view.setSelectedSkill(selectedSkill);
+                        view.playSkillAnimation();
 
                         ((Timer)e.getSource()).stop();
                     });
@@ -151,7 +156,16 @@ public class ArcadeBattleScene extends AbstractBattleScene {
 
             @Override
             public void onRoundStarted(int currentPlayerTurn) {
-                displayCharacterViews();
+                if(isFirstRound) {
+                    displayCharacterViews();
+                    isFirstRound = false;
+                    return;
+                }
+                Timer roundDelayTimer = new Timer(600, e->{
+                    displayCharacterViews();
+                    ((Timer)e.getSource()).stop();
+                });
+                roundDelayTimer.start();
             }
 
             @Override

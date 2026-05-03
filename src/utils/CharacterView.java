@@ -2,67 +2,63 @@ package utils;
 
 import characters.GameCharacter;
 import logic.Skill;
+import logic.SoundPlayer;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class CharacterView extends JPanel {
     private final GameCharacter character;
-    private OnClickListener clickListener;
-    private boolean isHovered = false;
-    private onAttackListener attackListener;
+    private Skill selectedSkill;
 
-    public interface OnClickListener {
-        void onClick(GameCharacter character);
-    }
+    private Timer animTimer;
+    private int currentFrameIndex = 0;
     
-    public interface onAttackListener {
-        void onAttack(Skill selectedSkill);
-    }
 
     public CharacterView(GameCharacter character) {
         this.character = character;
 
         setOpaque(false);
         setPreferredSize(new Dimension(120, 200));
-
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                if (character.getCurrentHP() > 0) {
-                    isHovered = true;
-                    repaint();
-                }
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                isHovered = false;
-                repaint();
-            }
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (clickListener != null && character.getCurrentHP() > 0) {
-                    clickListener.onClick(character);
-                }
-            }
-        });
-    }
-
-    public void setClickListener(OnClickListener listener) {
-        this.clickListener = listener;
-    }
-
-    public void setAttackListener(onAttackListener listener) {
-        this.attackListener = listener;
     }
 
     public GameCharacter getCharacter() {
         return character;
+    }
+
+
+    public void playSkillAnimation() {
+        if (animTimer != null && animTimer.isRunning()) return;
+
+        if(selectedSkill == null) return;
+
+        SoundPlayer.playSound("/resources/sounds/basic_attack_sound.wav");
+
+        ImageIcon[] animationFrames = selectedSkill.getAnimationFrames();
+        if (animationFrames == null || animationFrames.length == 0) return;
+
+        currentFrameIndex = 0;
+        animTimer = new Timer(200, e -> {
+            currentFrameIndex++;
+
+            if (currentFrameIndex >= animationFrames.length) {
+                currentFrameIndex = 0;
+                animTimer.stop();
+            }
+
+            repaint();
+        });
+        animTimer.start();
+    }
+
+    public void setSelectedSkill(Skill selectedSkill){
+        this.selectedSkill = selectedSkill;
     }
 
     @Override
@@ -71,7 +67,9 @@ public class CharacterView extends JPanel {
 
         if (character == null) return;
 
-        BufferedImage currentImage = character.getImage();
+        BufferedImage currentImage = null;
+        currentImage = character.getImage();
+
         if (currentImage == null) return;
 
         Graphics2D g2 = (Graphics2D) g.create();
@@ -101,8 +99,9 @@ public class CharacterView extends JPanel {
         int barWidth = 80;
         int barHeight = 8;
         int barX = (panelW - barWidth) / 2;
-        int hpY = y + drawH + 20;
 
+        // health bar
+        int hpY = y + drawH + 20;
         double hpPercent = (double) character.getCurrentHP() / character.getMaxHP();
         g2.setColor(Color.DARK_GRAY);
         g2.fillRect(barX, hpY, barWidth, barHeight);
@@ -111,6 +110,7 @@ public class CharacterView extends JPanel {
         g2.setColor(Color.WHITE);
         g2.drawRect(barX, hpY, barWidth, barHeight);
 
+        // mana bar
         int manaY = hpY + 10;
         double manaPercent = (double) character.getCurrentMana() / character.getMaxMana();
         g2.setColor(Color.DARK_GRAY);
@@ -120,14 +120,21 @@ public class CharacterView extends JPanel {
         g2.setColor(Color.WHITE);
         g2.drawRect(barX, manaY, barWidth, barHeight / 2);
 
-        if (isHovered) {
-            g2.setColor(new Color(0, 255, 0, 60));
-            g2.fillRect(0, 0, getWidth(), getHeight());
-            g2.setColor(Color.GREEN);
-            g2.setStroke(new BasicStroke(2f));
-            g2.drawRect(1, 1, getWidth() - 3, getHeight() - 3);
+
+        if(selectedSkill == null) return;
+
+        if (animTimer == null || !animTimer.isRunning()) {
+            return;
         }
+        ImageIcon[] animationFrames = selectedSkill.getAnimationFrames();
+        if (animationFrames == null || animationFrames.length == 0) return;
+
+        ImageIcon currentFrameIcon = animationFrames[currentFrameIndex];
+
+        g2.drawImage(currentFrameIcon.getImage(), x, y, drawW, drawH, this);
 
         g2.dispose();
     }
+
+
 }

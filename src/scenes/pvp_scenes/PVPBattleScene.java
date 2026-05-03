@@ -20,7 +20,6 @@ public class PVPBattleScene extends AbstractBattleScene {
         super(frame);
 
         backButton.addActionListener(e -> {
-//            battleLogic.resetCharacterChoices();
             frame.showScreen("PVPCharacterSelect");
         });
     }
@@ -42,6 +41,7 @@ public class PVPBattleScene extends AbstractBattleScene {
     public void startGame(){
         winCounterLabel.setText("0 / 0");
         roundNumber = 1;
+        isFirstRound = true;
         hasRoundEnded = false;
         hasGameEnded = false;
         selectedTarget = null;
@@ -64,7 +64,7 @@ public class PVPBattleScene extends AbstractBattleScene {
                     player1SkillPanel.removeAll();
                     for(Skill skill : currentCharacter.getSkills()){
                         if(skill == null) break;
-                        player1SkillPanel.add(getJButton(currentCharacter, skill));
+                        player1SkillPanel.add(getSkillButton(currentCharacter, skill));
                     }
 
                     player1SkillPanel.revalidate();
@@ -79,7 +79,7 @@ public class PVPBattleScene extends AbstractBattleScene {
                     player2SkillPanel.removeAll();
                     for(Skill skill : currentCharacter.getSkills()){
                         if(skill == null) break;
-                        player2SkillPanel.add(getJButton(currentCharacter, skill));
+                        player2SkillPanel.add(getSkillButton(currentCharacter, skill));
                     }
 
                     player2SkillPanel.revalidate();
@@ -136,7 +136,16 @@ public class PVPBattleScene extends AbstractBattleScene {
 
             @Override
             public void onRoundStarted(int currentPlayerTurn) {
-                displayCharacterViews();
+                if(isFirstRound) {
+                    displayCharacterViews();
+                    isFirstRound = false;
+                    return;
+                }
+                Timer roundDelayTimer = new Timer(600, e->{
+                    displayCharacterViews();
+                    ((Timer)e.getSource()).stop();
+                });
+                roundDelayTimer.start();
             }
 
             @Override
@@ -226,19 +235,13 @@ public class PVPBattleScene extends AbstractBattleScene {
 
         for(GameCharacter character : battleLogic.getActivePlayer1Team()){
             CharacterView view = new CharacterView(character);
-            view.setClickListener(e -> {
-                selectedTarget = character;
-                handleClick(selectedTarget);
-            });
+
             characterToViewMap.put(character, view);
             leftPanel.add(view);
         }
         for(GameCharacter character : battleLogic.getActivePlayer2Team()){
             CharacterView view = new CharacterView(character);
-            view.setClickListener(e -> {
-                selectedTarget = character;
-                handleClick(selectedTarget);
-            });
+
             characterToViewMap.put(character, view);
             rightPanel.add(view);
         }

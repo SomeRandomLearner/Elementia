@@ -9,6 +9,7 @@ import utils.Utility;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
@@ -44,6 +45,7 @@ public abstract class AbstractBattleScene extends JPanel {
 
     protected int roundNumber;
     protected int roundWinner;
+    protected boolean isFirstRound;
     protected boolean hasRoundEnded;
     protected int gameWinner;
     protected boolean hasGameEnded;
@@ -150,28 +152,6 @@ public abstract class AbstractBattleScene extends JPanel {
 
     public abstract void startGame();
 
-    protected void handleClick(GameCharacter target){
-        if (target == null || battleLogic.getSelectedSkill() == null || battleLogic.getCurrentTeam().contains(target)) return;
-
-        battleLogic.setTargetCharacter(target);
-        int currentPlayerTurn = battleLogic.getCurrentPlayerTurn();
-        if(currentPlayerTurn == 1){
-            rightPanel.setSelectedSkill(battleLogic.getSelectedSkill());
-            rightPanel.playSkillAnimation();
-        }
-        else{
-            leftPanel.setSelectedSkill(battleLogic.getSelectedSkill());
-            leftPanel.playSkillAnimation();
-        }
-        battleLogic.currentCharacterUseSkillOnTarget();
-
-        battleLogic.setSelectedSkill(null);
-        selectedTarget = null;
-
-        rightPanel.repaint();
-        leftPanel.repaint();
-    }
-
     public static void setAllComponents(Container container, boolean setTo) {
         for (Component component : container.getComponents()) {
             component.setEnabled(setTo);
@@ -181,7 +161,7 @@ public abstract class AbstractBattleScene extends JPanel {
         }
     }
 
-    protected JButton getJButton(GameCharacter currentCharacter, Skill skill) {
+    protected JButton getSkillButton(GameCharacter currentCharacter, Skill skill) {
         JButton skillButton = new JButton(skill.getName());
         skillButton.setFocusPainted(false);
         skillButton.setBackground(new Color(70, 110, 220));
@@ -193,6 +173,17 @@ public abstract class AbstractBattleScene extends JPanel {
         }
         skillButton.addActionListener(e -> {
             battleLogic.setSelectedSkill(skill);
+            ArrayList<GameCharacter> opponentTeam = (ArrayList<GameCharacter>) battleLogic.getOpposingTeam();
+            if(!opponentTeam.isEmpty()) {
+                GameCharacter targetCharacter = opponentTeam.get(new Random().nextInt(opponentTeam.size()));
+                battleLogic.setTargetCharacter(targetCharacter);
+                battleLogic.currentCharacterUseSkillOnTarget();
+                CharacterView view = characterToViewMap.get(targetCharacter);
+                if(view != null) {
+                    view.setSelectedSkill(skill);
+                    view.playSkillAnimation();
+                }
+            }
         });
         return skillButton;
     }
@@ -212,19 +203,11 @@ public abstract class AbstractBattleScene extends JPanel {
 
         for(GameCharacter character : battleLogic.getActivePlayer1Team()){
             CharacterView view = new CharacterView(character);
-            view.setClickListener(e -> {
-                selectedTarget = character;
-                handleClick(selectedTarget);
-            });
             characterToViewMap.put(character, view);
             leftPanel.add(view);
         }
         for(GameCharacter character : battleLogic.getActivePlayer2Team()){
             CharacterView view = new CharacterView(character);
-            view.setClickListener(e -> {
-                selectedTarget = character;
-                handleClick(selectedTarget);
-            });
             characterToViewMap.put(character, view);
             rightPanel.add(view);
         }
