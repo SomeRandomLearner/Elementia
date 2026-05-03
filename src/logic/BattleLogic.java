@@ -30,7 +30,7 @@ public class BattleLogic {
     private int previousRoundWinner;
 
     private BattleEventListener battleEventListener;
-    private boolean isPVP;
+    private final boolean isPVP;
     private boolean hasGameEnded;
 
     public BattleLogic(boolean isPVP){

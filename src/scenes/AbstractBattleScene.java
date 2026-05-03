@@ -35,7 +35,7 @@ public abstract class AbstractBattleScene extends JPanel {
     protected JButton backButton;
 
     protected Font normalFont = new Font("Times New Roman", Font.PLAIN, 32);
-    protected ImageIcon bgIcon = null;
+    protected ImageIcon bgIcon;
     protected Image bgImage;
 
     protected BattleLogic battleLogic;
@@ -189,7 +189,6 @@ public abstract class AbstractBattleScene extends JPanel {
             if(skill.getCooldown() > skill.getCooldownTimer()) skillButton.setText(skill.getName() + " " + (skill.getCooldown() - skill.getCooldownTimer()));
         }
         skillButton.addActionListener(e -> {
-
             battleLogic.setSelectedSkill(skill);
         });
         return skillButton;
