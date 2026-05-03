@@ -3,7 +3,7 @@ package scenes;
 import characters.*;
 import logic.BattleLogic;
 import utils.CustomButton;
-import utils.LevelManager;
+import logic.LevelManager;
 import utils.Utility;
 
 import javax.swing.*;

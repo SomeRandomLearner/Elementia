@@ -1,6 +1,5 @@
 package scenes;
 
-import characters.CharacterView;
 import logic.Skill;
 import logic.SoundPlayer;
 

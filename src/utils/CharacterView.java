@@ -1,4 +1,6 @@
-package characters;
+package utils;
+
+import characters.GameCharacter;
 
 import javax.swing.*;
 import java.awt.*;

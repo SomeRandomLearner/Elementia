@@ -1,6 +1,6 @@
 package scenes;
 
-import characters.CharacterView;
+import utils.CharacterView;
 import characters.GameCharacter;
 import logic.Skill;
 import logic.BattleEventListener;
@@ -13,7 +13,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Objects;
 
-public class PVPBattleScene extends BattleScene {
+public class PVPBattleScene extends AbstractBattleScene {
     public PVPBattleScene(Elementia frame) {
         super(frame);
 

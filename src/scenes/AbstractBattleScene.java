@@ -1,6 +1,6 @@
 package scenes;
 
-import characters.CharacterView;
+import utils.CharacterView;
 import characters.GameCharacter;
 import logic.Skill;
 import logic.BattleLogic;
@@ -11,7 +11,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Objects;
 
-public abstract class BattleScene extends JPanel {
+public abstract class AbstractBattleScene extends JPanel {
     protected Elementia frame;
 
     protected JPanel topPanel;
@@ -48,7 +48,7 @@ public abstract class BattleScene extends JPanel {
     protected Timer timer;
     protected int timerCount;
 
-    public BattleScene(Elementia frame) {
+    public AbstractBattleScene(Elementia frame) {
         this.frame = frame;
         setLayout(new BorderLayout());
 

@@ -4,8 +4,8 @@ import characters.GameCharacter;
 import logic.BattleEventListener;
 import logic.Skill;
 import logic.TurnResult;
-import utils.Level;
-import utils.LevelManager;
+import logic.Level;
+import logic.LevelManager;
 import utils.Utility;
 
 import javax.swing.*;
@@ -13,7 +13,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Random;
 
-public class ArcadeBattleScene extends BattleScene{
+public class ArcadeBattleScene extends AbstractBattleScene {
     public ArcadeBattleScene(Elementia frame){
         super(frame);
         backBtn.addActionListener(e -> {

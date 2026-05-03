@@ -1,7 +1,7 @@
 package scenes;
 
 import characters.*;
-import utils.LevelManager;
+import logic.LevelManager;
 import utils.Utility;
 
 import javax.swing.*;

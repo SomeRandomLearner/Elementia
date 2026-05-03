@@ -63,7 +63,7 @@ public class Elementia extends JFrame{
 
     public LevelSelectScene getLevelSelect() { return levelSelect; }
 
-    public BattleScene getArcadeBattle() { return arcadeBattle; }
+    public AbstractBattleScene getArcadeBattle() { return arcadeBattle; }
 
     public PVPCharacterSelectScene getPVPCharacterSelect() { return pvpCharacterSelect; }
 

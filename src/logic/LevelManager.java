@@ -1,10 +1,8 @@
-package utils;
+package logic;
 
 import characters.*;
 
 import java.util.ArrayList;
-
-import static characters.GameCharacter.Character.*;
 
 public class LevelManager {
     private static final int MAX_LEVELS = 10;
