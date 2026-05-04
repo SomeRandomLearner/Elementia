@@ -152,7 +152,7 @@ public class LevelSelectScene extends JPanel {
             frame.showScreen("LeaderboardNameInput");
             System.out.println("VALID");
         }
-        completedLevels = 10; // dev testing
+
         for (int i = 0; i < levelButtons.length; i++) {
             if (i <= completedLevels) {
 
