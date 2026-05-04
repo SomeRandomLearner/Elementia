@@ -1,4 +1,4 @@
-package scenes;
+package logic;
 
 public class CharacterInfo {
     private String name;
