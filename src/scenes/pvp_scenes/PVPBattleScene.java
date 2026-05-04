@@ -176,8 +176,8 @@ public class PVPBattleScene extends AbstractBattleScene {
                 gameWinner = winningPlayer;
                 hasGameEnded = true;
 
-                leftPanel.removeAll();
-                rightPanel.removeAll();
+                player1SkillPanel.removeAll();
+                player2SkillPanel.removeAll();
 
                 JButton rematchBtn = Utility.createButton("Rematch");
 

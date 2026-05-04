@@ -9,6 +9,10 @@ import utils.Utility;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -21,15 +25,18 @@ public class LevelSelectScene extends JPanel {
     private final CustomButton[] levelButtons;
 
     private Image bgImage;
+    private final byte NO_OF_LEVELS = 10;
+    private boolean hasInputtedLeaderboardScore;
 
+    private Elementia frame;
     public LevelSelectScene(Elementia frame) {
-
-        final byte NO_OF_LEVELS = 10;
+        this.frame = frame;
 
         bgImage = new ImageIcon(
                 Objects.requireNonNull(getClass().getResource("/resources/CharacterSelectBG.png"))
         ).getImage();
 
+        hasInputtedLeaderboardScore = false;
         levelStatuses = new HashMap<>();
 
         for (int i = 1; i <= NO_OF_LEVELS; i++) {
@@ -133,10 +140,20 @@ public class LevelSelectScene extends JPanel {
         return levelStatuses.get(levelNumber);
     }
 
-    protected void unlockLevels() {
-
+    void unlockLevels() {
+        if(!hasInputtedLeaderboardScore && completedLevels == NO_OF_LEVELS){
+            try(BufferedWriter writer = new BufferedWriter(new FileWriter("data/player_data.txt", true))){
+                writer.write("," + Instant.now());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            hasInputtedLeaderboardScore = true;
+            frame.getLeaderboardNameInput().displayTimes();
+            frame.showScreen("LeaderboardNameInput");
+            System.out.println("VALID");
+        }
+        completedLevels = 10; // dev testing
         for (int i = 0; i < levelButtons.length; i++) {
-
             if (i <= completedLevels) {
 
                 levelButtons[i].setEnabled(true);

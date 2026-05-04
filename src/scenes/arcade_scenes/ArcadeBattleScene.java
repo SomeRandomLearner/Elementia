@@ -35,6 +35,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 hasGameEnded = false;
             }
             frame.showScreen("LevelSelect");
+            frame.getLevelSelect().unlockLevels();
         });
     }
 
@@ -196,8 +197,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 gameWinner = winningPlayer;
                 hasGameEnded = true;
 
-                leftPanel.removeAll();
-                rightPanel.removeAll();
+                player1SkillPanel.removeAll();
 
                 JButton rematchBtn = Utility.createButton("Rematch");
 

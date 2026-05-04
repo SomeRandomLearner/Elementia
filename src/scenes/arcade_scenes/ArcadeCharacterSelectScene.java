@@ -3,12 +3,16 @@ package scenes.arcade_scenes;
 import characters.*;
 import logic.LevelManager;
 import scenes.Elementia;
-import utils.Utility;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.Objects;
 
 public class ArcadeCharacterSelectScene extends JPanel {
@@ -91,6 +95,18 @@ public class ArcadeCharacterSelectScene extends JPanel {
         confirmButton.addActionListener(e -> {
             frame.getLevelSelect().setSelectedCharacter(chosenCharacter);
             LevelManager.setBossLevel(chosenCharacter);
+
+            File currentDataFile = new File("data/player_data.txt");
+            if(!currentDataFile.getParentFile().exists()){
+                currentDataFile.getParentFile().mkdirs();
+            }else System.out.println("It exists");
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(currentDataFile, false),1024)){
+                Instant timeStarted = Instant.now();
+                writer.write(timeStarted.toString());
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
             frame.showScreen("LevelSelect");
         });
 

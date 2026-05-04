@@ -12,7 +12,7 @@ import java.net.URL;
 public class MainMenuScene extends JPanel {
     JPanel titleNamePanel, buttonPanel, creditsPanel;
     JLabel backgroundLabel;
-    JButton startButton, exitButton, creditsButton;
+    JButton startButton, exitButton, creditsButton, leaderboardButton;
     Image originalBackground;
     int width = 620, height = 1000;
 
@@ -37,7 +37,7 @@ public class MainMenuScene extends JPanel {
         titleNamePanel.setOpaque(false);
         layeredPane.add(titleNamePanel, Integer.valueOf(1));
 
-        buttonPanel = new JPanel(new GridLayout(3, 1, 0, 20));
+        buttonPanel = new JPanel(new GridLayout(4, 1, 0, 20));
         buttonPanel.setOpaque(false);
 
         creditsPanel = new JPanel();
@@ -64,13 +64,18 @@ public class MainMenuScene extends JPanel {
         startButton = Utility.createButton("START");
         startButton.addActionListener(e -> frame.showScreen("ModeSelect"));
 
+        leaderboardButton = Utility.createButton("LEADERBOARD");
+        leaderboardButton.addActionListener(e -> frame.showScreen("Leaderboard"));
+
         creditsButton = Utility.createButton("CREDITS");
         creditsButton.addActionListener(e -> creditsPanel.setVisible(true));
 
         exitButton = Utility.createButton("EXIT");
         exitButton.addActionListener(e -> System.exit(0));
 
+
         buttonPanel.add(startButton);
+        buttonPanel.add(leaderboardButton);
         buttonPanel.add(creditsButton);
         buttonPanel.add(exitButton);
 
@@ -125,7 +130,7 @@ public class MainMenuScene extends JPanel {
         backgroundLabel.setBounds(0, 0, width, height);
         layeredPane.setBounds(0, 0, width, height);
 
-        int buttonWidth = 200;
+        int buttonWidth = 300;
         int buttonHeight = 200;
         int buttonX = (width - buttonWidth) / 2;
         int buttonY = (height - buttonHeight) / 2 + 150;

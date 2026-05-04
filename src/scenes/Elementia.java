@@ -27,6 +27,10 @@ public class Elementia extends JFrame{
     private PVPStageSelectScene pvpStageSelect;
     private PVPBattleScene pvpBattle;
 
+    // Leaderboard
+    private LeaderboardScene leaderboard;
+    private LeaderboardNameInputScene leaderboardNameInput;
+
     public Elementia() {
         int width =  1200, height = 800;
         setTitle("ELEMENTIA");
@@ -43,6 +47,8 @@ public class Elementia extends JFrame{
         pvpCharacterSelect = new PVPCharacterSelectScene(this);
         pvpStageSelect = new PVPStageSelectScene(this);
         pvpBattle = new PVPBattleScene(this);
+        leaderboard = new LeaderboardScene(this);
+        leaderboardNameInput = new LeaderboardNameInputScene(this);
 
         container.add(mainMenu, "MainMenu");
         container.add(modeSelect, "ModeSelect");
@@ -56,6 +62,8 @@ public class Elementia extends JFrame{
         container.add(pvpBattle, "PVPBattle");
 
 
+        container.add(leaderboard, "Leaderboard");
+        container.add(leaderboardNameInput, "LeaderboardNameInput");
         add(container);
         layout.show(container, "MainMenu");
 
@@ -78,4 +86,7 @@ public class Elementia extends JFrame{
 
     public PVPBattleScene getPVPBattle() { return pvpBattle; }
 
+    public LeaderboardScene getLeaderboard() { return leaderboard; }
+
+    public LeaderboardNameInputScene getLeaderboardNameInput() { return leaderboardNameInput; }
 }
