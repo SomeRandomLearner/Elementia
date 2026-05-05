@@ -18,8 +18,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class ArcadeBattleScene extends AbstractBattleScene {
+
     public ArcadeBattleScene(Elementia frame){
         super(frame);
+
         backButton.addActionListener(e -> {
             repaint();
             if(enemyTurnTimer != null) enemyTurnTimer.stop();
@@ -27,52 +29,77 @@ public class ArcadeBattleScene extends AbstractBattleScene {
 
             if(hasGameEnded){
                 bottomPanel.removeAll();
-                bottomPanel.add(player1SkillPanel, BorderLayout.WEST);
-                bottomPanel.add(timerPanel, BorderLayout.CENTER);
-
+                setupBottomPanelLayout();
                 bottomPanel.revalidate();
                 bottomPanel.repaint();
                 hasGameEnded = false;
             }
+
             frame.showScreen("LevelSelect");
             frame.getLevelSelect().unlockLevels();
         });
     }
 
+    private void setupBottomPanelLayout() {
+        bottomPanel.removeAll();
+
+        // Create main container with BorderLayout
+        JPanel mainBottomContainer = new JPanel(new BorderLayout());
+        mainBottomContainer.setOpaque(false);
+
+        // Create upper section for timer (CENTER UPPER PART)
+        JPanel upperSection = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        upperSection.setOpaque(false);
+        upperSection.add(timerPanel);
+
+        // Create center section for skills/buttons (CENTER)
+        JPanel centerSection = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        centerSection.setOpaque(false);
+        centerSection.add(player1SkillPanel);
+
+        mainBottomContainer.add(upperSection, BorderLayout.NORTH);
+        mainBottomContainer.add(centerSection, BorderLayout.CENTER);
+
+        bottomPanel.add(mainBottomContainer, BorderLayout.CENTER);
+    }
+
     @Override
     public void startGame(){
-        setBattleSceneBackground((LevelManager.getCurrentLevelNumber() % 5) + 1); // sets background to background 1-5
+        setBattleSceneBackground((LevelManager.getCurrentLevelNumber() % 5) + 1);
+
         winCounterLabel.setText("0 / 0");
         isFirstRound = true;
         roundNumber = 1;
         hasRoundEnded = false;
         hasGameEnded = false;
         selectedTarget = null;
+
         displayCharacterViews();
+
+        // Setup initial bottom panel layout
+        setupBottomPanelLayout();
 
         if(battleLogic == null){
             System.out.println("Error: BattleLogic is null.");
             return;
         }
+
         battleLogic.setBattleEventListener(new BattleEventListener() {
             @Override
             public void onTurnStarted(int currentPlayerTurn, GameCharacter currentCharacter) {
                 if(currentPlayerTurn == 1){
                     currentTurnLabel.setText("Your Turn!");
                     currentTurnLabel.setForeground(Color.RED);
-
                     player1SkillPanel.setVisible(true);
-
                     player1SkillPanel.removeAll();
+
                     for(Skill skill : currentCharacter.getSkills()){
                         if(skill == null) break;
                         player1SkillPanel.add(getSkillButton(currentCharacter, skill));
                     }
-
                     player1SkillPanel.revalidate();
                     player1SkillPanel.repaint();
-                }
-                else{
+                } else{
                     enemyTurnTimer = new Timer(2000, e -> {
                         Random random = new Random();
                         selectedTarget = battleLogic.getActivePlayer1Team().get(random.nextInt(battleLogic.getActivePlayer1Team().size()));
@@ -86,12 +113,11 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                                 validSkills[count++] = skill;
                             }
                         }
-
                         Skill selectedSkill = validSkills[random.nextInt(count)];
                         battleLogic.setSelectedSkill(selectedSkill);
                         leftPanel.setSelectedSkill(selectedSkill);
-
                         battleLogic.currentCharacterUseSkillOnTarget();
+
                         CharacterView view = characterToViewMap.get(selectedTarget);
                         view.setSelectedSkill(selectedSkill);
                         view.playSkillAnimation();
@@ -99,49 +125,54 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                         ((Timer)e.getSource()).stop();
                     });
                     enemyTurnTimer.start();
+
                     currentTurnLabel.setText("Enemies' Turn!");
                     currentTurnLabel.setForeground(Color.BLUE);
                     player1SkillPanel.setVisible(false);
                 }
+
+                // Always use the new layout
+                setupBottomPanelLayout();
                 bottomPanel.revalidate();
                 bottomPanel.repaint();
 
                 if(currentPlayerTurn == 1){
                     setAllComponents(leftPanel, false);
                     setAllComponents(rightPanel, true);
-                }
-                else{
+                } else{
                     setAllComponents(leftPanel, true);
                     setAllComponents(rightPanel, false);
                 }
+
                 rightPanel.repaint();
                 leftPanel.repaint();
 
                 timerCount = 4;
                 timerLabel.setText(String.valueOf(timerCount));
-                if(currentPlayerTurn == 1) {
-                    timerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-                    timerPanel.setVisible(true);
-                }
-                else timerPanel.setVisible(false);
 
+                if(currentPlayerTurn == 1) {
+                    timerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+                    timerPanel.setVisible(true);
+                } else {
+                    timerPanel.setVisible(false);
+                }
                 timerPanel.revalidate();
 
                 if (timer != null && timer.isRunning()) {
                     timer.stop();
                 }
+
                 timer = new Timer(1000, e -> {
                     if(timerCount > 0){
                         timerCount--;
                         timerLabel.setText(String.valueOf(timerCount));
-                    }
-                    else{
+                    } else{
                         ((Timer)e.getSource()).stop();
                         battleLogic.nextTurn();
                     }
                 });
-                if(currentPlayerTurn == 1) timer.start();
 
+                if(currentPlayerTurn == 1) timer.start();
             }
 
             @Override
@@ -149,6 +180,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 if (timer != null && timer.isRunning()) {
                     timer.stop();
                 }
+                setupBottomPanelLayout();
                 leftPanel.revalidate();
                 rightPanel.revalidate();
                 leftPanel.repaint();
@@ -162,6 +194,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                     isFirstRound = false;
                     return;
                 }
+
                 Timer roundDelayTimer = new Timer(600, e->{
                     displayCharacterViews();
                     ((Timer)e.getSource()).stop();
@@ -174,19 +207,17 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 roundWinner = winningPlayer;
                 hasRoundEnded = true;
                 winCounterLabel.setText(battleLogic.getWinCount(1) + " / " + battleLogic.getWinCount(2));
-
-
                 topPanel.repaint();
                 centerPanel.revalidate();
                 centerPanel.repaint();
-
                 repaint();
-                Timer roundMessageTimer;
 
+                Timer roundMessageTimer;
                 roundMessageTimer = new Timer(2000, e -> {
                     roundNumber++;
                     hasRoundEnded = false;
                     repaint();
+                    setupBottomPanelLayout();
                     ((Timer)e.getSource()).stop();
                 });
                 roundMessageTimer.start();
@@ -196,24 +227,26 @@ public class ArcadeBattleScene extends AbstractBattleScene {
             public void onGameEnded(int winningPlayer) {
                 gameWinner = winningPlayer;
                 hasGameEnded = true;
-
                 player1SkillPanel.removeAll();
 
                 JButton rematchBtn = Utility.createButton("Rematch");
-
                 JPanel buttonWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
                 buttonWrapper.setOpaque(false);
                 buttonWrapper.setBorder(new EmptyBorder(0, 0, 40, 0));
                 buttonWrapper.add(rematchBtn);
 
+                // Use centered layout for game end screen too
+                JPanel mainBottomContainer = new JPanel(new BorderLayout());
+                mainBottomContainer.setOpaque(false);
+                mainBottomContainer.setBorder(new EmptyBorder(40, 0, 40, 0));
+                mainBottomContainer.add(buttonWrapper, BorderLayout.CENTER);
+
                 bottomPanel.removeAll();
-                bottomPanel.add(buttonWrapper, BorderLayout.CENTER);
+                bottomPanel.add(mainBottomContainer, BorderLayout.CENTER);
 
-                rematchBtn.addActionListener(e -> { // switch to continue button
+                rematchBtn.addActionListener(e -> {
                     bottomPanel.removeAll();
-                    bottomPanel.add(player1SkillPanel, BorderLayout.WEST);
-                    bottomPanel.add(timerPanel, BorderLayout.CENTER);
-
+                    setupBottomPanelLayout();
                     bottomPanel.revalidate();
                     bottomPanel.repaint();
                     hasGameEnded = false;
@@ -233,7 +266,9 @@ public class ArcadeBattleScene extends AbstractBattleScene {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (bgImage != null) g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), null);
+
+        if (bgImage != null)
+            g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), null);
 
         if (hasGameEnded) {
             if(gameWinner == 1) {
@@ -244,12 +279,14 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                     frame.getLevelSelect().unlockLevels();
                     currentLevel.setIsCleared(true);
                 }
+            } else {
+                displayMessage(g, "You Lose!");
             }
-            else displayMessage(g, "You Lose!");
-        }
-        else if(hasRoundEnded) {
-            if(roundWinner == 1) displayMessage(g, "You Win Round " + roundNumber);
-            else displayMessage(g, "You Lost Round" + roundNumber);
+        } else if(hasRoundEnded) {
+            if(roundWinner == 1)
+                displayMessage(g, "You Win Round " + roundNumber);
+            else
+                displayMessage(g, "You Lost Round " + roundNumber);
         }
     }
 }

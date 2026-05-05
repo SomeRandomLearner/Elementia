@@ -17,28 +17,23 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class LevelSelectScene extends JPanel {
-
     private int completedLevels = 0;
     private GameCharacter selectedCharacter = null;
-
     private final HashMap<Integer, Boolean> levelStatuses;
     private final CustomButton[] levelButtons;
-
     private Image bgImage;
     private final byte NO_OF_LEVELS = 10;
     private boolean hasInputtedLeaderboardScore;
-
     private Elementia frame;
+
     public LevelSelectScene(Elementia frame) {
         this.frame = frame;
-
         bgImage = new ImageIcon(
                 Objects.requireNonNull(getClass().getResource("/resources/CharacterSelectBG.png"))
         ).getImage();
 
         hasInputtedLeaderboardScore = false;
         levelStatuses = new HashMap<>();
-
         for (int i = 1; i <= NO_OF_LEVELS; i++) {
             levelStatuses.put(i, false);
         }
@@ -54,7 +49,6 @@ public class LevelSelectScene extends JPanel {
         topPanel.setOpaque(false);
         topPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 10, 0));
         topPanel.add(title, BorderLayout.CENTER);
-
         add(topPanel, BorderLayout.NORTH);
 
         // ================= LEVEL BUTTONS =================
@@ -62,25 +56,20 @@ public class LevelSelectScene extends JPanel {
         buttonPanel.setOpaque(false);
 
         levelButtons = new CustomButton[NO_OF_LEVELS];
-
         for (int i = 0; i < NO_OF_LEVELS; i++) {
-
             levelButtons[i] = Utility.createButton("" + (i + 1));
             levelButtons[i].setPreferredSize(new Dimension(120, 120));
             levelButtons[i].setFont(new Font("Arial", Font.BOLD, 18));
             levelButtons[i].setFocusPainted(false);
 
             int levelNumber = i + 1;
-
             levelButtons[i].addActionListener(e -> {
-
                 if (selectedCharacter == null) {
                     System.out.println("ERROR in level select");
                     return;
                 }
 
                 LevelManager.setCurrentLevelNumber(levelNumber);
-
                 boolean isPVP = false;
                 BattleLogic battleLogic = new BattleLogic(isPVP);
                 battleLogic.resetCharacterChoices();
@@ -89,7 +78,6 @@ public class LevelSelectScene extends JPanel {
 
                 frame.getArcadeBattle().setBattleLogic(battleLogic);
                 frame.getArcadeBattle().startGame();
-
                 frame.showScreen("Battle");
             });
 
@@ -101,7 +89,6 @@ public class LevelSelectScene extends JPanel {
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setOpaque(false);
         centerPanel.add(buttonPanel);
-
         add(centerPanel, BorderLayout.CENTER);
 
         // ================= BACK BUTTON (LOWER LEFT FIX) =================
@@ -118,16 +105,13 @@ public class LevelSelectScene extends JPanel {
 
         // 📐 spacing (left + bottom padding)
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 0));
-
         bottomPanel.add(backButton);
 
         backButton.addActionListener(e -> frame.showScreen("ArcadeCharacterSelect"));
-
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
     // ================= LOGIC =================
-
     public void incrementCompletedLevels() {
         completedLevels++;
     }
@@ -155,16 +139,13 @@ public class LevelSelectScene extends JPanel {
 
         for (int i = 0; i < levelButtons.length; i++) {
             if (i <= completedLevels) {
-
                 levelButtons[i].setEnabled(true);
                 levelButtons[i].setDefaultBackgroundColor(new Color(0, 0, 139));
                 levelButtons[i].setDefaultForegroundColor(Color.WHITE);
                 levelButtons[i].setHoverColor(new Color(70, 170, 255));
                 levelButtons[i].setBackgroundColorToDefault();
                 levelButtons[i].setForegroundColorToDefault();
-
             } else {
-
                 levelButtons[i].setEnabled(false);
                 levelButtons[i].setDefaultBackgroundColor(new Color(70, 70, 70));
                 levelButtons[i].setDefaultForegroundColor(Color.GRAY);
@@ -182,7 +163,6 @@ public class LevelSelectScene extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         if (bgImage != null) {
             g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
         }

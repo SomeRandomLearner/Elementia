@@ -3,7 +3,6 @@ package scenes.pvp_scenes;
 import characters.*;
 import logic.BattleLogic;
 import scenes.Elementia;
-import utils.Utility;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,35 +11,76 @@ import java.awt.event.MouseEvent;
 import java.util.Objects;
 
 public class PVPCharacterSelectScene extends JPanel {
+
     private GameCharacter player1ChosenCharacter;
     private GameCharacter player2ChosenCharacter;
 
     private boolean player1HasChosen = false;
     private boolean player2HasChosen = false;
 
-    private JLabel characterSelectLabel;
+    private JLabel titleLabel;
     private JButton confirmButton;
 
-    private JPanel player1Preview;
-    private JPanel player2Preview;
+    private JLabel previewImage;
+    private JLabel nameLabel, elementLabel, skill1, skill2, skill3;
+    private JTextArea descriptionArea;
 
     private Image bgImage;
 
-    BattleLogic battleLogic;
+    private BattleLogic battleLogic;
+    private Elementia frameRef;
+
     public PVPCharacterSelectScene(Elementia frame) {
+        this.frameRef = frame;
         setLayout(new BorderLayout());
 
-        boolean isPVP = true;
-        battleLogic = new BattleLogic(isPVP);
-        bgImage = new ImageIcon(
-                Objects.requireNonNull(getClass().getResource("/resources/CharacterSelectBG.png"))
-        ).getImage();
+        battleLogic = new BattleLogic(true);
 
-        characterSelectLabel = new JLabel("Player 1 Choose a Character");
-        characterSelectLabel.setFont(new Font("Times New Roman", Font.BOLD, 28));
-        characterSelectLabel.setForeground(Color.WHITE);
-        characterSelectLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        add(characterSelectLabel, BorderLayout.NORTH);
+        loadBackground();
+        initTop();
+        initCenter();
+        initBottom();
+    }
+
+    // ================= BACKGROUND =================
+    private void loadBackground() {
+        try {
+            bgImage = new ImageIcon(
+                    Objects.requireNonNull(getClass().getResource("/resources/CharacterSelectBG.png"))
+            ).getImage();
+        } catch (Exception e) {
+            bgImage = null;
+        }
+    }
+
+    // ================= TOP =================
+    private void initTop() {
+        titleLabel = new JLabel("PLAYER 1 - SELECT YOUR CHARACTER", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Segoe UI Black", Font.BOLD, 40));
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(25, 0, 25, 0));
+
+        JPanel top = new JPanel();
+        top.setOpaque(false);
+        top.add(titleLabel);
+
+        add(top, BorderLayout.NORTH);
+    }
+
+    // ================= CENTER =================
+    private void initCenter() {
+
+        JPanel main = new JPanel(new BorderLayout());
+        main.setOpaque(false);
+
+        main.add(createCharacterGrid(), BorderLayout.WEST);
+        main.add(createPreviewAndInfo(), BorderLayout.CENTER);
+
+        add(main, BorderLayout.CENTER);
+    }
+
+    // ================= CHARACTER GRID =================
+    private JPanel createCharacterGrid() {
 
         GameCharacter[] characters = {
                 new Aero(), new Kaelis(), new Kangel(),
@@ -48,297 +88,493 @@ public class PVPCharacterSelectScene extends JPanel {
                 new Ripper(), new Veyrion(), new ZenStream()
         };
 
-        JPanel grid = new JPanel(new GridLayout(3, 3, 10, 10));
+        JPanel grid = new JPanel(new GridLayout(3, 3, 20, 20));
         grid.setOpaque(false);
+        grid.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
 
         for (GameCharacter c : characters) {
-            grid.add(createCharacterPanel(c));
+            grid.add(createCharacterCard(c));
         }
 
-        JPanel leftPanel = new JPanel(new BorderLayout());
-        leftPanel.setOpaque(false);
-        leftPanel.setPreferredSize(new Dimension(800, 800));
-        leftPanel.add(grid, BorderLayout.CENTER);
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setOpaque(false);
+        wrapper.setPreferredSize(new Dimension(600, 800));
+        wrapper.add(grid);
 
-        add(leftPanel, BorderLayout.WEST);
-
-        player1Preview = createPreviewPanel("PLAYER 1");
-        player2Preview = createPreviewPanel("PLAYER 2");
-
-        JPanel rightPanel = new JPanel(new GridLayout(2, 1));
-        rightPanel.setOpaque(false);
-        rightPanel.setPreferredSize(new Dimension(500, 800));
-
-        rightPanel.add(player1Preview);
-        rightPanel.add(player2Preview);
-
-        add(rightPanel, BorderLayout.CENTER);
-
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.setOpaque(false);
-
-        confirmButton = Utility.createButton("Confirm");
-        confirmButton.setEnabled(false);
-
-        confirmButton.addActionListener(e -> {
-            battleLogic.resetCharacterChoices();
-
-            battleLogic.addToTeam(1, player1ChosenCharacter);
-            battleLogic.addToTeam(2, player2ChosenCharacter);
-
-            reset();
-            frame.getPVPBattle().setBattleLogic(battleLogic);
-            frame.showScreen("PVPStageSelect");
-        });
-
-        JButton backButton = Utility.createButton("Return to Main Menu");
-        backButton.addActionListener(e -> frame.showScreen("MainMenu"));
-
-        bottomPanel.add(backButton);
-        bottomPanel.add(confirmButton);
-
-        add(bottomPanel, BorderLayout.SOUTH);
+        return wrapper;
     }
 
-    private JPanel createCharacterPanel(GameCharacter character) {
+    // ================= CHARACTER CARD (ALL HOVER DISABLED AFTER P2 SELECT) =================
+    private JPanel createCharacterCard(GameCharacter character) {
 
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setOpaque(false);
-        panel.setPreferredSize(new Dimension(120, 120));
-        panel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
+        JPanel card = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        JLabel image = new JLabel(getCharacterImageIcon(character.getImagePath()));
-        image.setHorizontalAlignment(SwingConstants.CENTER);
+                // GLOBAL STATE CHECK
+                boolean gameReady = player2HasChosen;
+                boolean isSelected = getClientProperty("selected") == Boolean.TRUE;
+                boolean isHovered = !gameReady && !isSelected && (getClientProperty("hovered") == Boolean.TRUE);
 
-        JLabel name = new JLabel(character.getName(), SwingConstants.CENTER);
-        name.setForeground(Color.WHITE);
+                Color base = new Color(255, 255, 255, 35);
+                Color hover = new Color(120, 180, 255, 80);
+                Color selectedColor = new Color(255, 215, 0, 140);
 
-        panel.add(image, BorderLayout.CENTER);
-        panel.add(name, BorderLayout.SOUTH);
+                if (isSelected) {
+                    g2.setColor(selectedColor);
+                } else if (isHovered) {
+                    g2.setColor(hover);
+                } else {
+                    g2.setColor(base);
+                }
 
-        panel.addMouseListener(new MouseAdapter() {
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
+
+                g2.setColor(new Color(255, 255, 255, 120));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 25, 25);
+
+                if (isSelected) {
+                    g2.setColor(new Color(255, 255, 0, 100));
+                    g2.setStroke(new BasicStroke(3));
+                    g2.drawRoundRect(4, 4, getWidth() - 9, getHeight() - 9, 22, 22);
+                }
+
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        card.setOpaque(false);
+        card.setPreferredSize(new Dimension(160, 160));
+        card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        JLabel img = new JLabel(getIcon(character.getImagePath()));
+        img.setHorizontalAlignment(SwingConstants.CENTER);
+        card.add(img, BorderLayout.CENTER);
+
+        card.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                panel.setBorder(BorderFactory.createLineBorder(Color.CYAN, 2));
-
-                if (!player2HasChosen && isDuplicate(character)) {
-                    showPlayer2Warning("CHARACTER HAS ALREADY BEEN SELECTED!");
-                    clearPreview(player2Preview);
-                    return;
+                // DISABLE ALL HOVER IF GAME READY OR SELECTED
+                if (player2HasChosen || card.getClientProperty("selected") == Boolean.TRUE) {
+                    return; // NO HOVER, NO PREVIEW, NOTHING
                 }
 
-                if (!player1HasChosen) {
-                    showPreview(character, player1Preview);
-                } else if (!player2HasChosen) {
-                    showPreview(character, player2Preview);
-                }
+                card.putClientProperty("hovered", true);
+                card.repaint();
+                updatePreview(character);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                panel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
-
-                if (!player1HasChosen) {
-                    clearPreview(player1Preview);
-                } else if (!player2HasChosen) {
-                    clearPreview(player2Preview);
+                // DISABLE ALL HOVER IF GAME READY OR SELECTED
+                if (player2HasChosen || card.getClientProperty("selected") == Boolean.TRUE) {
+                    return;
                 }
-                clearWarning();
+
+                card.putClientProperty("hovered", false);
+                card.repaint();
             }
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (!player1HasChosen) {
+                // IGNORE CLICKS IF GAME READY
+                if (player2HasChosen) {
+                    return;
+                }
 
+                if (!player1HasChosen) {
+                    // PLAYER 1
                     player1ChosenCharacter = character;
                     player1HasChosen = true;
+                    titleLabel.setText("PLAYER 2 - SELECT YOUR CHARACTER");
 
-                    showPreview(character, player1Preview);
-                    characterSelectLabel.setText("Player 2 Choose a Character");
+                    card.putClientProperty("selected", true);
+                    card.putClientProperty("hovered", false);
+                    card.setCursor(Cursor.getDefaultCursor());
+                    card.repaint();
 
                 } else if (!player2HasChosen) {
-
+                    // PLAYER 2 - DUPLICATE CHECK FIRST
                     if (isDuplicate(character)) {
-                        showPlayer2Warning("CHARACTER ALREADY SELECTED!");
-                        player2ChosenCharacter = null;
-                        player2HasChosen = false;
                         return;
                     }
 
                     player2ChosenCharacter = character;
                     player2HasChosen = true;
-
-                    showPreview(character, player2Preview);
-
-                    characterSelectLabel.setText("All Ready!");
+                    titleLabel.setText("READY TO FIGHT!");
                     confirmButton.setEnabled(true);
+
+                    // DISABLE ALL CARDS HOVER BY SETTING GAME READY STATE
+                    card.putClientProperty("selected", true);
+                    card.putClientProperty("hovered", false);
+                    card.setCursor(Cursor.getDefaultCursor());
+                    card.repaint();
                 }
             }
         });
 
+        return card;
+    }
+
+    // ================= PREVIEW + INFO =================
+    private JPanel createPreviewAndInfo() {
+
+        JPanel panel = new JPanel(new GridLayout(1, 2, 30, 0));
+        panel.setOpaque(false);
+        panel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+
+        panel.add(createPreviewPanel());
+        panel.add(createInfoPanel());
+
         return panel;
     }
 
+    // ================= PREVIEW =================
+    private JPanel createPreviewPanel() {
 
-    private JPanel createPreviewPanel(String title) {
+        JPanel panel = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        JPanel panel = new JPanel();
+                GradientPaint gp = new GradientPaint(
+                        0, 0, new Color(0, 0, 0, 140),
+                        0, getHeight(), new Color(20, 20, 60, 160)
+                );
+
+                g2.setPaint(gp);
+                g2.fillRoundRect(10, 10, getWidth() - 20, getHeight() - 20, 30, 30);
+
+                g2.setColor(new Color(120, 180, 255, 80));
+                g2.drawRoundRect(10, 10, getWidth() - 20, getHeight() - 20, 30, 30);
+
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
         panel.setOpaque(false);
+
+        previewImage = new JLabel();
+        previewImage.setHorizontalAlignment(SwingConstants.CENTER);
+
+        panel.add(previewImage, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    // ================= INFO PANEL (FIXED + SAFE) =================
+    private JPanel createInfoPanel() {
+
+        JPanel mainBox = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                GradientPaint gp = new GradientPaint(
+                        0, 0, new Color(30, 20, 80, 200),
+                        0, getHeight(), new Color(10, 30, 80, 200)
+                );
+
+                g2.setPaint(gp);
+                g2.fillRoundRect(10, 10, getWidth() - 20, getHeight() - 20, 30, 30);
+
+                g2.setColor(new Color(120, 100, 255, 80));
+                g2.setStroke(new BasicStroke(3));
+                g2.drawRoundRect(8, 8, getWidth() - 16, getHeight() - 16, 30, 30);
+
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        mainBox.setOpaque(false);
+        mainBox.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+
+        JPanel content = new JPanel();
+        content.setOpaque(false);
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+
+        // ===== HEADER =====
+        nameLabel = createLabel("CHARACTER", 32, true);
+        elementLabel = createLabel("ELEMENT", 18, false);
+        elementLabel.setForeground(new Color(150, 255, 255));
+
+        JPanel headerBox = createSubBox(new Color(0, 200, 255, 60));
+        headerBox.add(nameLabel);
+        headerBox.add(Box.createVerticalStrut(5));
+        headerBox.add(elementLabel);
+
+        // ===== SKILLS =====
+        JLabel skillsTitle = createLabel("SKILLS", 20, true);
+        skillsTitle.setForeground(new Color(255, 215, 0));
+
+        skill1 = createLabel("", 14, false);
+        skill2 = createLabel("", 14, false);
+        skill3 = createLabel("", 14, false);
+
+        JPanel skillsBox = createSubBox(new Color(255, 200, 100, 60));
+        skillsBox.add(skillsTitle);
+        skillsBox.add(Box.createVerticalStrut(10));
+        skillsBox.add(skill1);
+        skillsBox.add(skill2);
+        skillsBox.add(skill3);
+
+        // ===== DESCRIPTION =====
+        JLabel descTitle = createLabel("DESCRIPTION", 18, true);
+        descTitle.setForeground(new Color(255, 150, 255));
+
+        descriptionArea = new JTextArea();
+        descriptionArea.setOpaque(false);
+        descriptionArea.setForeground(new Color(235, 235, 255));
+        descriptionArea.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        descriptionArea.setLineWrap(true);
+        descriptionArea.setWrapStyleWord(true);
+        descriptionArea.setEditable(false);
+
+        JPanel descBox = createSubBox(new Color(150, 100, 255, 60));
+        descBox.setLayout(new BorderLayout());
+        descBox.add(descTitle, BorderLayout.NORTH);
+        descBox.add(descriptionArea, BorderLayout.CENTER);
+
+        // ===== ADD =====
+        content.add(headerBox);
+        content.add(Box.createVerticalStrut(18));
+        content.add(skillsBox);
+        content.add(Box.createVerticalStrut(18));
+        content.add(descBox);
+
+        mainBox.add(content, BorderLayout.CENTER);
+
+        return mainBox;
+    }
+
+    // ================= FIXED (NO NULL) =================
+    private JPanel createSubBox(Color color) {
+
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                g2.setColor(color);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+
+                g2.setColor(new Color(255, 255, 255, 60));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 20, 20);
+
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        panel.setOpaque(false);
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
-        titleLabel.setForeground(Color.WHITE);
-        titleLabel.setFont(new Font("Times New Roman", Font.BOLD, 24));
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel warning = new JLabel("");
-        warning.setName("warning");
-        warning.setForeground(Color.RED);
-        warning.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel image = new JLabel();
-        image.setName("image");
-        image.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel name = new JLabel();
-        name.setName("name");
-
-        JLabel element = new JLabel();
-        element.setName("element");
-
-        JLabel skill1 = new JLabel();
-        skill1.setName("skill1");
-
-        JLabel skill2 = new JLabel();
-        skill2.setName("skill2");
-
-        JLabel skill3 = new JLabel();
-        skill3.setName("skill3");
-
-        for (JLabel l : new JLabel[]{name, element, skill1, skill2, skill3}) {
-            l.setForeground(Color.WHITE);
-            l.setAlignmentX(Component.CENTER_ALIGNMENT);
-        }
-
-        panel.add(titleLabel);
-        panel.add(warning);
-        panel.add(Box.createVerticalStrut(10));
-        panel.add(name);
-        panel.add(element);
-        panel.add(Box.createVerticalStrut(10));
-        panel.add(image);
-        panel.add(Box.createVerticalStrut(10));
-        panel.add(skill1);
-        panel.add(skill2);
-        panel.add(skill3);
-
         return panel;
     }
 
+    // ================= BOTTOM =================
+    private void initBottom() {
 
-    private void showPreview(GameCharacter character, JPanel panel) {
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 20));
+        bottom.setOpaque(false);
 
-        clearWarning(panel);
+        JButton back = createStyledButton(
+                "BACK",
+                new Color(60, 60, 120).brighter(),
+                new Color(40, 40, 80).darker()
+        );
 
-        JLabel image = (JLabel) findComponent(panel, "image");
-        JLabel name = (JLabel) findComponent(panel, "name");
-        JLabel element = (JLabel) findComponent(panel, "element");
-        JLabel skill1 = (JLabel) findComponent(panel, "skill1");
-        JLabel skill2 = (JLabel) findComponent(panel, "skill2");
-        JLabel skill3 = (JLabel) findComponent(panel, "skill3");
+        back.addActionListener(e -> frameRef.showScreen("ModeSelect"));
 
-        image.setIcon(new ImageIcon(
-                new ImageIcon(getClass().getResource(character.getImagePath()))
-                        .getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)
+        confirmButton = createStyledButton(
+                "CONFIRM CHARACTERS",
+                new Color(60, 60, 120).brighter(),
+                new Color(40, 40, 80).darker()
+        );
+
+        confirmButton.setEnabled(false);
+
+        confirmButton.addActionListener(e -> {
+            battleLogic.resetCharacterChoices();
+            battleLogic.addToTeam(1, player1ChosenCharacter);
+            battleLogic.addToTeam(2, player2ChosenCharacter);
+
+            frameRef.getPVPBattle().setBattleLogic(battleLogic);
+            frameRef.showScreen("PVPStageSelect");
+        });
+
+        bottom.add(back);
+        bottom.add(confirmButton);
+
+        add(bottom, BorderLayout.SOUTH);
+    }
+
+    private JButton createStyledButton(String text, Color topColor, Color bottomColor) {
+
+        JButton button = new JButton(text) {
+
+            private boolean hovered = false;
+
+            {
+                addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        if (isEnabled()) {
+                            hovered = true;
+                            repaint();
+                        }
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        hovered = false;
+                        repaint();
+                    }
+                });
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
+
+                int shadow = hovered ? 10 : 6;
+
+                // Shadow
+                g2.setColor(new Color(0, 0, 0, 80));
+                g2.fillRoundRect(
+                        shadow / 2,
+                        shadow / 2,
+                        getWidth() - shadow,
+                        getHeight() - shadow,
+                        35,
+                        35
+                );
+
+                // Gradient
+                GradientPaint gp;
+
+                if (hovered && isEnabled()) {
+                    gp = new GradientPaint(
+                            0, 0, topColor.brighter(),
+                            0, getHeight(), bottomColor.brighter()
+                    );
+                } else {
+                    gp = new GradientPaint(
+                            0, 0, topColor,
+                            0, getHeight(), bottomColor
+                    );
+                }
+
+                g2.setPaint(gp);
+                g2.fillRoundRect(
+                        0,
+                        0,
+                        getWidth() - shadow,
+                        getHeight() - shadow,
+                        35,
+                        35
+                );
+
+                // Border glow
+                g2.setColor(new Color(255, 255, 255, hovered ? 180 : 100));
+                g2.setStroke(new BasicStroke(2));
+                g2.drawRoundRect(
+                        1,
+                        1,
+                        getWidth() - shadow - 2,
+                        getHeight() - shadow - 2,
+                        35,
+                        35
+                );
+
+                // Disabled overlay
+                if (!isEnabled()) {
+                    g2.setColor(new Color(0, 0, 0, 140));
+                    g2.fillRoundRect(
+                            0,
+                            0,
+                            getWidth() - shadow,
+                            getHeight() - shadow,
+                            35,
+                            35
+                    );
+                }
+
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        button.setFont(new Font("Segoe UI Black", Font.BOLD, 20));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setOpaque(false);
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        button.setPreferredSize(new Dimension(260, 70));
+
+        return button;
+    }
+
+    // ================= LOGIC =================
+    private void updatePreview(GameCharacter c) {
+
+        previewImage.setIcon(new ImageIcon(
+                new ImageIcon(Objects.requireNonNull(getClass().getResource(c.getImagePath())))
+                        .getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH)
         ));
 
-        name.setText("Name: " + character.getName());
-        element.setText("Element: " + character.getElement());
+        nameLabel.setText(c.getName());
+        elementLabel.setText(c.getElement());
 
-        String[] skills = character.getSkillNames();
+        String[] s = c.getSkillNames();
+        skill1.setText("• " + (s.length > 0 ? s[0] : ""));
+        skill2.setText("• " + (s.length > 1 ? s[1] : ""));
+        skill3.setText("• " + (s.length > 2 ? s[2] : ""));
 
-        skill1.setText("Skill 1: " + (skills.length > 0 ? skills[0] : "-"));
-        skill2.setText("Skill 2: " + (skills.length > 1 ? skills[1] : "-"));
-        skill3.setText("Skill 3: " + (skills.length > 2 ? skills[2] : "-"));
+        descriptionArea.setText(c.getDescription());
     }
 
-
-    private void clearPreview(JPanel panel) {
-
-        JLabel image = (JLabel) findComponent(panel, "image");
-        JLabel name = (JLabel) findComponent(panel, "name");
-        JLabel element = (JLabel) findComponent(panel, "element");
-        JLabel skill1 = (JLabel) findComponent(panel, "skill1");
-        JLabel skill2 = (JLabel) findComponent(panel, "skill2");
-        JLabel skill3 = (JLabel) findComponent(panel, "skill3");
-
-        if (image != null) image.setIcon(null);
-        if (name != null) name.setText("");
-        if (element != null) element.setText("");
-        if (skill1 != null) skill1.setText("");
-        if (skill2 != null) skill2.setText("");
-        if (skill3 != null) skill3.setText("");
+    private boolean isDuplicate(GameCharacter c) {
+        return player1ChosenCharacter != null &&
+                player1ChosenCharacter.getClass() == c.getClass();
     }
 
-
-    private void showPlayer2Warning(String msg) {
-        JLabel warning = (JLabel) findComponent(player2Preview, "warning");
-        if (warning != null) warning.setText(msg);
+    // ================= UTIL =================
+    private JLabel createLabel(String text, int size, boolean bold) {
+        JLabel l = new JLabel(text);
+        l.setForeground(Color.WHITE);
+        l.setFont(new Font("Segoe UI", bold ? Font.BOLD : Font.PLAIN, size));
+        return l;
     }
 
-    private void clearWarning() {
-        JLabel warning = (JLabel) findComponent(player2Preview, "warning");
-        if (warning != null) warning.setText("");
-    }
-
-    private void clearWarning(JPanel panel) {
-        JLabel warning = (JLabel) findComponent(panel, "warning");
-        if (warning != null) warning.setText("");
-    }
-
-
-    private boolean isDuplicate(GameCharacter character) {
-        return (player1ChosenCharacter != null &&
-                player1ChosenCharacter.getClass() == character.getClass())
-                || (player2ChosenCharacter != null &&
-                player2ChosenCharacter.getClass() == character.getClass());
-    }
-
-
-    private Component findComponent(Container container, String name) {
-        for (Component c : container.getComponents()) {
-            if (name.equals(c.getName())) return c;
-            if (c instanceof Container) {
-                Component found = findComponent((Container) c, name);
-                if (found != null) return found;
-            }
-        }
-        return null;
-    }
-
-
-    private ImageIcon getCharacterImageIcon(String path) {
+    private ImageIcon getIcon(String path) {
         return new ImageIcon(
-                new ImageIcon(
-                        Objects.requireNonNull(getClass().getResource(path))
-                ).getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH)
+                new ImageIcon(Objects.requireNonNull(getClass().getResource(path)))
+                        .getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)
         );
     }
 
+    // ================= BACKGROUND PAINT =================
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (bgImage != null) {
             g.drawImage(bgImage, 0, 0, getWidth(), getHeight(), this);
         }
-    }
-
-    private void reset(){
-        player1ChosenCharacter = player2ChosenCharacter = null;
-        player1HasChosen = player2HasChosen = false;
-        clearPreview(player1Preview);
-        clearPreview(player2Preview);
-        confirmButton.setEnabled(false);
     }
 }

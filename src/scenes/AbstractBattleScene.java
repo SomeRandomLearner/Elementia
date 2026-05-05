@@ -59,7 +59,7 @@ public abstract class AbstractBattleScene extends JPanel {
         this.frame = frame;
         setLayout(new BorderLayout());
 
-        bgIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/LevelBackgrounds/Level1Background.png"))); // default background image
+        bgIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/LevelBackgrounds/LVL1_BG.png"))); // default background image
         bgImage = bgIcon.getImage();
 
         JPanel wrapperPanel = new JPanel(new BorderLayout());

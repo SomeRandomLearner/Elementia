@@ -14,7 +14,7 @@ public class ModeSelectScene extends JPanel {
     private Image pvpIcon;
 
     public ModeSelectScene(Elementia frame) {
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new BorderLayout()); // 🔥 CHANGED TO BORDERLAYOUT FOR BETTER CONTROL
         setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         // Load background
@@ -34,21 +34,78 @@ public class ModeSelectScene extends JPanel {
             pvpIcon = new ImageIcon(pvpPath).getImage();
         }
 
-        JLabel modeSelectLabel = new JLabel("Choose a Mode");
-        modeSelectLabel.setFont(new Font("Times New Roman", Font.BOLD, 80));
-        modeSelectLabel.setForeground(Color.WHITE);
-        modeSelectLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // 🔥 SPECTACULAR TITLE
+        JLabel modeSelectLabel = new JLabel("CHOOSE YOUR BATTLE MODE", SwingConstants.CENTER);
+        modeSelectLabel.setFont(new Font("Arial Black", Font.BOLD, 64));
+        modeSelectLabel.setForeground(new Color(255, 255, 255, 240));
+        modeSelectLabel.setBorder(BorderFactory.createEmptyBorder(80, 0, 60, 0));
 
-        // Icon panel with hover effects
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.setOpaque(false);
+        titlePanel.add(modeSelectLabel, BorderLayout.CENTER);
+
+        // 🔥 PREMIUM ICON PANEL
         IconPanel iconPanel = new IconPanel(frame);
-        iconPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        iconPanel.setPreferredSize(new Dimension(1200, 600));
 
-        // ADJUSTED SPACING
-        add(Box.createVerticalStrut(150));        // Reduced top spacing
-        add(modeSelectLabel);
-        add(Box.createVerticalStrut(50));        // Increased spacing between title and icons
-        add(iconPanel);
-        add(Box.createVerticalGlue());            // Push content up, fill remaining space
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setOpaque(false);
+        centerPanel.add(iconPanel, BorderLayout.CENTER);
+
+        // 🔥 BACK BUTTON - LOWER LEFT CORNER
+        JButton backButton = createPremiumBackButton(frame);
+
+        // 🔥 BOTTOM PANEL WITH BACK BUTTON POSITIONED LOWER LEFT
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setOpaque(false);
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 60, 40));
+        bottomPanel.add(backButton, BorderLayout.WEST);
+
+        add(titlePanel, BorderLayout.NORTH);
+        add(centerPanel, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
+    }
+
+    // 🔥 PREMIUM BACK BUTTON
+    private JButton createPremiumBackButton(Elementia frame) {
+        JButton backBtn = new JButton("← BACK") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // 🔥 GRADIENT BACKGROUND
+                GradientPaint gradient = new GradientPaint(
+                        0, 0, new Color(60, 60, 120).brighter(),
+                        0, getHeight(), new Color(40, 40, 80).darker()
+                );
+                g2d.setPaint(gradient);
+                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
+
+                // 🔥 GLOW BORDER
+                g2d.setColor(new Color(100, 100, 200, 150));
+                g2d.setStroke(new BasicStroke(3));
+                g2d.drawRoundRect(2, 2, getWidth()-5, getHeight()-5, 22, 22);
+
+                // 🔥 INNER SHINE
+                g2d.setColor(new Color(255, 255, 255, 40));
+                g2d.fillRoundRect(4, 4, getWidth()-8, getHeight()-8, 20, 20);
+
+                g2d.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        backBtn.setForeground(new Color(220, 220, 255));
+        backBtn.setFont(new Font("Arial Black", Font.BOLD, 20));
+        backBtn.setFocusPainted(false);
+        backBtn.setContentAreaFilled(false);
+        backBtn.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
+        backBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        backBtn.setPreferredSize(new Dimension(160, 55));
+        backBtn.addActionListener(e -> frame.showScreen("MainMenu"));
+
+        return backBtn;
     }
 
     @Override
@@ -59,7 +116,7 @@ public class ModeSelectScene extends JPanel {
         }
     }
 
-    // Custom panel for clickable icons with hover effects
+    // ENHANCED ICON PANEL WITH BETTER EFFECTS
     private class IconPanel extends JPanel {
         private Elementia frame;
         private Rectangle arcadeBounds;
@@ -70,7 +127,7 @@ public class ModeSelectScene extends JPanel {
         public IconPanel(Elementia frame) {
             this.frame = frame;
             setOpaque(false);
-            setPreferredSize(new Dimension(500, 500)); // FIXED: Proper size for 500x500 icons + spacing
+            setPreferredSize(new Dimension(1200, 600));
 
             addMouseListener(new MouseAdapter() {
                 @Override
@@ -127,25 +184,63 @@ public class ModeSelectScene extends JPanel {
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            int iconSize = 500;
-            int gapBetweenIcons = 0;  // FIXED: Proper gap between icons
+            int iconSize = 450;
+            int gapBetweenIcons = 50;
             int startX = (getWidth() - (iconSize * 2 + gapBetweenIcons)) / 2;
             int y = (getHeight() - iconSize) / 2;
 
-            // Draw Arcade icon
+            // ARCADE ICON WITH ENHANCED HOVER EFFECTS
             if (arcadeIcon != null) {
                 arcadeBounds = new Rectangle(startX, y, iconSize, iconSize);
-                float alpha = arcadeHovered ? 0.8f : 1.0f;
-                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-                g2d.drawImage(arcadeIcon, startX, y, iconSize, iconSize, this);
+
+                // BACKGROUND GLOW ON HOVER
+                if (arcadeHovered) {
+                    g2d.setColor(new Color(60, 40, 100, 100));
+                    g2d.fillRoundRect(startX - 15, y - 15, iconSize + 30, iconSize + 30, 35, 35);
+                }
+
+                // SCALE & SHADOW EFFECT
+                float scale = arcadeHovered ? 1.05f : 1.0f;
+                int scaledSize = (int)(iconSize * scale);
+                int offsetX = startX + (iconSize - scaledSize) / 2;
+                int offsetY = y + (iconSize - scaledSize) / 2;
+
+                // Shadow
+                if (arcadeHovered) {
+                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+                    g2d.drawImage(arcadeIcon, offsetX + 8, offsetY + 8, scaledSize, scaledSize, this);
+                }
+
+                // Main icon
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, arcadeHovered ? 0.95f : 1.0f));
+                g2d.drawImage(arcadeIcon, offsetX, offsetY, scaledSize, scaledSize, this);
             }
 
-            // Draw PVP icon
+            //  PVP ICON WITH ENHANCED HOVER EFFECTS
             if (pvpIcon != null) {
                 pvpBounds = new Rectangle(startX + iconSize + gapBetweenIcons, y, iconSize, iconSize);
-                float alpha = pvpHovered ? 0.8f : 1.0f;
-                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-                g2d.drawImage(pvpIcon, startX + iconSize + gapBetweenIcons, y, iconSize, iconSize, this);
+
+                // BACKGROUND GLOW ON HOVER
+                if (pvpHovered) {
+                    g2d.setColor(new Color(60, 40, 100, 100));// Red glow
+                    g2d.fillRoundRect(startX + iconSize + gapBetweenIcons - 15, y - 15, iconSize + 30, iconSize + 30, 35, 35);
+                }
+
+                //  SCALE & SHADOW EFFECT
+                float scale = pvpHovered ? 1.05f : 1.0f;
+                int scaledSize = (int)(iconSize * scale);
+                int offsetX = startX + iconSize + gapBetweenIcons + (iconSize - scaledSize) / 2;
+                int offsetY = y + (iconSize - scaledSize) / 2;
+
+                // Shadow
+                if (pvpHovered) {
+                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+                    g2d.drawImage(pvpIcon, offsetX + 8, offsetY + 8, scaledSize, scaledSize, this);
+                }
+
+                // Main icon
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pvpHovered ? 0.95f : 1.0f));
+                g2d.drawImage(pvpIcon, offsetX, offsetY, scaledSize, scaledSize, this);
             }
 
             g2d.dispose();
