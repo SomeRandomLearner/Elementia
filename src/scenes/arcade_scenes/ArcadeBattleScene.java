@@ -65,7 +65,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
 
     @Override
     public void startGame(){
-        setBattleSceneBackground((LevelManager.getCurrentLevelNumber() % 5) + 1);
+        setBattleSceneBackground((LevelManager.getCurrentLevelNumber() % 4) + 1); // only 4 backgrounds available
 
         winCounterLabel.setText("0 / 0");
         isFirstRound = true;

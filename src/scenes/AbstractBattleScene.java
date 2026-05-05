@@ -189,9 +189,7 @@ public abstract class AbstractBattleScene extends JPanel {
     }
 
     public void setBattleSceneBackground(int backgroundNumber){
-        ImageIcon newIcon;
-        if(new Random().nextInt(2) == 0) newIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/LevelBackgrounds/Level" + backgroundNumber + "BackgroundAlternate.png")));
-        else newIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/LevelBackgrounds/Level" + backgroundNumber + "Background.png")));
+        ImageIcon newIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/LevelBackgrounds/LVL" + backgroundNumber + "_BG.png")));
 
         bgImage = newIcon.getImage();
         repaint();
