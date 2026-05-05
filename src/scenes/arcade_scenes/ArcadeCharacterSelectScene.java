@@ -98,15 +98,19 @@ public class ArcadeCharacterSelectScene extends JPanel {
             File currentDataFile = new File("data/player_data.txt");
             if(!currentDataFile.getParentFile().exists()){
                 currentDataFile.getParentFile().mkdirs();
-            } else System.out.println("It exists");
+            }
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(currentDataFile, false),1024)){
                 Instant timeStarted = Instant.now();
-                writer.write(timeStarted.toString());
+                writer.write(timeStarted.toString()); // 3 hearts
+                writer.write(timeStarted.toString()); // 3 hearts
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
 
+
+            frame.getLevelSelect().resetProgress(); // I don't get it but it only works when there are two of them.
+            frame.getLevelSelect().resetProgress();
             frame.showScreen("LevelSelect");
         });
 

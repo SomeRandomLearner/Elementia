@@ -2,6 +2,7 @@ package scenes;
 
 import scenes.arcade_scenes.ArcadeBattleScene;
 import scenes.arcade_scenes.ArcadeCharacterSelectScene;
+import scenes.arcade_scenes.GameOverScene;
 import scenes.arcade_scenes.LevelSelectScene;
 import scenes.pvp_scenes.PVPBattleScene;
 import scenes.pvp_scenes.PVPCharacterSelectScene;
@@ -21,6 +22,7 @@ public class Elementia extends JFrame{
     private ArcadeCharacterSelectScene arcadeCharacterSelect;
     private LevelSelectScene levelSelect;
     private ArcadeBattleScene arcadeBattle;
+    private GameOverScene gameOver;
 
     // PVP Mode
     private PVPCharacterSelectScene pvpCharacterSelect;
@@ -44,6 +46,7 @@ public class Elementia extends JFrame{
         arcadeCharacterSelect = new ArcadeCharacterSelectScene(this);
         levelSelect = new LevelSelectScene(this);
         arcadeBattle = new ArcadeBattleScene(this);
+        gameOver = new GameOverScene(this);
         pvpCharacterSelect = new PVPCharacterSelectScene(this);
         pvpStageSelect = new PVPStageSelectScene(this);
         pvpBattle = new PVPBattleScene(this);
@@ -55,6 +58,7 @@ public class Elementia extends JFrame{
         container.add(arcadeCharacterSelect, "ArcadeCharacterSelect");
         container.add(levelSelect, "LevelSelect");
         container.add(arcadeBattle, "Battle");
+        container.add(gameOver, "GameOver");
 
 
         container.add(pvpCharacterSelect, "PVPCharacterSelect");
@@ -88,5 +92,6 @@ public class Elementia extends JFrame{
 
     public LeaderboardScene getLeaderboard() { return leaderboard; }
 
-    public LeaderboardNameInputScene getLeaderboardNameInput() { return leaderboardNameInput; }
+    public LeaderboardNameInputScene getLeaderboardNameInput() {
+        return leaderboardNameInput; }
 }

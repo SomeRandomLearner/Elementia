@@ -21,8 +21,11 @@ public class LevelSelectScene extends JPanel {
     private GameCharacter selectedCharacter = null;
     private final HashMap<Integer, Boolean> levelStatuses;
     private final CustomButton[] levelButtons;
+    private final JPanel heartPanel = new JPanel(new GridLayout(1,3));
     private Image bgImage;
     private final byte NO_OF_LEVELS = 10;
+    private final byte MAX_HEARTS = 3;
+    private byte heartCount;
     private boolean hasInputtedLeaderboardScore;
     private Elementia frame;
 
@@ -99,14 +102,18 @@ public class LevelSelectScene extends JPanel {
         backButton.setFont(new Font("Arial", Font.BOLD, 16));
         backButton.setFocusPainted(false);
 
+        JPanel wrapperPanel = new JPanel(new BorderLayout());
+        wrapperPanel.add(backButton, BorderLayout.SOUTH);
         // 🎯 LEFT-ALIGNED PANEL
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
+        JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setOpaque(false);
+        wrapperPanel.setOpaque(false);
+        heartPanel.setOpaque(false);
 
         // 📐 spacing (left + bottom padding)
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 0));
-        bottomPanel.add(backButton);
-
+        bottomPanel.add(wrapperPanel, BorderLayout.WEST);
+        bottomPanel.add(heartPanel, BorderLayout.EAST);
         backButton.addActionListener(e -> frame.showScreen("ArcadeCharacterSelect"));
         add(bottomPanel, BorderLayout.SOUTH);
     }
@@ -132,9 +139,8 @@ public class LevelSelectScene extends JPanel {
                 e.printStackTrace();
             }
             hasInputtedLeaderboardScore = true;
-            frame.getLeaderboardNameInput().displayTimes();
+            frame.getLeaderboardNameInput().calculateTimeElapsed();
             frame.showScreen("LeaderboardNameInput");
-            System.out.println("VALID");
         }
 
         for (int i = 0; i < levelButtons.length; i++) {
@@ -153,6 +159,31 @@ public class LevelSelectScene extends JPanel {
                 levelButtons[i].setForegroundColorToDefault();
             }
         }
+    }
+
+    void resetProgress(){
+        updateHeartPanel();
+        hasInputtedLeaderboardScore = false;
+        completedLevels = 0;
+        heartCount = 3;
+    }
+
+    void decrementHeart(){
+        heartCount--;
+        if(heartCount == 0) frame.showScreen("GameOver");
+        updateHeartPanel();
+    }
+
+    private void updateHeartPanel(){
+        ImageIcon heart = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/heart.png")));
+        Image heartImage = heart.getImage().getScaledInstance(100,100, Image.SCALE_SMOOTH);
+        ImageIcon heartResized = new ImageIcon(heartImage);
+        heartPanel.removeAll();
+        for(int i = 0; i < heartCount; i++){
+            heartPanel.add(new JLabel(heartResized));
+        }
+        heartPanel.revalidate();
+        heartPanel.repaint();
     }
 
     public void setSelectedCharacter(GameCharacter character) {

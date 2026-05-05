@@ -77,7 +77,7 @@ public class LeaderboardNameInputScene extends JPanel {
         add(confirmButton, gbc);
     }
 
-    public void displayTimes(){
+    public void calculateTimeElapsed(){
         if (playerDataFile.exists() && playerDataFile.length() > 0) {
             try (BufferedReader reader = new BufferedReader(new FileReader(playerDataFile), 256)){
                 String dataLine = reader.readLine();
@@ -89,17 +89,20 @@ public class LeaderboardNameInputScene extends JPanel {
                 timeCompleted = Instant.parse(playerData[1]);
                 timeElapsed = Duration.between(timeStarted, timeCompleted);
                 playerTime = (timeElapsed.getSeconds() / 60 + " minutes and " + timeElapsed.getSeconds() % 60 + " seconds");
-                if (playerTime != null) {
-                    timeLabel.setText("YOU CLEARED IT IN: " + playerTime);
-                    this.revalidate();
-                    this.repaint();
-                }
+                displayTimes();
             }
             catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
             System.out.println("No player data found at: " + playerDataFile.getAbsolutePath());
+        }
+    }
+    private void displayTimes(){
+        if (playerTime != null) {
+            timeLabel.setText("YOU CLEARED IT IN: " + playerTime);
+            this.revalidate();
+            this.repaint();
         }
     }
 }

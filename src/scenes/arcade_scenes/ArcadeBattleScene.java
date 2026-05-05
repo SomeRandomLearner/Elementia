@@ -229,6 +229,9 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 hasGameEnded = true;
                 player1SkillPanel.removeAll();
 
+                if(gameWinner != 1){
+                    frame.getLevelSelect().decrementHeart();
+                }
                 JButton rematchBtn = Utility.createButton("Rematch");
                 JPanel buttonWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
                 buttonWrapper.setOpaque(false);
