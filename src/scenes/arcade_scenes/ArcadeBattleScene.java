@@ -22,6 +22,10 @@ public class ArcadeBattleScene extends AbstractBattleScene {
     public ArcadeBattleScene(Elementia frame){
         super(frame);
 
+        // ✅ TIMER STYLE FIX (APPLIED ONCE)
+        timerLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        timerLabel.setForeground(Color.WHITE);
+
         backButton.addActionListener(e -> {
             repaint();
             if(enemyTurnTimer != null) enemyTurnTimer.stop();
@@ -43,16 +47,13 @@ public class ArcadeBattleScene extends AbstractBattleScene {
     private void setupBottomPanelLayout() {
         bottomPanel.removeAll();
 
-        // Create main container with BorderLayout
         JPanel mainBottomContainer = new JPanel(new BorderLayout());
         mainBottomContainer.setOpaque(false);
 
-        // Create upper section for timer (CENTER UPPER PART)
         JPanel upperSection = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         upperSection.setOpaque(false);
         upperSection.add(timerPanel);
 
-        // Create center section for skills/buttons (CENTER)
         JPanel centerSection = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         centerSection.setOpaque(false);
         centerSection.add(player1SkillPanel);
@@ -65,7 +66,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
 
     @Override
     public void startGame(){
-        setBattleSceneBackground((LevelManager.getCurrentLevelNumber() % 4) + 1); // only 4 backgrounds available
+        setBattleSceneBackground((LevelManager.getCurrentLevelNumber() % 4) + 1);
 
         winCounterLabel.setText("0 / 0");
         isFirstRound = true;
@@ -75,8 +76,6 @@ public class ArcadeBattleScene extends AbstractBattleScene {
         selectedTarget = null;
 
         displayCharacterViews();
-
-        // Setup initial bottom panel layout
         setupBottomPanelLayout();
 
         if(battleLogic == null){
@@ -85,11 +84,14 @@ public class ArcadeBattleScene extends AbstractBattleScene {
         }
 
         battleLogic.setBattleEventListener(new BattleEventListener() {
+
             @Override
             public void onTurnStarted(int currentPlayerTurn, GameCharacter currentCharacter) {
+
                 if(currentPlayerTurn == 1){
                     currentTurnLabel.setText("Your Turn!");
                     currentTurnLabel.setForeground(Color.RED);
+
                     player1SkillPanel.setVisible(true);
                     player1SkillPanel.removeAll();
 
@@ -97,22 +99,28 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                         if(skill == null) break;
                         player1SkillPanel.add(getSkillButton(currentCharacter, skill));
                     }
+
                     player1SkillPanel.revalidate();
                     player1SkillPanel.repaint();
-                } else{
+
+                } else {
                     enemyTurnTimer = new Timer(2000, e -> {
                         Random random = new Random();
-                        selectedTarget = battleLogic.getActivePlayer1Team().get(random.nextInt(battleLogic.getActivePlayer1Team().size()));
+                        selectedTarget = battleLogic.getActivePlayer1Team()
+                                .get(random.nextInt(battleLogic.getActivePlayer1Team().size()));
+
                         battleLogic.setTargetCharacter(selectedTarget);
 
                         Skill[] validSkills = new Skill[3];
                         int count = 0;
+
                         for(Skill skill: currentCharacter.getSkills()){
                             if(skill.isOnCooldown()) continue;
                             if(currentCharacter.getCurrentMana() >= skill.getManaCost()){
                                 validSkills[count++] = skill;
                             }
                         }
+
                         Skill selectedSkill = validSkills[random.nextInt(count)];
                         battleLogic.setSelectedSkill(selectedSkill);
                         leftPanel.setSelectedSkill(selectedSkill);
@@ -131,7 +139,6 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                     player1SkillPanel.setVisible(false);
                 }
 
-                // Always use the new layout
                 setupBottomPanelLayout();
                 bottomPanel.revalidate();
                 bottomPanel.repaint();
@@ -139,7 +146,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 if(currentPlayerTurn == 1){
                     setAllComponents(leftPanel, false);
                     setAllComponents(rightPanel, true);
-                } else{
+                } else {
                     setAllComponents(leftPanel, true);
                     setAllComponents(rightPanel, false);
                 }
@@ -156,6 +163,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 } else {
                     timerPanel.setVisible(false);
                 }
+
                 timerPanel.revalidate();
 
                 if (timer != null && timer.isRunning()) {
@@ -166,7 +174,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                     if(timerCount > 0){
                         timerCount--;
                         timerLabel.setText(String.valueOf(timerCount));
-                    } else{
+                    } else {
                         ((Timer)e.getSource()).stop();
                         battleLogic.nextTurn();
                     }
@@ -206,20 +214,23 @@ public class ArcadeBattleScene extends AbstractBattleScene {
             public void onRoundEnded(int winningPlayer) {
                 roundWinner = winningPlayer;
                 hasRoundEnded = true;
-                winCounterLabel.setText(battleLogic.getWinCount(1) + " / " + battleLogic.getWinCount(2));
+                winCounterLabel.setText(
+                        battleLogic.getWinCount(1) + " / " + battleLogic.getWinCount(2)
+                );
+
                 topPanel.repaint();
                 centerPanel.revalidate();
                 centerPanel.repaint();
                 repaint();
 
-                Timer roundMessageTimer;
-                roundMessageTimer = new Timer(2000, e -> {
+                Timer roundMessageTimer = new Timer(2000, e -> {
                     roundNumber++;
                     hasRoundEnded = false;
                     repaint();
                     setupBottomPanelLayout();
                     ((Timer)e.getSource()).stop();
                 });
+
                 roundMessageTimer.start();
             }
 
@@ -232,13 +243,14 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 if(gameWinner != 1){
                     frame.getLevelSelect().decrementHeart();
                 }
+
                 JButton rematchBtn = Utility.createButton("Rematch");
+
                 JPanel buttonWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
                 buttonWrapper.setOpaque(false);
                 buttonWrapper.setBorder(new EmptyBorder(0, 0, 40, 0));
                 buttonWrapper.add(rematchBtn);
 
-                // Use centered layout for game end screen too
                 JPanel mainBottomContainer = new JPanel(new BorderLayout());
                 mainBottomContainer.setOpaque(false);
                 mainBottomContainer.setBorder(new EmptyBorder(40, 0, 40, 0));

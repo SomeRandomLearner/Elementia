@@ -6,23 +6,49 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Utility {
-    private static final Font normalFont = new Font("Times New Roman", Font.PLAIN, 30);
 
-    public static CustomButton createButton(String text, Color defaultBackgroundColor, Color defaultForegroundColor, Color hoverColor) {
+    private static final Font normalFont = new Font("Arial", Font.BOLD, 18);
+
+    public static CustomButton createButton(
+            String text,
+            Color defaultBackgroundColor,
+            Color defaultForegroundColor,
+            Color hoverColor
+    ) {
+
         CustomButton btn = new CustomButton(text, defaultBackgroundColor, defaultForegroundColor, hoverColor);
-        btn.setFocusPainted(false);
-        btn.setOpaque(true);
-        btn.setContentAreaFilled(true);
-        btn.setDefaultBackgroundColor(defaultBackgroundColor);
-        btn.setDefaultForegroundColor(defaultForegroundColor);
+
+
         btn.setFont(normalFont);
+        btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
+        btn.setContentAreaFilled(true);
+        btn.setOpaque(true);
+
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+
+        btn.setPreferredSize(new Dimension(180, 45));
         btn.setMinimumSize(new Dimension(150, 40));
 
 
+        btn.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+
+        btn.setBackground(defaultBackgroundColor);
+        btn.setForeground(defaultForegroundColor);
+
+        btn.setDefaultBackgroundColor(defaultBackgroundColor);
+        btn.setDefaultForegroundColor(defaultForegroundColor);
+
         btn.addMouseListener(new MouseAdapter() {
+
             @Override
             public void mouseEntered(MouseEvent e) {
-                if(btn.isEnabled()) btn.setBackground(btn.getHoverColor());
+                if (btn.isEnabled()) {
+                    btn.setBackground(hoverColor);
+                    btn.setForeground(Color.WHITE);
+                }
             }
 
             @Override
@@ -38,14 +64,25 @@ public class Utility {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if(btn.contains(e.getPoint())) btn.setBackground(btn.getHoverColor());
-                else btn.setBackgroundColorToDefault();
+                if (!btn.isEnabled()) return;
+
+                if (btn.contains(e.getPoint())) {
+                    btn.setBackground(hoverColor);
+                } else {
+                    btn.setBackgroundColorToDefault();
+                }
             }
         });
+
         return btn;
     }
 
     public static CustomButton createButton(String text) {
-        return createButton(text, Color.BLACK, Color.WHITE, new Color(70,70,70));
+        return createButton(
+                text,
+                new Color(25, 25, 25),
+                Color.WHITE,
+                new Color(70, 130, 180)
+        );
     }
 }

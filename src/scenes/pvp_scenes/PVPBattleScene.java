@@ -19,6 +19,9 @@ public class PVPBattleScene extends AbstractBattleScene {
     public PVPBattleScene(Elementia frame) {
         super(frame);
 
+        timerLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        timerLabel.setForeground(Color.WHITE);
+
         backButton.addActionListener(e -> {
             frame.showScreen("PVPCharacterSelect");
         });
