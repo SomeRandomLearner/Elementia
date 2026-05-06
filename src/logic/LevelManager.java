@@ -5,30 +5,18 @@ import jdk.jshell.execution.Util;
 import utils.Utility;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class LevelManager {
     private static final int MAX_LEVELS = 10;
-    static int levelCount = 0;
     private static int currentLevelNumber = 0;
     private static Level currentLevel = null;
 
     private static ArrayList<Level> levels = new ArrayList<>();
+    private static final ArrayList<GameCharacter> allCharacters = Utility.getAllCharacters();
 
-    static {
-        ArrayList<GameCharacter> allCharacters = Utility.getAllCharacters();
-        for(int i = 0; i < MAX_LEVELS-1; i++){
-            levels.add(new Level());
-            levels.get(i).addToEnemyTeam(allCharacters.get(i).clone());
-        }
-    }
 
     public static void setBossLevel(GameCharacter boss){
-
-            if (levels.size() >= MAX_LEVELS) {
-                levels.remove(MAX_LEVELS - 1);
-                levelCount--;
-            }
-
         GameCharacter upgradedBoss = switch(boss.getCharacterId()){
             case 1 -> new Aero(150, 120, 22, 25);
             case 2 -> new Kaelis(150, 120, 22, 25);
@@ -60,6 +48,30 @@ public class LevelManager {
 
     public static Level getCurrentLevel(){
         return currentLevel;
+    }
+
+    public static void initLevels(){
+        levels.clear();
+        for(int i = 0; i < MAX_LEVELS-1; i++){
+            ArrayList<GameCharacter> availableCharacters = new ArrayList<>();
+            for(GameCharacter character : allCharacters){
+                availableCharacters.add(character.clone());
+            }
+
+            levels.add(new Level());
+            if (levels.size() >= MAX_LEVELS) {
+                levels.remove(MAX_LEVELS - 1);
+            }
+            levels.get(i).addToEnemyTeam(availableCharacters.get(i).clone());
+            availableCharacters.remove(i);
+            Random random = new Random();
+            int randomNumber = random.nextInt(availableCharacters.size());
+            levels.get(i).addToEnemyTeam(availableCharacters.get(randomNumber).clone());
+            availableCharacters.remove(randomNumber);
+
+            randomNumber = random.nextInt(availableCharacters.size());
+            levels.get(i).addToAllyTeam(availableCharacters.get(randomNumber).clone());
+        }
     }
 }
 

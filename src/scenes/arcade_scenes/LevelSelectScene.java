@@ -2,6 +2,7 @@ package scenes.arcade_scenes;
 
 import characters.*;
 import logic.BattleLogic;
+import logic.Level;
 import scenes.Elementia;
 import utils.CustomButton;
 import logic.LevelManager;
@@ -77,6 +78,7 @@ public class LevelSelectScene extends JPanel {
                 BattleLogic battleLogic = new BattleLogic(isPVP);
                 battleLogic.resetCharacterChoices();
                 battleLogic.addToTeam(1, selectedCharacter);
+                battleLogic.addAllToTeam(1, (LevelManager.getCurrentLevel().getAlliedTeam()));
                 battleLogic.addAllToTeam(2, (LevelManager.getCurrentLevel()).getEnemyTeam());
 
                 frame.getArcadeBattle().setBattleLogic(battleLogic);

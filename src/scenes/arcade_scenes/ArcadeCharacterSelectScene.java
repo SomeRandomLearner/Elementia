@@ -108,8 +108,9 @@ public class ArcadeCharacterSelectScene extends JPanel {
             }
 
 
-            frame.getLevelSelect().resetProgress(); // I don't get it but it only works when there are two of them.
+            frame.getLevelSelect().resetProgress(); // I don't get it, but it only works when there are two of them.
             frame.getLevelSelect().resetProgress();
+            LevelManager.initLevels();
             frame.showScreen("LevelSelect");
         });
 

@@ -105,9 +105,16 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 } else {
                     enemyTurnTimer = new Timer(2000, e -> {
                         Random random = new Random();
-                        selectedTarget = battleLogic.getActivePlayer1Team()
-                                .get(random.nextInt(battleLogic.getActivePlayer1Team().size()));
 
+                        ArrayList<GameCharacter> validTargets = new ArrayList<>();
+                        for(GameCharacter character: battleLogic.getActivePlayer1Team()){
+                            if(!character.isDead()){
+                                validTargets.add(character);
+                            }
+                        }
+                        if(validTargets.isEmpty()) return;
+
+                        GameCharacter selectedTarget = validTargets.get(new Random().nextInt(validTargets.size()));
                         battleLogic.setTargetCharacter(selectedTarget);
 
                         Skill[] validSkills = new Skill[3];

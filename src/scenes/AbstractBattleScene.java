@@ -175,7 +175,15 @@ public abstract class AbstractBattleScene extends JPanel {
             battleLogic.setSelectedSkill(skill);
             ArrayList<GameCharacter> opponentTeam = (ArrayList<GameCharacter>) battleLogic.getOpposingTeam();
             if(!opponentTeam.isEmpty()) {
-                GameCharacter targetCharacter = opponentTeam.get(new Random().nextInt(opponentTeam.size()));
+                ArrayList<GameCharacter> validTargets = new ArrayList<>();
+                for(GameCharacter character: opponentTeam){
+                    if(!character.isDead()){
+                        validTargets.add(character);
+                    }
+                }
+                if(validTargets.isEmpty()) return;
+
+                GameCharacter targetCharacter = validTargets.get(new Random().nextInt(validTargets.size()));
                 battleLogic.setTargetCharacter(targetCharacter);
                 battleLogic.currentCharacterUseSkillOnTarget();
                 CharacterView view = characterToViewMap.get(targetCharacter);
