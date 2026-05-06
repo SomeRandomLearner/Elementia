@@ -226,7 +226,7 @@ public class PVPBattleScene extends AbstractBattleScene {
 
 
     public void setPVPBattleSceneBackground(int backgroundNumber){
-        ImageIcon newIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/LevelBackgrounds/Level" + backgroundNumber + "Background.png")));
+        ImageIcon newIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/LevelBackgrounds/LVL" + backgroundNumber + "_BG.png")));
         bgImage = newIcon.getImage();
         repaint();
     }

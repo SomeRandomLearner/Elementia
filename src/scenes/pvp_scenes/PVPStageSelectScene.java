@@ -37,16 +37,16 @@ public class PVPStageSelectScene extends JPanel {
         add(stageSelectLabel, gbc);
 
 
-        JPanel wrapperPanel = new JPanel(new GridLayout(3, 3, 10, 10));
+        JPanel wrapperPanel = new JPanel(new GridLayout(2, 2, 10, 10));
         wrapperPanel.setOpaque(false);
 
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= 4; i++) {
 
             final int choiceNumber = i;
 
             ImageIcon selectBgIcon = new ImageIcon(
                     Objects.requireNonNull(
-                            getClass().getResource("/resources/LevelBackgrounds/Level" + i + "Background.png")
+                            getClass().getResource("/resources/LevelBackgrounds/LVL" + i + "_BG.png")
                     )
             );
 
