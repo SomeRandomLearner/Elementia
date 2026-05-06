@@ -38,7 +38,9 @@ public class Kangel extends GameCharacter {
 
     @Override
     public GameCharacter clone() {
-        return new Kangel(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
+        GameCharacter clone = new Kangel(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
+        clone.replaceSkillsWithClone();
+        return clone;
     }
     @Override
     public String getImagePath(){

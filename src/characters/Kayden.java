@@ -39,7 +39,9 @@ public class Kayden extends GameCharacter{
 
     @Override
     public GameCharacter clone(){
-        return new Kayden(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
+        GameCharacter clone = new Kayden(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
+        clone.replaceSkillsWithClone();
+        return clone;
     }
     @Override
     public String getImagePath(){

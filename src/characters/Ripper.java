@@ -39,7 +39,9 @@ public class Ripper extends GameCharacter{
 
     @Override
     public GameCharacter clone(){
-        return new Ripper(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
+        GameCharacter clone = new Ripper(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
+        clone.replaceSkillsWithClone();
+        return clone;
     }
     @Override
     public String getImagePath(){

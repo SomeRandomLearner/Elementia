@@ -76,6 +76,11 @@ public abstract class GameCharacter {
 
     public abstract GameCharacter clone();
 
+    public void replaceSkillsWithClone(){
+        for(int i = 0; i < skillCount; i++){
+            skills[i] = skills[i].clone();
+        }
+    }
 
     public void addNewSkill(String id, String name, int manaCost, int minDamage, int maxDamage, int cooldown) {
         if (this.skillCount < 3) {
@@ -234,19 +239,6 @@ public abstract class GameCharacter {
         }
     }
 
-    public static final ArrayList<GameCharacter>getAllCharacters(){
-        ArrayList<GameCharacter> allCharactersArray = new ArrayList<>();
-        allCharactersArray.add(new Aero());
-        allCharactersArray.add(new Kaelis());
-        allCharactersArray.add(new Kangel());
-        allCharactersArray.add(new Kayden());
-        allCharactersArray.add(new Maelor());
-        allCharactersArray.add(new Psalm());
-        allCharactersArray.add(new Ripper());
-        allCharactersArray.add(new Veyrion());
-        allCharactersArray.add(new ZenStream());
-        return allCharactersArray;
-    }
     public int getX(){
         return x;
     }

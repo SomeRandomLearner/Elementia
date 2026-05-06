@@ -38,7 +38,9 @@ public class Aero extends GameCharacter{
 
     @Override
     public GameCharacter clone(){
-        return new Aero();
+        GameCharacter clone = new Aero(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
+        clone.replaceSkillsWithClone();
+        return clone;
     }
 
     @Override

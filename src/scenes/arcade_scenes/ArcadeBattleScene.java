@@ -3,7 +3,6 @@ package scenes.arcade_scenes;
 import characters.GameCharacter;
 import logic.BattleEventListener;
 import logic.Skill;
-import logic.TurnResult;
 import logic.Level;
 import logic.LevelManager;
 import scenes.AbstractBattleScene;

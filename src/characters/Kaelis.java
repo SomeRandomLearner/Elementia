@@ -38,7 +38,9 @@ public class Kaelis extends GameCharacter{
 
     @Override
     public GameCharacter clone(){
-        return new Kaelis(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
+        GameCharacter clone = new Kaelis(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
+        clone.replaceSkillsWithClone();
+        return clone;
     }
     @Override
     public String getImagePath(){

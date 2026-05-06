@@ -132,7 +132,7 @@ public class LevelSelectScene extends JPanel {
     }
 
     void unlockLevels() {
-        if(!hasInputtedLeaderboardScore && completedLevels == NO_OF_LEVELS){
+        if(!hasInputtedLeaderboardScore && completedLevels >= NO_OF_LEVELS){
             try(BufferedWriter writer = new BufferedWriter(new FileWriter("data/player_data.txt", true))){
                 writer.write("," + Instant.now());
             } catch (IOException e) {

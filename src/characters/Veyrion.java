@@ -37,7 +37,9 @@ public class Veyrion extends GameCharacter{
 
     @Override
     public GameCharacter clone(){
-        return new Veyrion(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
+        GameCharacter clone = new Veyrion(super.getMaxHP(), super.getMaxMana(), super.getDefense(), super.getManaRecovery());
+        clone.replaceSkillsWithClone();
+        return clone;
     }
     @Override
     public String getImagePath(){

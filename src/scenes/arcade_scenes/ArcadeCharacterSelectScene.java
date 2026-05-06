@@ -93,7 +93,7 @@ public class ArcadeCharacterSelectScene extends JPanel {
 
         confirmButton.addActionListener(e -> {
             frame.getLevelSelect().setSelectedCharacter(chosenCharacter);
-            LevelManager.setBossLevel(chosenCharacter);
+            LevelManager.setBossLevel(chosenCharacter.clone());
 
             File currentDataFile = new File("data/player_data.txt");
             if(!currentDataFile.getParentFile().exists()){
@@ -102,8 +102,7 @@ public class ArcadeCharacterSelectScene extends JPanel {
 
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(currentDataFile, false),1024)){
                 Instant timeStarted = Instant.now();
-                writer.write(timeStarted.toString()); // 3 hearts
-                writer.write(timeStarted.toString()); // 3 hearts
+                writer.write(timeStarted.toString());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

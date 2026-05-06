@@ -1,9 +1,12 @@
 package utils;
 
+import characters.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class Utility {
 
@@ -84,5 +87,19 @@ public class Utility {
                 Color.WHITE,
                 new Color(70, 130, 180)
         );
+    }
+
+    public static final ArrayList<GameCharacter> getAllCharacters(){
+        ArrayList<GameCharacter> allCharactersArray = new ArrayList<>();
+        allCharactersArray.add(new Aero());
+        allCharactersArray.add(new Kaelis());
+        allCharactersArray.add(new Kangel());
+        allCharactersArray.add(new Kayden());
+        allCharactersArray.add(new Maelor());
+        allCharactersArray.add(new Psalm());
+        allCharactersArray.add(new Ripper());
+        allCharactersArray.add(new Veyrion());
+        allCharactersArray.add(new ZenStream());
+        return allCharactersArray;
     }
 }
