@@ -239,17 +239,12 @@ public abstract class GameCharacter {
         }
     }
 
-    public int getX(){
-        return x;
+    public void setMaxHealth(int maxHealth){
+        this.maxHealth = maxHealth;
     }
-    public void setX(int x){
-        this.x = x;
-    }
-    public int getY(){
-        return y;
-    }
-    public void setY(int y){
-        this.y = y;
+
+    public void setMaxMana(int maxMana){
+        this.maxMana = maxMana;
     }
 
     public int getCharacterId() {

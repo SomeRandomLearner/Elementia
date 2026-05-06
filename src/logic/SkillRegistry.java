@@ -21,7 +21,7 @@ public class SkillRegistry {
 
         // Aero's Skills
         registerSkill(new Skill("zephyr_splash", "Zephyr Splash", 15, 15, 45, 0));
-        registerSkill(new Skill("cyclone_fury", "Cyclone Fury", 80, 70, 119, 2));
+        registerSkill(new Skill("cyclone_fury", "Cyclone Fury", 80, 70, 120, 2));
         registerSkill(new Skill("aether_guard", "Aether Guard", -60, 0, 0, 2)); // restores mana only;
 
         // Psalm's Skills (Fire)
@@ -37,22 +37,22 @@ public class SkillRegistry {
         // Kangel's Skills
         registerSkill(new Skill("blood_bind", "Blood Bind", 0, 15, 45, 0));
         registerSkill(new Skill("crimson_spear", "Crimson Spear", 30, 30, 70, 2));
-        registerSkill(new Skill("life_drain", "Life Drain", 70, 100, 150, 5));
+        registerSkill(new Skill("life_drain", "Life Drain", 70, 100, 150, 4));
 
         // Maelor's Skills
-        registerSkill(new Skill("magnetic_pull", "Magnetic Pull", 0, 20, 35, 0));
+        registerSkill(new Skill("magnetic_pull", "Magnetic Pull", -8, 20, 35, 0)); // minor mana regen
         registerSkill(new Skill("repulse_field", "Repulse Field", 10, 60, 80, 2));
-        registerSkill(new Skill("iron_storm", "Iron Storm", 55, 10, 200, 3));
+        registerSkill(new Skill("iron_storm", "Iron Storm", 55, 100, 200, 3));
 
         // Kaelis' Skills
         registerSkill(new Skill("wolf_call", "Wolf Call", 0, 20, 30, 0));
-        registerSkill(new Skill("hawk_sight", "Hawk Sight", 15, 10, 50, 2));
-        registerSkill(new Skill("beast_surge", "Beast Surge", 70, 80, 120, 4));
+        registerSkill(new Skill("hawk_sight", "Hawk Sight", 35, 40, 50, 2));
+        registerSkill(new Skill("beast_surge", "Beast Surge", 70, 80, 120, 2));
 
         // Veyrion's Skills (Shadow)
         registerSkill(new Skill("shadow_step", "Shadow Step", 0, 10, 50, 0));
-        registerSkill(new Skill("dark_grasp", "Dark Grasp", 30, 25, 70, 2));
-        registerSkill(new Skill("night_veil", "Night Veil", 55, 35, 110, 5));
+        registerSkill(new Skill("dark_grasp", "Dark Grasp", 30, 30, 70, 2));
+        registerSkill(new Skill("night_veil", "Night Veil", 55, 100, 110, 3));
     }
 
     private static void registerSkill(Skill skill) {

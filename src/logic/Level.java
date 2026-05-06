@@ -6,10 +6,12 @@ import java.util.ArrayList;
 
 public class Level{
     private boolean isCleared = false;
+    private final int levelNumber;
     private final ArrayList<GameCharacter> enemyTeam;
     private final ArrayList<GameCharacter> allyTeam;
 
     public Level(){;
+        this.levelNumber = ++LevelManager.levelCount;
         enemyTeam = new ArrayList<>();
         allyTeam = new ArrayList<>();
     }
@@ -25,6 +27,10 @@ public class Level{
     }
     void addToAllyTeam(GameCharacter character){
         allyTeam.add(character);
+    }
+
+    public int getLevelNumber(){
+        return levelNumber;
     }
 
     public boolean getIsCleared(){

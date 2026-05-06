@@ -76,6 +76,8 @@ public class ArcadeBattleScene extends AbstractBattleScene {
 
         displayCharacterViews();
         setupBottomPanelLayout();
+        centerPanel.revalidate();
+        centerPanel.repaint();
 
         if(battleLogic == null){
             System.out.println("Error: BattleLogic is null.");
@@ -265,6 +267,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 bottomPanel.removeAll();
                 bottomPanel.add(mainBottomContainer, BorderLayout.CENTER);
 
+                LevelManager.refreshCurrentLevel(); // new companions and enemies every match
                 rematchBtn.addActionListener(e -> {
                     bottomPanel.removeAll();
                     setupBottomPanelLayout();

@@ -1,15 +1,16 @@
 package logic;
 
 import characters.*;
-import jdk.jshell.execution.Util;
 import utils.Utility;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class LevelManager {
     private static final int MAX_LEVELS = 10;
     private static int currentLevelNumber = 0;
+    static int levelCount = 0;
     private static Level currentLevel = null;
 
     private static ArrayList<Level> levels = new ArrayList<>();
@@ -72,6 +73,27 @@ public class LevelManager {
             randomNumber = random.nextInt(availableCharacters.size());
             levels.get(i).addToAllyTeam(availableCharacters.get(randomNumber).clone());
         }
+    }
+
+        public static void refreshCurrentLevel(){
+        ArrayList<GameCharacter> availableCharacters = new ArrayList<>();
+
+        for(GameCharacter character : allCharacters){
+            availableCharacters.add(character.clone());
+        }
+
+        levels.get(currentLevelNumber-1).getAlliedTeam().removeLast();
+        levels.get(currentLevelNumber-1).getEnemyTeam().clear();
+
+        levels.get(currentLevelNumber-1).addToEnemyTeam(availableCharacters.get(currentLevelNumber-1).clone());
+        availableCharacters.remove(currentLevelNumber-1);
+
+        int randomIndex = ThreadLocalRandom.current().nextInt(availableCharacters.size());
+        levels.get(currentLevelNumber-1).addToEnemyTeam(availableCharacters.get(randomIndex).clone());
+        availableCharacters.remove(randomIndex);
+
+        randomIndex = ThreadLocalRandom.current().nextInt(availableCharacters.size());
+        levels.get(currentLevelNumber-1).addToAllyTeam(availableCharacters.get(randomIndex).clone());
     }
 }
 
