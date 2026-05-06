@@ -184,7 +184,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
             }
 
             @Override
-            public void onAttackResolved(TurnResult result) {
+            public void onAttackResolved() {
                 if (timer != null && timer.isRunning()) {
                     timer.stop();
                 }

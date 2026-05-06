@@ -120,8 +120,7 @@ public class BattleLogic {
         if(success){
             selectedSkill = null;
             if(battleEventListener != null) {
-                TurnResult result = new TurnResult(currentCharacter.getName(), targetCharacter.getName(), targetCharacter.isDead());
-                battleEventListener.onAttackResolved(result);
+                battleEventListener.onAttackResolved();
             }
 
             if(isOpposingTeamAllDeadOrEmpty()){

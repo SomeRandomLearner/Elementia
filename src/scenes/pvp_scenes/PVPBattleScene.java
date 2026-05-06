@@ -7,7 +7,6 @@ import characters.GameCharacter;
 import logic.Skill;
 import logic.BattleEventListener;
 import logic.BattleLogic;
-import logic.TurnResult;
 import utils.Utility;
 
 import javax.swing.*;
@@ -127,7 +126,7 @@ public class PVPBattleScene extends AbstractBattleScene {
             }
 
             @Override
-            public void onAttackResolved(TurnResult result) {
+            public void onAttackResolved() {
                 if (timer != null && timer.isRunning()) {
                     timer.stop();
                 }
