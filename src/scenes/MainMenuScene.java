@@ -61,18 +61,37 @@ public class MainMenuScene extends JPanel {
         creditsPanel.setVisible(false);
         creditsPanel.add(closeButton);
 
-        startButton = Utility.createButton("START");
+        ImageIcon startIcon = new ImageIcon(MainMenuScene.class.getResource("/resources/StartBtn.png"));
+        startButton = new JButton(new ImageIcon(startIcon.getImage().getScaledInstance(220, 55, Image.SCALE_SMOOTH)));
+        startButton.setBorderPainted(false);
+        startButton.setContentAreaFilled(false);
+        startButton.setFocusPainted(false);
+        startButton.setPreferredSize(new Dimension(220, 55));
         startButton.addActionListener(e -> frame.showScreen("ModeSelect"));
 
-        leaderboardButton = Utility.createButton("LEADERBOARD");
+        ImageIcon leaderboardIcon = new ImageIcon(MainMenuScene.class.getResource("/resources/LeadBtn.png"));
+        leaderboardButton = new JButton(new ImageIcon(leaderboardIcon.getImage().getScaledInstance(220, 55, Image.SCALE_SMOOTH)));
+        leaderboardButton.setBorderPainted(false);
+        leaderboardButton.setContentAreaFilled(false);
+        leaderboardButton.setFocusPainted(false);
+        leaderboardButton.setPreferredSize(new Dimension(220, 55));
         leaderboardButton.addActionListener(e -> frame.showScreen("Leaderboard"));
 
-        creditsButton = Utility.createButton("CREDITS");
+        ImageIcon creditsIcon = new ImageIcon(MainMenuScene.class.getResource("/resources/CreditsBtn.png"));
+        creditsButton = new JButton(new ImageIcon(creditsIcon.getImage().getScaledInstance(220, 55, Image.SCALE_SMOOTH)));
+        creditsButton.setBorderPainted(false);
+        creditsButton.setContentAreaFilled(false);
+        creditsButton.setFocusPainted(false);
+        creditsButton.setPreferredSize(new Dimension(220, 55));
         creditsButton.addActionListener(e -> creditsPanel.setVisible(true));
 
-        exitButton = Utility.createButton("EXIT");
+        ImageIcon exitIcon = new ImageIcon(MainMenuScene.class.getResource("/resources/ExitBtn.png"));
+        exitButton = new JButton(new ImageIcon(exitIcon.getImage().getScaledInstance(220, 55, Image.SCALE_SMOOTH)));
+        exitButton.setBorderPainted(false);
+        exitButton.setContentAreaFilled(false);
+        exitButton.setFocusPainted(false);
+        exitButton.setPreferredSize(new Dimension(220, 55));
         exitButton.addActionListener(e -> System.exit(0));
-
 
         buttonPanel.add(startButton);
         buttonPanel.add(leaderboardButton);
@@ -111,7 +130,7 @@ public class MainMenuScene extends JPanel {
                         "Contributors:\n" +
                         "Joshua Raagas\n" +
                         "Kaizen Gabriel Guiroy\n" +
-                        "Kangel Hermosilla\n" +
+                        "Yesha Kangel Hermosilla\n" +
                         "Maria Mie Cadungog\n" +
                         "Psalmist Mae Guiroy\n" +
                         "Vince Jayson\n\n\n" +
