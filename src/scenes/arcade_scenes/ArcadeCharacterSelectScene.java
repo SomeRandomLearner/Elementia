@@ -94,7 +94,7 @@ public class ArcadeCharacterSelectScene extends JPanel {
         confirmButton.addActionListener(e -> {
             chosenCharacter.setMaxHealth(chosenCharacter.getMaxHP() + 50); // game too hard :(
             chosenCharacter.setMaxMana(chosenCharacter.getMaxMana() + 50);
-            frame.getLevelSelect().setSelectedCharacter(chosenCharacter);
+            LevelManager.setCurrentPlayerCharacter(chosenCharacter);
             LevelManager.setBossLevel(chosenCharacter.clone());
 
             File currentDataFile = new File("data/player_data.txt");

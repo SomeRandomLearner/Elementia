@@ -252,12 +252,20 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                     frame.getLevelSelect().decrementHeart();
                 }
 
-                JButton rematchBtn = Utility.createButton("Rematch");
+                JButton toNextLevelButton = Utility.createButton();
+                if(LevelManager.getCurrentLevelNumber() == LevelManager.getMaxLevels()){
+                    toNextLevelButton.setText("Continue to Leaderboard");
+                    toNextLevelButton.addActionListener(e -> {
+                        frame.showScreen("LevelSelect");
+                        frame.getLevelSelect().unlockLevels();
+                    });
+                }
+                else toNextLevelButton.setText("Continue to the Next Level?");
 
                 JPanel buttonWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
                 buttonWrapper.setOpaque(false);
                 buttonWrapper.setBorder(new EmptyBorder(0, 0, 40, 0));
-                buttonWrapper.add(rematchBtn);
+                buttonWrapper.add(toNextLevelButton);
 
                 JPanel mainBottomContainer = new JPanel(new BorderLayout());
                 mainBottomContainer.setOpaque(false);
@@ -268,12 +276,18 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 bottomPanel.add(mainBottomContainer, BorderLayout.CENTER);
 
                 LevelManager.refreshCurrentLevel(); // new companions and enemies every match
-                rematchBtn.addActionListener(e -> {
+                toNextLevelButton.addActionListener(e -> {
                     bottomPanel.removeAll();
                     setupBottomPanelLayout();
                     bottomPanel.revalidate();
                     bottomPanel.repaint();
                     hasGameEnded = false;
+                    int currentLevel = LevelManager.getCurrentLevelNumber() + 1;
+                    if(currentLevel >= LevelManager.getMaxLevels()) return;
+                    LevelManager.setCurrentLevelNumber(currentLevel);
+                    battleLogic.resetCharacterChoices();
+                    battleLogic.addAllToTeam(1, LevelManager.getCurrentLevel().getAlliedTeam());
+                    battleLogic.addAllToTeam(2, LevelManager.getCurrentLevel().getEnemyTeam());
                     startGame();
                 });
 

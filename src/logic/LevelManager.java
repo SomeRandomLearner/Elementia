@@ -12,6 +12,7 @@ public class LevelManager {
     private static int currentLevelNumber = 0;
     static int levelCount = 0;
     private static Level currentLevel = null;
+    private static GameCharacter playerCharacter = null;
 
     private static ArrayList<Level> levels = new ArrayList<>();
     private static final ArrayList<GameCharacter> allCharacters = Utility.getAllCharacters();
@@ -63,6 +64,8 @@ public class LevelManager {
             if (levels.size() >= MAX_LEVELS) {
                 levels.remove(MAX_LEVELS - 1);
             }
+
+            levels.get(i).addToAllyTeam(playerCharacter.clone());
             levels.get(i).addToEnemyTeam(availableCharacters.get(i).clone());
             availableCharacters.remove(i);
             Random random = new Random();
@@ -94,6 +97,14 @@ public class LevelManager {
 
         randomIndex = ThreadLocalRandom.current().nextInt(availableCharacters.size());
         levels.get(currentLevelNumber-1).addToAllyTeam(availableCharacters.get(randomIndex).clone());
+    }
+
+    public static int getMaxLevels(){
+        return MAX_LEVELS;
+    }
+
+    public static void setCurrentPlayerCharacter(GameCharacter character){
+        playerCharacter = character;
     }
 }
 

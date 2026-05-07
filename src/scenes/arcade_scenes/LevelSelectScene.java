@@ -2,7 +2,6 @@ package scenes.arcade_scenes;
 
 import characters.*;
 import logic.BattleLogic;
-import logic.Level;
 import scenes.Elementia;
 import utils.CustomButton;
 import logic.LevelManager;
@@ -19,7 +18,6 @@ import java.util.Objects;
 
 public class LevelSelectScene extends JPanel {
     private int completedLevels = 0;
-    private GameCharacter selectedCharacter = null;
     private final HashMap<Integer, Boolean> levelStatuses;
     private final CustomButton[] levelButtons;
     private final JPanel heartPanel = new JPanel(new GridLayout(1,3));
@@ -68,16 +66,10 @@ public class LevelSelectScene extends JPanel {
 
             int levelNumber = i + 1;
             levelButtons[i].addActionListener(e -> {
-                if (selectedCharacter == null) {
-                    System.out.println("ERROR in level select");
-                    return;
-                }
-
                 LevelManager.setCurrentLevelNumber(levelNumber);
                 boolean isPVP = false;
                 BattleLogic battleLogic = new BattleLogic(isPVP);
                 battleLogic.resetCharacterChoices();
-                battleLogic.addToTeam(1, selectedCharacter);
                 battleLogic.addAllToTeam(1, (LevelManager.getCurrentLevel().getAlliedTeam()));
                 battleLogic.addAllToTeam(2, (LevelManager.getCurrentLevel()).getEnemyTeam());
 
@@ -186,10 +178,6 @@ public class LevelSelectScene extends JPanel {
         }
         heartPanel.revalidate();
         heartPanel.repaint();
-    }
-
-    public void setSelectedCharacter(GameCharacter character) {
-        this.selectedCharacter = character;
     }
 
     // ================= BACKGROUND =================

@@ -132,12 +132,15 @@ public class BattleLogic {
                     player2WinCount++;
                     previousRoundWinner = player2;
                 }
-                if(battleEventListener != null) battleEventListener.onRoundEnded(previousRoundWinner);
 
                 if(player1WinCount >= 3 || player2WinCount >= 3){
                     endGame();
+                    return;
                 }
-                else startRound();
+                if(battleEventListener != null) {
+                    battleEventListener.onRoundEnded(previousRoundWinner);
+                    startRound();
+                }
             }
             else {
                 currentCharacterTurn++;

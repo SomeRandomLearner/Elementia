@@ -89,7 +89,11 @@ public class Utility {
         );
     }
 
-    public static final ArrayList<GameCharacter> getAllCharacters(){
+    public static CustomButton createButton(){
+        return createButton("");
+    }
+
+    public static ArrayList<GameCharacter> getAllCharacters(){
         ArrayList<GameCharacter> allCharactersArray = new ArrayList<>();
         allCharactersArray.add(new Aero());
         allCharactersArray.add(new Kaelis());
