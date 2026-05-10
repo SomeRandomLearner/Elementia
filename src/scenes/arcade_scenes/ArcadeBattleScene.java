@@ -253,6 +253,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 }
 
                 JButton toNextLevelButton = Utility.createButton();
+                toNextLevelButton.setPreferredSize(new Dimension(360,45));
                 if(LevelManager.getCurrentLevelNumber() == LevelManager.getMaxLevels()){
                     toNextLevelButton.setText("Continue to Leaderboard");
                     toNextLevelButton.addActionListener(e -> {
