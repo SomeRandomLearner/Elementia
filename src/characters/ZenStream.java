@@ -30,8 +30,9 @@ public class ZenStream extends GameCharacter{
 
     @Override
     public String getDescription() {
-        return "ZenStream, the Water Sage, flows like a river through battle. " +
-                "Her fluid movements and healing waters sustain her through any conflict.";
+        return  "Living water made from the collective thoughts and energy of humans."  +
+                "He seeks to understand the stories and emotions that he could not witness the conclusion of.";
+
     }
 
     @Override

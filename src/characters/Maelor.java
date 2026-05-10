@@ -29,8 +29,13 @@ public class Maelor extends GameCharacter{
 
     @Override
     public String getDescription() {
-        return "Maelor, the Earth Warden, commands the unbreakable might of stone " +
-                "and soil. His defenses are impenetrable, his strikes devastating.";
+        return "Maelor grew up in a heavily industrialized state where metal powered"+
+        "everything — cities, weapons, infrastructure. His magnetic abilities manifested"+
+        "early and were quickly exploited for military development. Rather than remain a"+
+        "state asset, he disappeared. Now he operates independently, taking contracts that"+
+        "align with his own logic. He values control — of himself, of his environment, and"+
+        "especially of any battlefield he steps into. He doesn’t fight emotionally. He fights"+
+        "strategically.";
     }
 
     @Override

@@ -29,8 +29,14 @@ public class Kaelis extends GameCharacter{
 
     @Override
     public String getDescription() {
-        return "Kaelis, the Flame Sovereign, wields fire with passionate fury. " +
-                "Her blazing attacks incinerate foes and ignite the hearts of allies.";
+        return "Kaelis was raised on the edge of expanding civilization, where forests"+
+        "were slowly replaced by roads and factories. She learned early how to survive"+
+        "without relying on cities. Her connection with animals isn’t mystical—it's mutual"+
+        "trust built over time. Through a rare resonance ability, she can synchronize with"+
+        "beasts and call them to her side. survive without relying on cities."+
+        "Her connection with animals isn’t mystical — it’s mutual trust built over time."+
+        "Through a rare resonance ability, she can synchronize with beasts and call them"+
+        "to her side.";
     }
 
     @Override

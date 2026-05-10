@@ -31,8 +31,16 @@ public class Ripper extends GameCharacter{
 
     @Override
     public String getDescription() {
-        return "Ripper, the Blood Berserker, thrives on carnage and destruction. " +
-                "His savage fury grows stronger with every wound he inflicts.";
+        return "Ripper is an Earth Elementalist and a wise ruler from another realm"+
+        "who governed with peace, balance, and harmony, ensuring the land and its"+
+        "creatures thrived. However, years later something unexpected happened"+
+        "during the cataclysmic event from the outsiders, his realm was destroyed, the"+
+        "lands were disrupted, and worst of all, the innocent peoples and other creatures"+
+        "who lived peacefully were all killed by them. The destruction left scars on"+
+        "Ripper, leaving him very devastated losing his sanity. And now, he roams to"+
+        "every realm and desires for vengeance against those outsiders who were"+
+        "responsible on destroying his realm. Don't let his friendly yet intimidating look"+
+        "fool you! He can be a real menace for those who try to harm him";
     }
 
     @Override

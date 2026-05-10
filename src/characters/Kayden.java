@@ -31,8 +31,9 @@ public class Kayden extends GameCharacter{
 
     @Override
     public String getDescription() {
-        return "Kayden, the Shadow Assassin, strikes from the darkness with lethal " +
-                "precision. No target escapes his silent, deadly embrace.";
+        return "Kayden was one of the strongest Elementalists, a lone wolf who mastered his elemental power on his own." +
+        "Feared and respected, his name spread as a legend whispered with both awe and fear.";
+
     }
 
     @Override

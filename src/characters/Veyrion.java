@@ -29,8 +29,12 @@ public class Veyrion extends GameCharacter{
 
     @Override
     public String getDescription() {
-        return "Veyrion, the Thunder Lord, unleashes devastating electrical storms. " +
-                "His lightning strikes with the wrath of a thousand tempests.";
+        return "Veyrion’s abilities surfaced during adolescence — shadows"+
+        "reacting to his presence, stretching beyond natural limits. Rather than fear it, he"+
+        "studied it. He later discovered shadow energy is simply the absence of light"+
+        "manipulated at high density. To him, it’s a discipline — not superstition. He works"+
+        "best alone, prefers short engagements, and avoids prolonged conflict. His goal"+
+        "isn’t domination. It’s efficiency.";
     }
 
     @Override

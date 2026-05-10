@@ -14,7 +14,7 @@ public class ModeSelectScene extends JPanel {
     private Image pvpIcon;
 
     public ModeSelectScene(Elementia frame) {
-        setLayout(new BorderLayout()); // 🔥 CHANGED TO BORDERLAYOUT FOR BETTER CONTROL
+        setLayout(new BorderLayout());
         setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         // Load background

@@ -1,511 +1,539 @@
 package scenes.arcade_scenes;
 
 import characters.*;
-import logic.LevelManager;
+import logic.BattleLogic;
 import scenes.Elementia;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.Instant;
 import java.util.Objects;
 
 public class ArcadeCharacterSelectScene extends JPanel {
-    private final ImageIcon aeroImgIcon, kaelisImgIcon, kangelImgIcon, kaydenImgIcon;
-    private final ImageIcon psalmImgIcon, maelorImgIcon, ripperImgIcon, veyrionImgIcon, zenStreamImgIcon;
 
-    private GameCharacter chosenCharacter;
-    private GameCharacter lockedCharacter = null;
+    private GameCharacter selectedCharacter;
 
+    private boolean characterSelected = false;
+
+    private JLabel titleLabel;
     private JButton confirmButton;
-    private Image bgImage;
 
-    private JLabel previewImage, nameLabel, elementLabel, skill1, skill2, skill3;
+    private JLabel previewImage;
+    private JLabel nameLabel, elementLabel, skill1, skill2, skill3;
     private JTextArea descriptionArea;
 
+    private Image bgImage;
+
+    private BattleLogic battleLogic;
+    private Elementia frameRef;
+
     public ArcadeCharacterSelectScene(Elementia frame) {
+        this.frameRef = frame;
         setLayout(new BorderLayout());
 
-        // BACKGROUND
-        bgImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/CharacterSelectBG.png"))).getImage();
+        battleLogic = new BattleLogic(false);
 
-        // TITLE
-        JLabel title = new JLabel("SELECT YOUR CHARACTER", SwingConstants.CENTER);
-        title.setFont(new Font("Arial Black", Font.BOLD, 40));
-        title.setForeground(new Color(255, 255, 255, 240));
-        title.setBorder(BorderFactory.createEmptyBorder(25, 0, 20, 0));
+        loadBackground();
+        initTop();
+        initCenter();
+        initBottom();
+    }
 
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setOpaque(false);
-        topPanel.add(title, BorderLayout.CENTER);
+    private void loadBackground() {
+        try {
+            bgImage = new ImageIcon(
+                    Objects.requireNonNull(getClass().getResource("/resources/CharacterSelectBG.png"))
+            ).getImage();
+        } catch (Exception e) {
+            bgImage = null;
+        }
+    }
 
-        // ICONS
-        aeroImgIcon = getIcon("/resources/Aero.png");
-        kaelisImgIcon = getIcon("/resources/Kaelis.png");
-        kangelImgIcon = getIcon("/resources/Kangel.png");
-        kaydenImgIcon = getIcon("/resources/Kayden.png");
-        maelorImgIcon = getIcon("/resources/Maelor.png");
-        psalmImgIcon = getIcon("/resources/Psalm.png");
-        ripperImgIcon = getIcon("/resources/Ripper.png");
-        veyrionImgIcon = getIcon("/resources/Veyrion.png");
-        zenStreamImgIcon = getIcon("/resources/ZenStream.png");
 
-        // 🔥 LUXURY CHARACTER GRID
-        JPanel grid = new JPanel(new GridLayout(3, 3, 25, 25));
+    private void initTop() {
+        titleLabel = new JLabel("SELECT YOUR CHARACTER", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Segoe UI Black", Font.BOLD, 40));
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(25, 0, 25, 0));
+
+        JPanel top = new JPanel();
+        top.setOpaque(false);
+        top.add(titleLabel);
+
+        add(top, BorderLayout.NORTH);
+    }
+
+
+    private void initCenter() {
+
+        JPanel main = new JPanel(new BorderLayout());
+        main.setOpaque(false);
+
+        main.add(createCharacterGrid(), BorderLayout.WEST);
+        main.add(createPreviewAndInfo(), BorderLayout.CENTER);
+
+        add(main, BorderLayout.CENTER);
+    }
+
+
+    private JPanel createCharacterGrid() {
+
+        GameCharacter[] characters = {
+                new Aero(), new Kaelis(), new Kangel(),
+                new Kayden(), new Maelor(), new Psalm(),
+                new Ripper(), new Veyrion(), new ZenStream()
+        };
+
+        JPanel grid = new JPanel(new GridLayout(3, 3, 20, 20));
         grid.setOpaque(false);
         grid.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
 
-        grid.add(createPremiumCard(GameCharacter.Character.AERO, aeroImgIcon));
-        grid.add(createPremiumCard(GameCharacter.Character.KAELIS, kaelisImgIcon));
-        grid.add(createPremiumCard(GameCharacter.Character.KANGEL, kangelImgIcon));
-        grid.add(createPremiumCard(GameCharacter.Character.KAYDEN, kaydenImgIcon));
-        grid.add(createPremiumCard(GameCharacter.Character.MAELOR, maelorImgIcon));
-        grid.add(createPremiumCard(GameCharacter.Character.PSALM, psalmImgIcon));
-        grid.add(createPremiumCard(GameCharacter.Character.RIPPER, ripperImgIcon));
-        grid.add(createPremiumCard(GameCharacter.Character.VEYRION, veyrionImgIcon));
-        grid.add(createPremiumCard(GameCharacter.Character.ZENSTREAM, zenStreamImgIcon));
+        for (GameCharacter c : characters) {
+            grid.add(createCharacterCard(c, grid));
+        }
 
-        JPanel leftPanel = new JPanel(new BorderLayout());
-        leftPanel.setOpaque(false);
-        leftPanel.setPreferredSize(new Dimension(780, 850));
-        leftPanel.add(grid, BorderLayout.CENTER);
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setOpaque(false);
+        wrapper.setPreferredSize(new Dimension(600, 800));
+        wrapper.add(grid);
 
-        // RIGHT PANEL
-        JPanel rightPanel = createEpicRightPanel();
-        rightPanel.setPreferredSize(new Dimension(850, 850));
-
-        // BUTTONS
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setOpaque(false);
-        bottomPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 30, 40));
-
-        confirmButton = createPremiumButton("CONFIRM", new Color(40, 40, 80).darker());
-        confirmButton.setEnabled(false);
-        confirmButton.setPreferredSize(new Dimension(300, 55));
-
-        JButton backBtn = createPremiumButton("← BACK", new Color(40, 40, 80).darker());
-        backBtn.setPreferredSize(new Dimension(250, 55));
-
-        confirmButton.addActionListener(e -> {
-            LevelManager.setCurrentPlayerCharacter(chosenCharacter);
-            LevelManager.setBossLevel(chosenCharacter.clone());
-
-            File currentDataFile = new File("data/player_data.txt");
-            if(!currentDataFile.getParentFile().exists()){
-                currentDataFile.getParentFile().mkdirs();
-            }
-
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(currentDataFile, false),1024)){
-                Instant timeStarted = Instant.now();
-                writer.write(timeStarted.toString());
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-
-            frame.getLevelSelect().resetProgress(); // I don't get it, but it only works when there are two of them.
-            frame.getLevelSelect().resetProgress();
-            LevelManager.initLevels();
-            frame.showScreen("LevelSelect");
-        });
-
-        backBtn.addActionListener(e -> frame.showScreen("ModeSelect"));
-
-        bottomPanel.add(backBtn, BorderLayout.WEST);
-        bottomPanel.add(confirmButton, BorderLayout.EAST);
-
-        add(topPanel, BorderLayout.NORTH);
-        add(leftPanel, BorderLayout.WEST);
-        add(rightPanel, BorderLayout.CENTER);
-        add(bottomPanel, BorderLayout.SOUTH);
-    }
-    // PANEL
-    private JPanel createEpicRightPanel() {
-        JPanel panel = new JPanel(new GridLayout(1, 2, 40, 0));
-        panel.setOpaque(false);
-        panel.setBorder(BorderFactory.createEmptyBorder(30, 35, 30, 35));
-
-        // MASSIVE HERO PREVIEW
-        panel.add(createHeroPreviewPanel());
-
-        // SPECTACULAR INFO PANEL
-        panel.add(createSpectacularInfoPanel());
-
-        return panel;
+        return wrapper;
     }
 
-    private JPanel createHeroPreviewPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setOpaque(false);
+    private JPanel createCharacterCard(GameCharacter character, JPanel grid) {
 
-        //GLOW EFFECT CONTAINER
-        previewImage = new JLabel();
-        previewImage.setHorizontalAlignment(SwingConstants.CENTER);
-        previewImage.setPreferredSize(new Dimension(680, 780));
-        previewImage.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        panel.add(previewImage, BorderLayout.CENTER);
-        return panel;
-    }
-
-    private JPanel createSpectacularInfoPanel() {
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setOpaque(false);
-
-        // VERTICALLY CENTERED CONTENT
-        JPanel content = new JPanel();
-        content.setOpaque(false);
-        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-        content.setAlignmentY(CENTER_ALIGNMENT);
-
-        // MAIN INFO CONTAINER WITH SEMI-TRANSPARENT BOX
-        JPanel mainInfoBox = createMainInfoBox();
-
-        // HERO NAME - MASSIVE
-        nameLabel = createSpectacularLabel("CHARACTER", 44, Color.WHITE, true);
-        nameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 25, 0));
-
-        // ELEMENT TYPE
-        elementLabel = createSpectacularLabel("ELEMENT", 26, new Color(150, 255, 255), false);
-        elementLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
-
-        // SKILLS SECTION
-        JLabel skillsTitle = createSpectacularLabel("SKILLS", 24, new Color(255, 215, 0), true);
-        skillsTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-
-        skill1 = createSpectacularLabel("PRIMARY", 18, Color.WHITE, false);
-        skill2 = createSpectacularLabel("SECONDARY", 18, Color.WHITE, false);
-        skill3 = createSpectacularLabel("ULTIMATE", 18, Color.WHITE, true);
-
-        JLabel loreTitle = createSpectacularLabel("CHARACTER DESCRIPTION", 24, new Color(255, 150, 255), true);
-        loreTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 12, 0));
-
-        // DESCRIPTION BOX
-        JPanel descriptionBox = createDescriptionBox();
-        descriptionArea = new JTextArea("Hover over champions to reveal their power...");
-        styleDescriptionArea(descriptionArea);
-        descriptionBox.add(descriptionArea, BorderLayout.CENTER);
-
-        // ELEMENT PANEL (Name + Element)
-        JPanel elementPanel = createElementPanel(nameLabel, elementLabel);
-
-        // ADD ALL TO MAIN INFO BOX
-        mainInfoBox.add(elementPanel, BorderLayout.NORTH);
-        mainInfoBox.add(createSkillsPanel(skillsTitle, skill1, skill2, skill3), BorderLayout.CENTER);
-        mainInfoBox.add(descriptionBox, BorderLayout.SOUTH);
-
-        content.add(Box.createVerticalGlue());
-        content.add(mainInfoBox);
-        content.add(Box.createVerticalGlue());
-
-        mainPanel.add(content, BorderLayout.CENTER);
-        return mainPanel;
-    }
-
-    // MAIN INFO BOX - WRAPS EVERYTHING (Name, Element, Skills, Description)
-    private JPanel createMainInfoBox() {
-        JPanel box = new JPanel(new BorderLayout()) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                // Semi-transparent gradient background (25% opacity)
-                GradientPaint gradient = new GradientPaint(
-                        0, 0, new Color(20, 15, 50, 90), // Top: Deep space purple
-                        0, getHeight(), new Color(10, 20, 60, 90) // Bottom: Cosmic blue
-                );
-                g2d.setPaint(gradient);
-                g2d.fillRoundRect(12, 12, getWidth()-24, getHeight()-24, 25, 25);
-
-                // Premium outer glow
-                g2d.setColor(new Color(100, 80, 200, 60));
-                g2d.setStroke(new BasicStroke(3));
-                g2d.drawRoundRect(8, 8, getWidth()-16, getHeight()-16, 28, 28);
-
-                // Inner highlight border
-                g2d.setColor(new Color(150, 120, 255, 80));
-                g2d.setStroke(new BasicStroke(1.5f));
-                g2d.drawRoundRect(15, 15, getWidth()-30, getHeight()-30, 22, 22);
-
-                g2d.dispose();
-            }
-        };
-        box.setOpaque(false);
-        box.setBorder(BorderFactory.createEmptyBorder(25, 30, 25, 30));
-        box.setPreferredSize(new Dimension(400, 720));
-        box.setAlignmentX(Component.CENTER_ALIGNMENT);
-        return box;
-    }
-
-    private JPanel createElementPanel(JLabel nameLabel, JLabel elementLabel) {
-        JPanel elementBox = new JPanel(new BorderLayout()) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                // Cyan-tinted semi-transparent background (20% opacity)
-                g2d.setColor(new Color(0, 180, 255, 70));
-                g2d.fillRoundRect(8, 8, getWidth()-16, getHeight()-16, 22, 22);
-
-                // Cyan glow border
-                g2d.setColor(new Color(0, 220, 255, 90));
-                g2d.setStroke(new BasicStroke(2.5f));
-                g2d.drawRoundRect(10, 10, getWidth()-20, getHeight()-20, 20, 20);
-
-                g2d.dispose();
-            }
-        };
-        elementBox.setOpaque(false);
-        elementBox.setBorder(BorderFactory.createEmptyBorder(20, 25, 25, 25));
-        elementBox.setPreferredSize(new Dimension(330, 160));
-
-        JPanel elementContent = new JPanel(new BorderLayout());
-        elementContent.setOpaque(false);
-        elementContent.add(nameLabel, BorderLayout.NORTH);
-        elementContent.add(elementLabel, BorderLayout.SOUTH);
-
-        elementBox.add(elementContent, BorderLayout.CENTER);
-        return elementBox;
-    }
-
-    // SKILLS PANEL WITH ITS OWN MINI-BOX
-    private JPanel createSkillsPanel(JLabel skillsTitle, JLabel skill1, JLabel skill2, JLabel skill3) {
-        JPanel skillsBox = new JPanel(new BorderLayout()) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                // Gold-tinted semi-transparent background (20% opacity)
-                g2d.setColor(new Color(255, 200, 100, 70));
-                g2d.fillRoundRect(8, 8, getWidth()-16, getHeight()-16, 18, 18);
-
-                // Golden border glow
-                g2d.setColor(new Color(255, 215, 0, 100));
-                g2d.setStroke(new BasicStroke(2));
-                g2d.drawRoundRect(10, 10, getWidth()-20, getHeight()-20, 16, 16);
-
-                g2d.dispose();
-            }
-        };
-        skillsBox.setOpaque(false);
-        skillsBox.setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
-        skillsBox.setPreferredSize(new Dimension(330, 180));
-
-        // Skills content panel
-        JPanel skillsContent = new JPanel(new GridLayout(4, 1, 0, 8));
-        skillsContent.setOpaque(false);
-        skillsContent.add(skillsTitle);
-        skillsContent.add(skill1);
-        skillsContent.add(skill2);
-        skillsContent.add(skill3);
-
-        skillsBox.add(skillsContent, BorderLayout.CENTER);
-        return skillsBox;
-    }
-
-    // DESCRIPTION BOX
-    private JPanel createDescriptionBox() {
-        JPanel box = new JPanel(new BorderLayout()) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                // Semi-transparent gradient background (25% opacity)
-                GradientPaint gradient = new GradientPaint(
-                        0, 0, new Color(60, 40, 100, 100), // Top-left: dark purple
-                        0, getHeight(), new Color(40, 60, 120, 100) // Bottom: dark blue
-                );
-                g2d.setPaint(gradient);
-                g2d.fillRoundRect(8, 8, getWidth()-16, getHeight()-16, 20, 20);
-
-                // Subtle inner glow border
-                g2d.setColor(new Color(120, 100, 200, 80));
-                g2d.setStroke(new BasicStroke(2));
-                g2d.drawRoundRect(10, 10, getWidth()-20, getHeight()-20, 18, 18);
-
-                g2d.dispose();
-            }
-        };
-        box.setOpaque(false);
-        box.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 25));
-        box.setPreferredSize(new Dimension(330, 140));
-        box.setAlignmentX(Component.CENTER_ALIGNMENT);
-        return box;
-    }
-
-    private JPanel createPremiumCard(GameCharacter.Character character, ImageIcon icon) {
         JPanel card = new JPanel(new BorderLayout()) {
+
             @Override
             protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                boolean isSelected = getClientProperty("selected") == Boolean.TRUE;
+                boolean isHovered = getClientProperty("hovered") == Boolean.TRUE;
+
+                Color base = new Color(255, 255, 255, 35);
+                Color hover = new Color(120, 180, 255, 80);
+                Color selectedColor = new Color(255, 215, 0, 140);
+
+                if (isSelected) {
+                    g2.setColor(new Color(255, 255, 0, 100));
+                    g2.setStroke(new BasicStroke(3));
+                    g2.drawRoundRect(4, 4, getWidth() - 9, getHeight() - 9, 22, 22);
+                } else if (isHovered) {
+                    g2.setColor(hover);
+                } else {
+                    g2.setColor(base);
+                }
+
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
+
+                g2.setColor(new Color(255, 255, 255, 120));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 25, 25);
+
+                g2.dispose();
                 super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.setColor(new Color(0, 150, 255, 30));
-                g2d.fillRoundRect(8, 8, getWidth()-16, getHeight()-16, 25, 25);
-                g2d.dispose();
             }
         };
-        card.setPreferredSize(new Dimension(200, 200));
-        card.setOpaque(false);
-        card.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(255, 255, 255, 120), 3, true),
-                BorderFactory.createEmptyBorder(12, 12, 12, 12)
-        ));
 
-        JLabel img = new JLabel(icon);
+        card.setOpaque(false);
+        card.setPreferredSize(new Dimension(160, 160));
+        card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        JLabel img = new JLabel(getIcon(character.getImagePath()));
         img.setHorizontalAlignment(SwingConstants.CENTER);
-        img.setVerticalAlignment(SwingConstants.CENTER);
         card.add(img, BorderLayout.CENTER);
 
-        card.addMouseListener(new PremiumMouseAdapter(character));
+        card.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                card.putClientProperty("hovered", true);
+                card.repaint();
+                updatePreview(character);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                card.putClientProperty("hovered", false);
+                card.repaint();
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                clearSelection(grid);
+
+                selectedCharacter = character;
+                characterSelected = true;
+
+                card.putClientProperty("selected", true);
+                card.repaint();
+
+                confirmButton.setEnabled(true);
+                titleLabel.setText("CHARACTER READY!");
+            }
+        });
+
         return card;
     }
 
-    private class PremiumMouseAdapter extends MouseAdapter {
-        private final GameCharacter.Character character;
-
-        PremiumMouseAdapter(GameCharacter.Character character) {
-            this.character = character;
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-            if (lockedCharacter == null)
-                updatePreview(character);
-            ((JPanel) e.getSource()).setBorder(BorderFactory.createLineBorder(new Color(0, 220, 255, 220), 4, true));
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-            JPanel card = (JPanel) e.getSource();
-            if (lockedCharacter != getCharacterInstance(character)) {
-                card.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255, 120), 3, true));
+    private void clearSelection(JPanel grid) {
+        for (Component comp : grid.getComponents()) {
+            if (comp instanceof JPanel panel) {
+                panel.putClientProperty("selected", false);
+                panel.repaint();
             }
         }
-
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            chosenCharacter = getCharacterInstance(character);
-            lockedCharacter = chosenCharacter;
-            confirmButton.setEnabled(true);
-            updatePreview(character);
-        }
     }
 
-    private void updatePreview(GameCharacter.Character character) {
-        GameCharacter temp = getCharacterInstance(character);
-        previewImage.setIcon(new ImageIcon(
-                new ImageIcon(Objects.requireNonNull(getClass().getResource(temp.getImagePath())))
-                        .getImage().getScaledInstance(680, 600, Image.SCALE_SMOOTH)
-        ));
+    private JPanel createPreviewAndInfo() {
 
-        nameLabel.setText(temp.getName().toUpperCase());
-        elementLabel.setText("The " + temp.getElement() + " Element");
+        JPanel panel = new JPanel(new GridLayout(1, 2, 30, 0));
+        panel.setOpaque(false);
+        panel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
 
-        String[] skills = temp.getSkillNames();
-        skill1.setText((skills.length > 0 ? skills[0] : "PRIMARY ATTACK"));
-        skill2.setText((skills.length > 1 ? skills[1] : "POWER STRIKE"));
-        skill3.setText((skills.length > 2 ? skills[2] : "ULTIMATE"));
+        panel.add(createPreviewPanel());
+        panel.add(createInfoPanel());
 
-        try {
-            String desc = temp.getDescription();
-            descriptionArea.setText(desc != null && !desc.trim().isEmpty() ? desc : temp.getName() + " - Legend of the " + temp.getElement());
-        } catch (Exception e) {
-            descriptionArea.setText(temp.getName() + " - Epic " + temp.getElement() + " Warrior");
-        }
+        return panel;
     }
 
-    // UTILITY METHODS
-    private GameCharacter getCharacterInstance(GameCharacter.Character character) {
-        return switch (character) {
-            case AERO -> new Aero();
-            case KAELIS -> new Kaelis();
-            case KANGEL -> new Kangel();
-            case KAYDEN -> new Kayden();
-            case MAELOR -> new Maelor();
-            case PSALM -> new Psalm();
-            case RIPPER -> new Ripper();
-            case VEYRION -> new Veyrion();
-            case ZENSTREAM -> new ZenStream();
-            default -> null;
-        };
-    }
 
-    private JLabel createSpectacularLabel(String text, int size, Color color, boolean shadow) {
-        JLabel label = new JLabel(text);
-        label.setForeground(color);
-        label.setFont(new Font("Arial Black", Font.BOLD, size));
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        if (shadow) {
-            label.setBorder(BorderFactory.createEmptyBorder(4, 4, 0, 0));
-        }
-        return label;
-    }
+    private JPanel createPreviewPanel() {
 
-    private void styleDescriptionArea(JTextArea area) {
-        area.setOpaque(false);
-        area.setForeground(new Color(240, 240, 255));
-        area.setFont(new Font("Georgia", Font.ITALIC, 16));
-        area.setLineWrap(true);
-        area.setWrapStyleWord(true);
-        area.setEditable(false);
-        area.setBorder(null);
-        area.setBackground(null);
-        area.setAlignmentX(Component.CENTER_ALIGNMENT);
-        area.setPreferredSize(new Dimension(300, 100));
-        area.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
-    }
-
-    private JButton createPremiumButton(String text, Color color) {
-        JButton button = new JButton(text) {
+        JPanel panel = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                GradientPaint gradient = new GradientPaint(0, 0, color.brighter(), 0, getHeight(), color.darker());
-                g2d.setPaint(gradient);
-                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+                GradientPaint gp = new GradientPaint(
+                        0, 0, new Color(0, 0, 0, 140),
+                        0, getHeight(), new Color(20, 20, 60, 160)
+                );
 
-                g2d.setColor(Color.WHITE);
-                g2d.setStroke(new BasicStroke(2));
-                g2d.drawRoundRect(1, 1, getWidth()-3, getHeight()-3, 20, 20);
+                g2.setPaint(gp);
+                g2.fillRoundRect(10, 10, getWidth() - 20, getHeight() - 20, 30, 30);
 
+                g2.setColor(new Color(120, 180, 255, 80));
+                g2.drawRoundRect(10, 10, getWidth() - 20, getHeight() - 20, 30, 30);
+
+                g2.dispose();
                 super.paintComponent(g);
-                g2d.dispose();
             }
         };
+
+        panel.setOpaque(false);
+
+        previewImage = new JLabel();
+        previewImage.setHorizontalAlignment(SwingConstants.CENTER);
+
+        panel.add(previewImage, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+
+    private JPanel createInfoPanel() {
+
+        JPanel mainBox = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                GradientPaint gp = new GradientPaint(
+                        0, 0, new Color(30, 20, 80, 200),
+                        0, getHeight(), new Color(10, 30, 80, 200)
+                );
+
+                g2.setPaint(gp);
+                g2.fillRoundRect(10, 10, getWidth() - 20, getHeight() - 20, 30, 30);
+
+                g2.setColor(new Color(120, 100, 255, 80));
+                g2.setStroke(new BasicStroke(3));
+                g2.drawRoundRect(8, 8, getWidth() - 16, getHeight() - 16, 30, 30);
+
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        mainBox.setOpaque(false);
+        mainBox.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+
+        JPanel content = new JPanel();
+        content.setOpaque(false);
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+
+
+        nameLabel = createLabel("CHARACTER", 32, true);
+        elementLabel = createLabel("ELEMENT", 18, false);
+        elementLabel.setForeground(new Color(150, 255, 255));
+
+        JPanel headerBox = createSubBox(new Color(0, 200, 255, 60));
+        headerBox.add(nameLabel);
+        headerBox.add(Box.createVerticalStrut(5));
+        headerBox.add(elementLabel);
+
+        // ===== SKILLS =====
+        JLabel skillsTitle = createLabel("SKILLS", 20, true);
+        skillsTitle.setForeground(new Color(255, 215, 0));
+
+        skill1 = createLabel("", 14, false);
+        skill2 = createLabel("", 14, false);
+        skill3 = createLabel("", 14, false);
+
+        JPanel skillsBox = createSubBox(new Color(255, 200, 100, 60));
+        skillsBox.add(skillsTitle);
+        skillsBox.add(Box.createVerticalStrut(10));
+        skillsBox.add(skill1);
+        skillsBox.add(skill2);
+        skillsBox.add(skill3);
+
+        // ===== DESCRIPTION =====
+        JLabel descTitle = createLabel("DESCRIPTION", 18, true);
+        descTitle.setForeground(new Color(255, 150, 255));
+
+        descriptionArea = new JTextArea();
+        descriptionArea.setOpaque(false);
+        descriptionArea.setForeground(new Color(235, 235, 255));
+        descriptionArea.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        descriptionArea.setLineWrap(true);
+        descriptionArea.setWrapStyleWord(true);
+        descriptionArea.setEditable(false);
+
+        JPanel descBox = createSubBox(new Color(150, 100, 255, 60));
+        descBox.setLayout(new BorderLayout());
+        descBox.add(descTitle, BorderLayout.NORTH);
+        descBox.add(descriptionArea, BorderLayout.CENTER);
+
+        // ===== ADD =====
+        content.add(headerBox);
+        content.add(Box.createVerticalStrut(18));
+        content.add(skillsBox);
+        content.add(Box.createVerticalStrut(18));
+        content.add(descBox);
+
+        mainBox.add(content, BorderLayout.CENTER);
+
+        return mainBox;
+    }
+
+    // ================= FIXED (NO NULL) =================
+    private JPanel createSubBox(Color color) {
+
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                g2.setColor(color);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+
+                g2.setColor(new Color(255, 255, 255, 60));
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 20, 20);
+
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        panel.setOpaque(false);
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        return panel;
+    }
+
+    // ================= BOTTOM =================
+    private void initBottom() {
+
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 20));
+        bottom.setOpaque(false);
+
+        JButton back = createStyledButton(
+                "BACK",
+                new Color(60, 60, 120).brighter(),
+                new Color(40, 40, 80).darker()
+        );
+
+        back.addActionListener(e -> frameRef.showScreen("ModeSelect"));
+
+        confirmButton = createStyledButton(
+                "CONFIRM",
+                new Color(60, 60, 120).brighter(),
+                new Color(40, 40, 80).darker()
+        );
+
+        confirmButton.setEnabled(false);
+
+        confirmButton.addActionListener(e -> {
+
+            if (selectedCharacter == null) return;
+
+            battleLogic.resetCharacterChoices();
+            battleLogic.addToTeam(1, selectedCharacter);
+
+            frameRef.getArcadeBattle().setBattleLogic(battleLogic);
+            frameRef.showScreen("ArcadeBattleScene");
+        });
+
+        bottom.add(back);
+        bottom.add(confirmButton);
+
+        add(bottom, BorderLayout.SOUTH);
+    }
+
+    private JButton createStyledButton(String text, Color topColor, Color bottomColor) {
+
+        JButton button = new JButton(text) {
+
+            private boolean hovered = false;
+
+            {
+                addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        if (isEnabled()) {
+                            hovered = true;
+                            repaint();
+                        }
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        hovered = false;
+                        repaint();
+                    }
+                });
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
+
+                int shadow = hovered ? 10 : 6;
+
+                // Shadow
+                g2.setColor(new Color(0, 0, 0, 80));
+                g2.fillRoundRect(
+                        shadow / 2,
+                        shadow / 2,
+                        getWidth() - shadow,
+                        getHeight() - shadow,
+                        35,
+                        35
+                );
+
+                // Gradient
+                GradientPaint gp;
+
+                if (hovered && isEnabled()) {
+                    gp = new GradientPaint(
+                            0, 0, topColor.brighter(),
+                            0, getHeight(), bottomColor.brighter()
+                    );
+                } else {
+                    gp = new GradientPaint(
+                            0, 0, topColor,
+                            0, getHeight(), bottomColor
+                    );
+                }
+
+                g2.setPaint(gp);
+                g2.fillRoundRect(
+                        0,
+                        0,
+                        getWidth() - shadow,
+                        getHeight() - shadow,
+                        35,
+                        35
+                );
+
+                // Border glow
+                g2.setColor(new Color(255, 255, 255, hovered ? 180 : 100));
+                g2.setStroke(new BasicStroke(2));
+                g2.drawRoundRect(
+                        1,
+                        1,
+                        getWidth() - shadow - 2,
+                        getHeight() - shadow - 2,
+                        35,
+                        35
+                );
+
+                // Disabled overlay
+                if (!isEnabled()) {
+                    g2.setColor(new Color(0, 0, 0, 140));
+                    g2.fillRoundRect(
+                            0,
+                            0,
+                            getWidth() - shadow,
+                            getHeight() - shadow,
+                            35,
+                            35
+                    );
+                }
+
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        button.setFont(new Font("Segoe UI Black", Font.BOLD, 20));
         button.setForeground(Color.WHITE);
-        button.setFont(new Font("Arial Black", Font.BOLD, 16));
         button.setFocusPainted(false);
+        button.setBorderPainted(false);
         button.setContentAreaFilled(false);
-        button.setBorder(BorderFactory.createEmptyBorder(12, 30, 12, 30));
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setOpaque(false);
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        button.setPreferredSize(new Dimension(260, 70));
+
         return button;
+    }
+
+    // ================= LOGIC =================
+    private void updatePreview(GameCharacter c) {
+
+        previewImage.setIcon(new ImageIcon(
+                new ImageIcon(Objects.requireNonNull(getClass().getResource(c.getImagePath())))
+                        .getImage().getScaledInstance(400, 400, Image.SCALE_SMOOTH)
+        ));
+
+        nameLabel.setText(c.getName());
+        elementLabel.setText(c.getElement());
+
+        String[] s = c.getSkillNames();
+        skill1.setText("• " + (s.length > 0 ? s[0] : ""));
+        skill2.setText("• " + (s.length > 1 ? s[1] : ""));
+        skill3.setText("• " + (s.length > 2 ? s[2] : ""));
+
+        descriptionArea.setText(c.getDescription());
+    }
+
+    // ================= UTIL =================
+    private JLabel createLabel(String text, int size, boolean bold) {
+        JLabel l = new JLabel(text);
+        l.setForeground(Color.WHITE);
+        l.setFont(new Font("Segoe UI", bold ? Font.BOLD : Font.PLAIN, size));
+        return l;
     }
 
     private ImageIcon getIcon(String path) {
         return new ImageIcon(
                 new ImageIcon(Objects.requireNonNull(getClass().getResource(path)))
-                        .getImage().getScaledInstance(160, 160, Image.SCALE_SMOOTH)
+                        .getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)
         );
     }
 
+    // ================= BACKGROUND PAINT =================
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

@@ -397,7 +397,7 @@ public class PVPCharacterSelectScene extends JPanel {
         back.addActionListener(e -> frameRef.showScreen("ModeSelect"));
 
         confirmButton = createStyledButton(
-                "CONFIRM CHARACTERS",
+                "CONFIRM",
                 new Color(60, 60, 120).brighter(),
                 new Color(40, 40, 80).darker()
         );

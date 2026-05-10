@@ -29,8 +29,12 @@ public class Psalm extends GameCharacter{
 
     @Override
     public String getDescription() {
-        return "Psalm, the Arcane Scholar, weaves complex spells of pure magic. " +
-                "Her intellect and arcane mastery bend reality to her will.";
+        return "A woman with an unknown lineage seeking the truth of her past."+
+        "She travels distant lands to uncover any clues there are of her true self. "+
+                "She practiced daily making her physically strong in order to prepare for the trials " +
+        "and tribulations she is guaranteed to face. She thought that mastering her"+
+        "element on her own wasn't enough so she decided to enroll in CIT-U where"+
+        "she can sharpen her skills.";
     }
 
     @Override

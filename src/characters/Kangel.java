@@ -30,8 +30,13 @@ public class Kangel extends GameCharacter {
 
     @Override
     public String getDescription() {
-        return "Kangel, the Celestial Guardian, channels divine light to protect " +
-                "and purify. Her holy powers cleanse corruption and shield the innocent.";
+        return "Kangel was trained in a secluded medical order known for advanced healing"+
+        "techniques. During a regional conflict, she discovered that the same knowledge used to"+
+        "preserve life could also manipulate it. When her order refused to interfere in the war, she"+
+        "left. She doesn’t see her power as forbidden or cursed. To her, it’s simply biology pushed"+
+        "further than others are willing to go. She fights efficiently, wastes nothing, and treats battle"+
+        "like surgery — precise and controlled. She doesn’t enjoy violence. She just understands"+
+                "it.";
     }
 
     @Override

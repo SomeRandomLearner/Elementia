@@ -12,18 +12,27 @@ import utils.Utility;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.Objects;
 
 public class PVPBattleScene extends AbstractBattleScene {
     public PVPBattleScene(Elementia frame) {
         super(frame);
 
-        timerLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        timerLabel.setFont(new Font("Arial", Font.BOLD, 40));
         timerLabel.setForeground(Color.WHITE);
 
-        backButton.addActionListener(e -> {
-            frame.showScreen("PVPCharacterSelect");
-        });
+        backButton = createStyledButton(
+                "BACK",
+                new Color(60, 60, 120).brighter(),
+                new Color(40, 40, 80).darker()
+        );
+
+        backButton.addActionListener(e -> frame.showScreen("PVPCharacterSelect"));
+
+        topLeftPanel.add(backButton);
+        topLeftPanel.revalidate();
+        topLeftPanel.repaint();
     }
 
     @Override
@@ -181,7 +190,11 @@ public class PVPBattleScene extends AbstractBattleScene {
                 player1SkillPanel.removeAll();
                 player2SkillPanel.removeAll();
 
-                JButton rematchBtn = Utility.createButton("Rematch");
+                JButton rematchBtn = createStyledButton(
+                        "REMATCH",
+                        new Color(60, 60, 120).brighter(),
+                        new Color(40, 40, 80).darker()
+                );
 
                 JPanel buttonWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
                 buttonWrapper.setOpaque(false);
@@ -255,6 +268,113 @@ public class PVPBattleScene extends AbstractBattleScene {
     }
     public void setBattleLogic(BattleLogic battleLogic) {
         this.battleLogic = battleLogic;
+    }
+
+    private JButton createStyledButton(String text, Color topColor, Color bottomColor) {
+
+        JButton button = new JButton(text) {
+
+            private boolean hovered = false;
+
+            {
+                addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        if (isEnabled()) {
+                            hovered = true;
+                            repaint();
+                        }
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        hovered = false;
+                        repaint();
+                    }
+                });
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
+
+                int shadow = hovered ? 10 : 6;
+
+                g2.setColor(new Color(0, 0, 0, 80));
+                g2.fillRoundRect(
+                        shadow / 2,
+                        shadow / 2,
+                        getWidth() - shadow,
+                        getHeight() - shadow,
+                        35,
+                        35
+                );
+
+                GradientPaint gp;
+
+                if (hovered && isEnabled()) {
+                    gp = new GradientPaint(
+                            0, 0, topColor.brighter(),
+                            0, getHeight(), bottomColor.brighter()
+                    );
+                } else {
+                    gp = new GradientPaint(
+                            0, 0, topColor,
+                            0, getHeight(), bottomColor
+                    );
+                }
+
+                g2.setPaint(gp);
+                g2.fillRoundRect(
+                        0,
+                        0,
+                        getWidth() - shadow,
+                        getHeight() - shadow,
+                        35,
+                        35
+                );
+
+                g2.setColor(new Color(255, 255, 255, hovered ? 180 : 100));
+                g2.setStroke(new BasicStroke(2));
+                g2.drawRoundRect(
+                        1,
+                        1,
+                        getWidth() - shadow - 2,
+                        getHeight() - shadow - 2,
+                        35,
+                        35
+                );
+
+                if (!isEnabled()) {
+                    g2.setColor(new Color(0, 0, 0, 140));
+                    g2.fillRoundRect(
+                            0,
+                            0,
+                            getWidth() - shadow,
+                            getHeight() - shadow,
+                            35,
+                            35
+                    );
+                }
+
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        button.setFont(new Font("Segoe UI Black", Font.BOLD, 18));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setOpaque(false);
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        button.setPreferredSize(new Dimension(220, 60));
+
+        return button;
     }
 
 }

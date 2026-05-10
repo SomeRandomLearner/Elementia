@@ -21,8 +21,8 @@ public class ArcadeBattleScene extends AbstractBattleScene {
     public ArcadeBattleScene(Elementia frame){
         super(frame);
 
-        // ✅ TIMER STYLE FIX (APPLIED ONCE)
-        timerLabel.setFont(new Font("Arial", Font.BOLD, 24));
+
+        timerLabel.setFont(new Font("Arial", Font.BOLD, 30));
         timerLabel.setForeground(Color.WHITE);
 
         backButton.addActionListener(e -> {

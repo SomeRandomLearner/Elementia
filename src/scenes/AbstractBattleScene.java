@@ -117,7 +117,7 @@ public abstract class AbstractBattleScene extends JPanel {
         bottomPanel.add(timerPanel, BorderLayout.CENTER);
         bottomPanel.add(player2SkillPanel, BorderLayout.EAST);
 
-        backButton = Utility.createButton("Back");
+        backButton = createDefaultBackButton();
 
         currentTurnLabel = new JLabel();
         currentTurnLabel.setFont(normalFont);
@@ -128,7 +128,7 @@ public abstract class AbstractBattleScene extends JPanel {
 
         winCounterLabel = new JLabel("0 / 0"); // starts at zero for now
         winCounterLabel.setForeground(Color.WHITE);
-        winCounterLabel.setFont(new Font("Times New Roman", Font.BOLD, 24));
+        winCounterLabel.setFont(new Font("Arial", Font.BOLD, 40));
 
         topRightPanel.add(winCounterLabel);
 
@@ -141,6 +141,16 @@ public abstract class AbstractBattleScene extends JPanel {
 
         add(wrapperPanel);
         repaint();
+    }
+
+    protected JButton createDefaultBackButton() {
+        JButton button = new JButton("BACK");
+        button.setFocusPainted(false);
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setOpaque(false);
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return button;
     }
 
     private JLabel initTimerLabel() {
