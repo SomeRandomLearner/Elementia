@@ -26,9 +26,7 @@ public class Kangel extends GameCharacter {
         }
     }
 
-    public Kangel() {
-        this(120, 80,20,10);
-    }
+    public Kangel() { this(110, 80,  15, 15); }
 
     @Override
     public String getDescription() {

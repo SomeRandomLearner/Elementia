@@ -25,9 +25,7 @@ public class Maelor extends GameCharacter{
             skill.setAnimationFrames(animationFrames);
         }
     }
-    public Maelor(){
-        this(80,80,40, 10);
-    }
+    public Maelor()    { this(95,  90,  25, 15); }
 
     @Override
     public String getDescription() {

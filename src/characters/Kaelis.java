@@ -25,10 +25,7 @@ public class Kaelis extends GameCharacter{
             skill.setAnimationFrames(animationFrames);
         }
     }
-
-    public Kaelis(){
-        this(130, 80, 30, 10);
-    }
+    public Kaelis() { this(105, 70,  20, 15); }
 
     @Override
     public String getDescription() {

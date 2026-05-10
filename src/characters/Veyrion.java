@@ -25,9 +25,7 @@ public class Veyrion extends GameCharacter{
             skill.setAnimationFrames(animationFrames);
         }
     }
-    public Veyrion(){
-        this(80,80,50,6);
-    }
+    public Veyrion()   { this(70,  100, 10, 20); }
 
     @Override
     public String getDescription() {

@@ -88,7 +88,6 @@ public class ArcadeBattleScene extends AbstractBattleScene {
 
             @Override
             public void onTurnStarted(int currentPlayerTurn, GameCharacter currentCharacter) {
-
                 if(currentPlayerTurn == 1){
                     currentTurnLabel.setText("Your Turn!");
                     currentTurnLabel.setForeground(Color.RED);
@@ -247,6 +246,11 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 gameWinner = winningPlayer;
                 hasGameEnded = true;
                 player1SkillPanel.removeAll();
+
+                winCounterLabel.setText(
+                        battleLogic.getWinCount(1) + " / " + battleLogic.getWinCount(2)
+                );
+                topPanel.repaint();
 
                 if(gameWinner != 1){
                     frame.getLevelSelect().decrementHeart();

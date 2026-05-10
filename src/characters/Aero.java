@@ -25,11 +25,7 @@ public class Aero extends GameCharacter{
             skill.setAnimationFrames(animationFrames);
         }
     }
-
-    public Aero(){
-        this(100, 100, 20, 10);
-    }
-
+    public Aero() { this(80,  150, 10, 20); }
     @Override
     public String getDescription() {
         return "Aero, the Wind Master, commands the tempests with unmatched grace. " +

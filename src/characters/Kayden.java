@@ -27,9 +27,7 @@ public class Kayden extends GameCharacter{
         }
     }
 
-    public Kayden(){
-        this(90, 110, 20, 10);
-    }
+    public Kayden() { this(75,  120, 15, 10); }
 
     @Override
     public String getDescription() {

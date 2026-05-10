@@ -25,9 +25,7 @@ public class Psalm extends GameCharacter{
         }
         super.setCharacterImage("/resources/Psalm.png");
     }
-    public Psalm(){
-        this(90, 110, 20, 10);
-    }
+    public Psalm() { this(60,  120, 5,  15); }
 
     @Override
     public String getDescription() {

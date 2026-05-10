@@ -27,9 +27,7 @@ public class Ripper extends GameCharacter{
         }
     }
 
-    public Ripper(){
-        this(80, 80, 30, 30);
-    }
+    public Ripper()    { this(120, 50,  30, 10); }
 
     @Override
     public String getDescription() {

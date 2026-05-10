@@ -26,9 +26,7 @@ public class ZenStream extends GameCharacter{
         }
     }
 
-    public ZenStream(){
-        this(80, 80, 30, 20);
-    }
+    public ZenStream() { this(90,  100, 20, 15); }
 
     @Override
     public String getDescription() {
