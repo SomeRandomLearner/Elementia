@@ -29,7 +29,21 @@ public class LeaderboardScene extends JPanel {
         leaderboardTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         leaderboardTable.setFillsViewportHeight(true);
 
-        JPanel container = new JPanel(new GridBagLayout());
+        JPanel container = new JPanel(new GridBagLayout()) {
+            private final Image bg = new ImageIcon("imgs/LEADERB.png").getImage();
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        container.setOpaque(true);
+        leaderboardTable.setBackground(new Color(50, 50, 65));
+        leaderboardTable.setForeground(Color.WHITE);
+        leaderboardTable.getTableHeader().setBackground(new Color(70, 70, 90));
+        leaderboardTable.getTableHeader().setForeground(Color.WHITE);
+        scrollPane.getViewport().setBackground(new Color(50, 50, 65));
+
         container.add(scrollPane);
         add(container);
 
