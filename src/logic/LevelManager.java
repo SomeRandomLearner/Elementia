@@ -34,6 +34,7 @@ public class LevelManager {
 
         upgradedBoss.replaceSkillsWithClone();
         Level level = new Level();
+        level.addToAllyTeam(playerCharacter);
         level.addToEnemyTeam(upgradedBoss);
         levels.add(level);
     }
@@ -65,7 +66,7 @@ public class LevelManager {
                 levels.remove(MAX_LEVELS - 1);
             }
 
-            levels.get(i).addToAllyTeam(playerCharacter.clone());
+            levels.get(i).addToAllyTeam(playerCharacter);
             levels.get(i).addToEnemyTeam(availableCharacters.get(i).clone());
             availableCharacters.remove(i);
             Random random = new Random();
@@ -104,7 +105,9 @@ public class LevelManager {
     }
 
     public static void setCurrentPlayerCharacter(GameCharacter character){
-        playerCharacter = character;
+        playerCharacter = character.clone();
+        playerCharacter.setMaxHealth(playerCharacter.getMaxHP() + 90); // game too hard :(
+        playerCharacter.setMaxMana(playerCharacter.getMaxMana() + 50);
     }
 }
 

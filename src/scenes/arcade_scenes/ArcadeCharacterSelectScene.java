@@ -92,8 +92,6 @@ public class ArcadeCharacterSelectScene extends JPanel {
         backBtn.setPreferredSize(new Dimension(250, 55));
 
         confirmButton.addActionListener(e -> {
-            chosenCharacter.setMaxHealth(chosenCharacter.getMaxHP() + 50); // game too hard :(
-            chosenCharacter.setMaxMana(chosenCharacter.getMaxMana() + 50);
             LevelManager.setCurrentPlayerCharacter(chosenCharacter);
             LevelManager.setBossLevel(chosenCharacter.clone());
 
