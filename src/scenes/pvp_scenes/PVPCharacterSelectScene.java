@@ -11,7 +11,6 @@ import java.awt.event.MouseEvent;
 import java.util.Objects;
 
 public class PVPCharacterSelectScene extends JPanel {
-
     private GameCharacter player1ChosenCharacter;
     private GameCharacter player2ChosenCharacter;
 
@@ -28,10 +27,10 @@ public class PVPCharacterSelectScene extends JPanel {
     private Image bgImage;
 
     private BattleLogic battleLogic;
-    private Elementia frameRef;
+    private Elementia frame;
 
     public PVPCharacterSelectScene(Elementia frame) {
-        this.frameRef = frame;
+        this.frame = frame;
         setLayout(new BorderLayout());
 
         battleLogic = new BattleLogic(true);
@@ -394,7 +393,7 @@ public class PVPCharacterSelectScene extends JPanel {
                 new Color(40, 40, 80).darker()
         );
 
-        back.addActionListener(e -> frameRef.showScreen("ModeSelect"));
+        back.addActionListener(e -> frame.showScreen("ModeSelect"));
 
         confirmButton = createStyledButton(
                 "CONFIRM",
@@ -409,8 +408,8 @@ public class PVPCharacterSelectScene extends JPanel {
             battleLogic.addToTeam(1, player1ChosenCharacter);
             battleLogic.addToTeam(2, player2ChosenCharacter);
 
-            frameRef.getPVPBattle().setBattleLogic(battleLogic);
-            frameRef.showScreen("PVPStageSelect");
+            frame.getPVPBattle().setBattleLogic(battleLogic);
+            frame.showScreen("PVPStageSelect");
         });
 
         bottom.add(back);

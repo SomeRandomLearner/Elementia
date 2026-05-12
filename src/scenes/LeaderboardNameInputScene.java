@@ -23,7 +23,6 @@ public class LeaderboardNameInputScene extends JPanel {
     private Instant timeStarted;
     private Instant timeCompleted;
     private Duration timeElapsed;
-
     private String playerTime;
     public LeaderboardNameInputScene(Elementia frame){
         setLayout(new GridBagLayout());

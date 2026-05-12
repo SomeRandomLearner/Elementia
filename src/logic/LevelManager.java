@@ -4,8 +4,6 @@ import characters.*;
 import utils.Utility;
 
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class LevelManager {
     private static final int MAX_LEVELS = 10;
@@ -14,12 +12,16 @@ public class LevelManager {
     private static Level currentLevel = null;
     private static GameCharacter playerCharacter = null;
 
-    private static ArrayList<Level> levels = new ArrayList<>();
+    private static ArrayList<Level> levels = new ArrayList<>(MAX_LEVELS);
     private static final ArrayList<GameCharacter> allCharacters = Utility.getAllCharacters();
 
 
     public static void setBossLevel(GameCharacter boss){
-        GameCharacter upgradedBoss = switch(boss.getCharacterId()){
+        Level bossLevel = levels.get(MAX_LEVELS-1);
+        bossLevel.getAlliedTeam().clear();
+        bossLevel.getEnemyTeam().clear();
+
+        boss = switch(boss.getCharacterId()){
             case 1 -> new Aero(150, 120, 22, 25);
             case 2 -> new Kaelis(150, 120, 22, 25);
             case 3 -> new Kangel(150, 120, 22, 25);
@@ -32,11 +34,8 @@ public class LevelManager {
             default -> throw new IllegalStateException("Unexpected value: " + boss.getCharacterId());
         };
 
-        upgradedBoss.replaceSkillsWithClone();
-        Level level = new Level();
-        level.addToAllyTeam(playerCharacter);
-        level.addToEnemyTeam(upgradedBoss);
-        levels.add(level);
+        bossLevel.addToAllyTeam(playerCharacter);
+        bossLevel.addToEnemyTeam(boss);
     }
 
     public static int getCurrentLevelNumber(){
@@ -55,49 +54,70 @@ public class LevelManager {
 
     public static void initLevels(){
         levels.clear();
-        for(int i = 0; i < MAX_LEVELS-1; i++){
-            ArrayList<GameCharacter> availableCharacters = new ArrayList<>();
-            for(GameCharacter character : allCharacters){
-                availableCharacters.add(character.clone());
-            }
+        for(int i = 0; i < MAX_LEVELS; i++){
 
             levels.add(new Level());
-            if (levels.size() >= MAX_LEVELS) {
-                levels.remove(MAX_LEVELS - 1);
+            if (levels.size() > MAX_LEVELS) {
+                levels.removeLast();
             }
+            if(i == MAX_LEVELS-1){
+                setBossLevel(playerCharacter);
+                break;
+            }
+            else {
+                ArrayList<GameCharacter> availableCharacters = new ArrayList<>();
+                for (GameCharacter character : allCharacters) {
+                    availableCharacters.add(character.clone());
+                }
 
-            levels.get(i).addToAllyTeam(playerCharacter);
-            levels.get(i).addToEnemyTeam(availableCharacters.get(i).clone());
-            availableCharacters.remove(i);
-            Random random = new Random();
-            int randomNumber = random.nextInt(availableCharacters.size());
-            levels.get(i).addToEnemyTeam(availableCharacters.get(randomNumber).clone());
-            availableCharacters.remove(randomNumber);
 
-            randomNumber = random.nextInt(availableCharacters.size());
-            levels.get(i).addToAllyTeam(availableCharacters.get(randomNumber).clone());
+                levels.get(i).addToAllyTeam(playerCharacter);
+                levels.get(i).addToEnemyTeam(availableCharacters.get(i));
+            }
+//            availableCharacters.remove(i);
+//            Random random = new Random();
+//            int randomNumber = random.nextInt(availableCharacters.size());
+//            levels.get(i).addToEnemyTeam(availableCharacters.get(randomNumber).clone());
+//            availableCharacters.remove(randomNumber);
+//
+//            randomNumber = random.nextInt(availableCharacters.size());
+//            levels.get(i).addToAllyTeam(availableCharacters.get(randomNumber).clone());
         }
     }
 
         public static void refreshCurrentLevel(){
+        if(currentLevelNumber == MAX_LEVELS) {
+            setBossLevel(playerCharacter);
+            return;
+        }
         ArrayList<GameCharacter> availableCharacters = new ArrayList<>();
 
         for(GameCharacter character : allCharacters){
             availableCharacters.add(character.clone());
         }
+        int currentLevelIndex = currentLevelNumber - 1;
+        ArrayList<GameCharacter> alliedTeam = levels.get(currentLevelIndex).getAlliedTeam();
+        ArrayList<GameCharacter> enemyTeam = levels.get(currentLevelIndex).getEnemyTeam();
 
-        levels.get(currentLevelNumber-1).getAlliedTeam().removeLast();
-        levels.get(currentLevelNumber-1).getEnemyTeam().clear();
+        alliedTeam.clear();
+        enemyTeam.clear();
 
-        levels.get(currentLevelNumber-1).addToEnemyTeam(availableCharacters.get(currentLevelNumber-1).clone());
-        availableCharacters.remove(currentLevelNumber-1);
+        alliedTeam.add(playerCharacter);
+        enemyTeam.add(availableCharacters.get(currentLevelIndex));
 
-        int randomIndex = ThreadLocalRandom.current().nextInt(availableCharacters.size());
-        levels.get(currentLevelNumber-1).addToEnemyTeam(availableCharacters.get(randomIndex).clone());
-        availableCharacters.remove(randomIndex);
 
-        randomIndex = ThreadLocalRandom.current().nextInt(availableCharacters.size());
-        levels.get(currentLevelNumber-1).addToAllyTeam(availableCharacters.get(randomIndex).clone());
+//        levels.get(currentLevelNumber-1).getAlliedTeam().removeLast();
+//        levels.get(currentLevelNumber-1).getEnemyTeam().clear();
+//
+//        levels.get(currentLevelNumber-1).addToEnemyTeam(availableCharacters.get(currentLevelNumber-1).clone());
+//        availableCharacters.remove(currentLevelNumber-1);
+
+//        int randomIndex = ThreadLocalRandom.current().nextInt(availableCharacters.size());
+//        levels.get(currentLevelNumber-1).addToEnemyTeam(availableCharacters.get(randomIndex).clone());
+//        availableCharacters.remove(randomIndex);
+//
+//        randomIndex = ThreadLocalRandom.current().nextInt(availableCharacters.size());
+//        levels.get(currentLevelNumber-1).addToAllyTeam(availableCharacters.get(randomIndex).clone());
     }
 
     public static int getMaxLevels(){

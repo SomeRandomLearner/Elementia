@@ -22,11 +22,8 @@ public abstract class GameCharacter {
     private int defense;
     private int manaRecovery;
     private boolean allyStatus = false;
-    private boolean takingDamage;
     private boolean isDead;
     private BufferedImage characterImage;
-    private int x;
-    private int y;
 
     private Skill[] skills = new Skill[3];
     private int skillCount = 0;

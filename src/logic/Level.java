@@ -23,7 +23,7 @@ public class Level{
         return allyTeam;
     }
     void addToEnemyTeam(GameCharacter character){
-        enemyTeam.add(character);
+        enemyTeam.add(character.clone());
     }
     void addToAllyTeam(GameCharacter character){
         allyTeam.add(character);

@@ -19,7 +19,8 @@ import java.util.Objects;
 public class LevelSelectScene extends JPanel {
     private int completedLevels = 0;
     private final HashMap<Integer, Boolean> levelStatuses;
-    private final CustomButton[] levelButtons;
+    private final JPanel buttonPanel;
+    private CustomButton[] levelButtons;
     private final JPanel heartPanel = new JPanel(new GridLayout(1,3));
     private Image bgImage;
     private final byte NO_OF_LEVELS = 10;
@@ -54,34 +55,9 @@ public class LevelSelectScene extends JPanel {
         add(topPanel, BorderLayout.NORTH);
 
         // ================= LEVEL BUTTONS =================
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 5, 25, 25));
+        buttonPanel = new JPanel(new GridLayout(2, 5, 25, 25));
         buttonPanel.setOpaque(false);
 
-        levelButtons = new CustomButton[NO_OF_LEVELS];
-        for (int i = 0; i < NO_OF_LEVELS; i++) {
-            levelButtons[i] = Utility.createButton("" + (i + 1));
-            levelButtons[i].setPreferredSize(new Dimension(120, 120));
-            levelButtons[i].setFont(new Font("Arial", Font.BOLD, 18));
-            levelButtons[i].setFocusPainted(false);
-
-            int levelNumber = i + 1;
-            levelButtons[i].addActionListener(e -> {
-                LevelManager.setCurrentLevelNumber(levelNumber);
-                boolean isPVP = false;
-                BattleLogic battleLogic = new BattleLogic(isPVP);
-                battleLogic.resetCharacterChoices();
-                battleLogic.addAllToTeam(1, (LevelManager.getCurrentLevel().getAlliedTeam()));
-                battleLogic.addAllToTeam(2, (LevelManager.getCurrentLevel()).getEnemyTeam());
-
-                frame.getArcadeBattle().setBattleLogic(battleLogic);
-                frame.getArcadeBattle().startGame();
-                frame.showScreen("Battle");
-            });
-
-            buttonPanel.add(levelButtons[i]);
-        }
-
-        unlockLevels();
 
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setOpaque(false);
@@ -126,17 +102,6 @@ public class LevelSelectScene extends JPanel {
     }
 
     void unlockLevels() {
-        if(!hasInputtedLeaderboardScore && completedLevels >= NO_OF_LEVELS){
-            try(BufferedWriter writer = new BufferedWriter(new FileWriter("data/player_data.txt", true))){
-                writer.write("," + Instant.now());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            hasInputtedLeaderboardScore = true;
-            frame.getLeaderboardNameInput().calculateTimeElapsed();
-            frame.showScreen("LeaderboardNameInput");
-        }
-
         for (int i = 0; i < levelButtons.length; i++) {
             if (i <= completedLevels) {
                 levelButtons[i].setEnabled(true);
@@ -180,6 +145,32 @@ public class LevelSelectScene extends JPanel {
         heartPanel.repaint();
     }
 
+    void initLevelButtons(){
+        buttonPanel.removeAll();
+        levelButtons = new CustomButton[NO_OF_LEVELS];
+        for (int i = 0; i < NO_OF_LEVELS; i++) {
+            levelButtons[i] = Utility.createButton("" + (i + 1));
+            levelButtons[i].setPreferredSize(new Dimension(120, 120));
+            levelButtons[i].setFont(new Font("Arial", Font.BOLD, 18));
+            levelButtons[i].setFocusPainted(false);
+
+            int levelNumber = i + 1;
+            levelButtons[i].addActionListener(e -> {
+                LevelManager.setCurrentLevelNumber(levelNumber);
+                boolean isPVP = false;
+                BattleLogic battleLogic = new BattleLogic(isPVP);
+                battleLogic.resetCharacterChoices();
+                battleLogic.addAllToTeam(1, (LevelManager.getCurrentLevel().getAlliedTeam()));
+                battleLogic.addAllToTeam(2, (LevelManager.getCurrentLevel()).getEnemyTeam());
+
+                frame.getArcadeBattle().setBattleLogic(battleLogic);
+                frame.getArcadeBattle().startGame();
+                frame.showScreen("Battle");
+            });
+
+            buttonPanel.add(levelButtons[i]);
+        }
+    }
     // ================= BACKGROUND =================
     @Override
     protected void paintComponent(Graphics g) {

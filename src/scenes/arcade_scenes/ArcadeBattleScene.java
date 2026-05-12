@@ -13,6 +13,10 @@ import utils.Utility;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -261,8 +265,13 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 if(LevelManager.getCurrentLevelNumber() == LevelManager.getMaxLevels()){
                     toNextLevelButton.setText("Continue to Leaderboard");
                     toNextLevelButton.addActionListener(e -> {
-                        frame.showScreen("LevelSelect");
-                        frame.getLevelSelect().unlockLevels();
+                        try(BufferedWriter writer = new BufferedWriter(new FileWriter("data/player_data.txt", true))){
+                            writer.write("," + Instant.now());
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                        frame.getLeaderboardNameInput().calculateTimeElapsed();
+                        frame.showScreen("LeaderboardNameInput");
                     });
                 }
                 else toNextLevelButton.setText("Continue to the Next Level?");

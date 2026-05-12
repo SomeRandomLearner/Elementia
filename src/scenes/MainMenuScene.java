@@ -10,11 +10,11 @@ import java.net.URL;
 
 
 public class MainMenuScene extends JPanel {
-    JPanel titleNamePanel, buttonPanel, creditsPanel;
-    JLabel backgroundLabel;
-    JButton startButton, exitButton, creditsButton, leaderboardButton;
-    Image originalBackground;
-    int width = 620, height = 1000;
+    private JPanel titleNamePanel, buttonPanel, creditsPanel;
+    private JLabel backgroundLabel;
+    private JButton startButton, exitButton, creditsButton, leaderboardButton;
+    private Image originalBackground;
+    private int width = 620, height = 1000;
 
 
     private int count = 3;
