@@ -15,6 +15,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -31,16 +32,16 @@ public class ArcadeBattleScene extends AbstractBattleScene {
 
         backButton.addActionListener(e -> {
             repaint();
+            if(timer != null) timer.stop();
             if(enemyTurnTimer != null) enemyTurnTimer.stop();
             timer = enemyTurnTimer = null;
 
-            if(hasGameEnded){
                 bottomPanel.removeAll();
                 setupBottomPanelLayout();
                 bottomPanel.revalidate();
                 bottomPanel.repaint();
                 hasGameEnded = false;
-            }
+
 
             frame.showScreen(Scenes.ARCADE_LEVEL_SELECT);
             frame.getLevelSelect().unlockLevels();

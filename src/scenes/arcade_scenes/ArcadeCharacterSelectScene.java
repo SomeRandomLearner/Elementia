@@ -2,6 +2,7 @@ package scenes.arcade_scenes;
 
 import characters.*;
 import logic.BattleLogic;
+import logic.LevelManager;
 import scenes.Elementia;
 import scenes.Scenes;
 
@@ -27,10 +28,10 @@ public class ArcadeCharacterSelectScene extends JPanel {
     private Image bgImage;
 
     private BattleLogic battleLogic;
-    private Elementia frameRef;
+    private Elementia frame;
 
     public ArcadeCharacterSelectScene(Elementia frame) {
-        this.frameRef = frame;
+        this.frame = frame;
         setLayout(new BorderLayout());
 
         battleLogic = new BattleLogic(false);
@@ -376,11 +377,15 @@ public class ArcadeCharacterSelectScene extends JPanel {
 
             if (selectedCharacter == null) return;
 
-            battleLogic.resetCharacterChoices();
-            battleLogic.addToTeam(1, selectedCharacter);
 
-            frameRef.getArcadeBattle().setBattleLogic(battleLogic);
-            frameRef.showScreen(Scenes.ARCADE_LEVEL_SELECT);
+            frame.getArcadeBattle().setBattleLogic(battleLogic);
+            LevelManager.setCurrentPlayerCharacter(selectedCharacter);
+            LevelManager.initLevels();
+            frame.getLevelSelect().resetProgress();
+            frame.getLevelSelect().resetProgress();
+            frame.getLevelSelect().initLevelButtons();
+            frame.getLevelSelect().unlockLevels();
+            frame.showScreen(Scenes.ARCADE_LEVEL_SELECT);
         });
 
         bottom.add(back);
