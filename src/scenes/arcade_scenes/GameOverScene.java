@@ -1,6 +1,7 @@
 package scenes.arcade_scenes;
 
 import scenes.Elementia;
+import scenes.Scenes;
 import utils.Utility;
 
 import javax.swing.*;
@@ -20,7 +21,7 @@ public class GameOverScene extends JPanel {
         JButton backButton = Utility.createButton("BACK");
 
         backButton.addActionListener(e -> {
-            frame.showScreen("MainMenu");
+            frame.showScreen(Scenes.MAIN_MENU);
         });
 
         gameOverPanel.add(gameOverLabel, gbc);

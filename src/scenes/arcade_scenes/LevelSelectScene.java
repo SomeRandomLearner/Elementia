@@ -3,6 +3,7 @@ package scenes.arcade_scenes;
 import characters.*;
 import logic.BattleLogic;
 import scenes.Elementia;
+import scenes.Scenes;
 import utils.CustomButton;
 import logic.LevelManager;
 import utils.Utility;
@@ -84,7 +85,7 @@ public class LevelSelectScene extends JPanel {
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 0));
         bottomPanel.add(wrapperPanel, BorderLayout.WEST);
         bottomPanel.add(heartPanel, BorderLayout.EAST);
-        backButton.addActionListener(e -> frame.showScreen("ArcadeCharacterSelect"));
+        backButton.addActionListener(e -> frame.showScreen(Scenes.ARCADE_CHARACTER_SELECT));
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
@@ -129,7 +130,7 @@ public class LevelSelectScene extends JPanel {
 
     void decrementHeart(){
         heartCount--;
-        if(heartCount == 0) frame.showScreen("GameOver");
+        if(heartCount == 0) frame.showScreen(Scenes.ARCADE_GAME_OVER);
         updateHeartPanel();
     }
 
@@ -165,7 +166,7 @@ public class LevelSelectScene extends JPanel {
 
                 frame.getArcadeBattle().setBattleLogic(battleLogic);
                 frame.getArcadeBattle().startGame();
-                frame.showScreen("Battle");
+                frame.showScreen(Scenes.ARCADE_BATTLE);
             });
 
             buttonPanel.add(levelButtons[i]);

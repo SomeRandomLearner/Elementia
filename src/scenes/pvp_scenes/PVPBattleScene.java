@@ -2,6 +2,7 @@ package scenes.pvp_scenes;
 
 import scenes.AbstractBattleScene;
 import scenes.Elementia;
+import scenes.Scenes;
 import utils.CharacterView;
 import characters.GameCharacter;
 import logic.Skill;
@@ -28,7 +29,7 @@ public class PVPBattleScene extends AbstractBattleScene {
                 new Color(40, 40, 80).darker()
         );
 
-        backButton.addActionListener(e -> frame.showScreen("PVPCharacterSelect"));
+        backButton.addActionListener(e -> frame.showScreen(Scenes.PVP_CHARACTER_SELECT));
 
         topLeftPanel.add(backButton);
         topLeftPanel.revalidate();

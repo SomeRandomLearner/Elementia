@@ -74,7 +74,20 @@ public class Elementia extends JFrame{
         setVisible(true);
     }
 
-    public void showScreen(String name) {
+    public void showScreen(Scenes scene) {
+        String name = switch (scene){
+            case ARCADE_BATTLE -> "Battle";
+            case ARCADE_CHARACTER_SELECT -> "ArcadeCharacterSelect";
+            case ARCADE_GAME_OVER -> "GameOver";
+            case ARCADE_LEVEL_SELECT -> "LevelSelect";
+            case ARCADE_NAME_INPUT -> "LeaderboardNameInput";
+            case ARCADE_LEADERBOARD -> "Leaderboard";
+            case PVP_BATTLE -> "PVPBattle";
+            case PVP_CHARACTER_SELECT -> "PVPCharacterSelect";
+            case PVP_STAGE_SELECT -> "PVPStageSelect";
+            case MAIN_MENU -> "MainMenu";
+            case MODE_SELECT -> "ModeSelect";
+        };
         layout.show(container, name);
     }
 

@@ -48,7 +48,7 @@ public class LeaderboardScene extends JPanel {
         add(container);
 
         JButton backButton = Utility.createButton("BACK");
-        backButton.addActionListener(e -> frame.showScreen("MainMenu"));
+        backButton.addActionListener(e -> frame.showScreen(Scenes.MAIN_MENU));
         add(backButton, BorderLayout.SOUTH);
     }
 

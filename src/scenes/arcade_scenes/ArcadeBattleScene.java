@@ -7,6 +7,7 @@ import logic.Level;
 import logic.LevelManager;
 import scenes.AbstractBattleScene;
 import scenes.Elementia;
+import scenes.Scenes;
 import utils.CharacterView;
 import utils.Utility;
 
@@ -14,7 +15,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 hasGameEnded = false;
             }
 
-            frame.showScreen("LevelSelect");
+            frame.showScreen(Scenes.ARCADE_LEVEL_SELECT);
             frame.getLevelSelect().unlockLevels();
         });
     }
@@ -271,7 +271,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                             ex.printStackTrace();
                         }
                         frame.getLeaderboardNameInput().calculateTimeElapsed();
-                        frame.showScreen("LeaderboardNameInput");
+                        frame.showScreen(Scenes.ARCADE_NAME_INPUT);
                     });
                 }
                 else toNextLevelButton.setText("Continue to the Next Level?");

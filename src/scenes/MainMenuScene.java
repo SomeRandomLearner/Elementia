@@ -67,7 +67,7 @@ public class MainMenuScene extends JPanel {
         startButton.setContentAreaFilled(false);
         startButton.setFocusPainted(false);
         startButton.setPreferredSize(new Dimension(220, 55));
-        startButton.addActionListener(e -> frame.showScreen("ModeSelect"));
+        startButton.addActionListener(e -> frame.showScreen(Scenes.MODE_SELECT));
 
         ImageIcon leaderboardIcon = new ImageIcon(MainMenuScene.class.getResource("/resources/LeadBtn.png"));
         leaderboardButton = new JButton(new ImageIcon(leaderboardIcon.getImage().getScaledInstance(220, 55, Image.SCALE_SMOOTH)));
@@ -75,7 +75,7 @@ public class MainMenuScene extends JPanel {
         leaderboardButton.setContentAreaFilled(false);
         leaderboardButton.setFocusPainted(false);
         leaderboardButton.setPreferredSize(new Dimension(220, 55));
-        leaderboardButton.addActionListener(e -> frame.showScreen("Leaderboard"));
+        leaderboardButton.addActionListener(e -> frame.showScreen(Scenes.ARCADE_LEADERBOARD));
 
         ImageIcon creditsIcon = new ImageIcon(MainMenuScene.class.getResource("/resources/CreditsBtn.png"));
         creditsButton = new JButton(new ImageIcon(creditsIcon.getImage().getScaledInstance(220, 55, Image.SCALE_SMOOTH)));

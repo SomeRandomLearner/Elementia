@@ -60,7 +60,7 @@ public class LeaderboardNameInputScene extends JPanel {
                 ex.printStackTrace();
             }
             frame.getLeaderboard().updateLeaderboard();
-            frame.showScreen("Leaderboard");
+            frame.showScreen(Scenes.ARCADE_LEADERBOARD);
         });
 
         add(congratulationsLabel, gbc);

@@ -1,6 +1,7 @@
 package scenes.pvp_scenes;
 
 import scenes.Elementia;
+import scenes.Scenes;
 import utils.Utility;
 
 import javax.swing.*;
@@ -132,7 +133,7 @@ public class PVPStageSelectScene extends JPanel {
         confirmButton.addActionListener(e -> {
             frame.getPVPBattle().setPVPBattleSceneBackground(choice);
             frame.getPVPBattle().startGame();
-            frame.showScreen("PVPBattle");
+            frame.showScreen(Scenes.PVP_BATTLE);
             confirmButton.setEnabled(false);
         });
 

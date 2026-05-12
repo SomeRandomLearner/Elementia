@@ -103,7 +103,7 @@ public class ModeSelectScene extends JPanel {
         backBtn.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
         backBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backBtn.setPreferredSize(new Dimension(160, 55));
-        backBtn.addActionListener(e -> frame.showScreen("MainMenu"));
+        backBtn.addActionListener(e -> frame.showScreen(Scenes.MAIN_MENU));
 
         return backBtn;
     }
@@ -154,9 +154,9 @@ public class ModeSelectScene extends JPanel {
 
         private void checkClick(int x, int y) {
             if (arcadeBounds != null && arcadeBounds.contains(x, y)) {
-                frame.showScreen("ArcadeCharacterSelect");
+                frame.showScreen(Scenes.ARCADE_CHARACTER_SELECT);
             } else if (pvpBounds != null && pvpBounds.contains(x, y)) {
-                frame.showScreen("PVPCharacterSelect");
+                frame.showScreen(Scenes.PVP_CHARACTER_SELECT);
             }
         }
 

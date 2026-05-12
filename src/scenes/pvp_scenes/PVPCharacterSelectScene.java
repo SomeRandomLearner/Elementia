@@ -3,6 +3,7 @@ package scenes.pvp_scenes;
 import characters.*;
 import logic.BattleLogic;
 import scenes.Elementia;
+import scenes.Scenes;
 
 import javax.swing.*;
 import java.awt.*;
@@ -393,7 +394,7 @@ public class PVPCharacterSelectScene extends JPanel {
                 new Color(40, 40, 80).darker()
         );
 
-        back.addActionListener(e -> frame.showScreen("ModeSelect"));
+        back.addActionListener(e -> frame.showScreen(Scenes.MODE_SELECT));
 
         confirmButton = createStyledButton(
                 "CONFIRM",
@@ -409,7 +410,7 @@ public class PVPCharacterSelectScene extends JPanel {
             battleLogic.addToTeam(2, player2ChosenCharacter);
 
             frame.getPVPBattle().setBattleLogic(battleLogic);
-            frame.showScreen("PVPStageSelect");
+            frame.showScreen(Scenes.PVP_STAGE_SELECT);
         });
 
         bottom.add(back);
