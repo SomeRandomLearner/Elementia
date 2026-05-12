@@ -18,6 +18,9 @@ public class PVPCharacterSelectScene extends JPanel {
     private boolean player1HasChosen = false;
     private boolean player2HasChosen = false;
 
+    JPanel main;
+    JPanel characterGrid;
+
     private JLabel titleLabel;
     private JButton confirmButton;
 
@@ -70,10 +73,11 @@ public class PVPCharacterSelectScene extends JPanel {
     // ================= CENTER =================
     private void initCenter() {
 
-        JPanel main = new JPanel(new BorderLayout());
+        main = new JPanel(new BorderLayout());
         main.setOpaque(false);
 
-        main.add(createCharacterGrid(), BorderLayout.WEST);
+        characterGrid = createCharacterGrid();
+        main.add(characterGrid, BorderLayout.WEST);
         main.add(createPreviewAndInfo(), BorderLayout.CENTER);
 
         add(main, BorderLayout.CENTER);
@@ -413,8 +417,39 @@ public class PVPCharacterSelectScene extends JPanel {
             frame.showScreen(Scenes.PVP_STAGE_SELECT);
         });
 
+        JButton clearButton = createStyledButton(
+                "CLEAR",
+                new Color(60, 60, 120).brighter(),
+                new Color(40, 40, 80).darker()
+        );
+
+        clearButton.addActionListener(e -> {
+            battleLogic.resetCharacterChoices();
+
+            player1ChosenCharacter = null;
+            player2ChosenCharacter = null;
+
+            player1HasChosen = false;
+            player2HasChosen = false;
+
+            confirmButton.setEnabled(false);
+
+            titleLabel.setText("PLAYER 1 - SELECT YOUR CHARACTER");
+
+            JPanel grid = (JPanel) characterGrid.getComponent(0);
+
+            for (Component c : grid.getComponents()) {
+                if (c instanceof JComponent card) {
+                    card.putClientProperty("selected", false);
+                    card.putClientProperty("hovered", false);
+                    card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    card.repaint();
+                }
+            }
+        });
         bottom.add(back);
         bottom.add(confirmButton);
+        bottom.add(clearButton);
 
         add(bottom, BorderLayout.SOUTH);
     }
