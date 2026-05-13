@@ -121,6 +121,7 @@ public class PVPStageSelectScene extends JPanel {
                 new Color(60, 60, 120).brighter(),
                 new Color(40, 40, 80).darker()
         );
+        backButton.addActionListener(e -> frame.showScreen(Scenes.PVP_CHARACTER_SELECT));
 
         confirmButton = createStyledButton(
                 "CONFIRM",
