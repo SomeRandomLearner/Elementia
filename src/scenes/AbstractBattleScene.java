@@ -117,8 +117,11 @@ public abstract class AbstractBattleScene extends JPanel {
         bottomPanel.add(timerPanel, BorderLayout.CENTER);
         bottomPanel.add(player2SkillPanel, BorderLayout.EAST);
 
-        backButton = createDefaultBackButton();
-
+        backButton = Utility.createStyledButton(
+                "BACK",
+                new Color(60, 60, 120).brighter(),
+                new Color(40, 40, 80).darker()
+        );
         currentTurnLabel = new JLabel();
         currentTurnLabel.setFont(normalFont);
 
