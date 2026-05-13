@@ -2,10 +2,12 @@ package scenes;
 
 import utils.Utility;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.time.Duration;
 import java.time.Instant;
@@ -24,9 +26,22 @@ public class LeaderboardNameInputScene extends JPanel {
     private Instant timeCompleted;
     private Duration timeElapsed;
     private String playerTime;
+    private BufferedImage bg;
     public LeaderboardNameInputScene(Elementia frame){
+        BufferedImage loadedImage = null;
+        try (InputStream is = getClass().getResourceAsStream("/resources/LEADERB.png")) {
+            if (is == null) {
+                throw new IOException("Resource not found: /resources/LEADERB.png");
+            }
+            loadedImage = ImageIO.read(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        bg = loadedImage;
+
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
+        JPanel container = new JPanel(new GridBagLayout());
         congratulationsLabel = new JLabel("CONGRATULATIONS ON CLEARING THE GAME!");
         timeLabel = new JLabel("YOU CLEARED IT IN: ");
 
@@ -63,16 +78,18 @@ public class LeaderboardNameInputScene extends JPanel {
             frame.showScreen(Scenes.ARCADE_LEADERBOARD);
         });
 
-        add(congratulationsLabel, gbc);
+        container.add(congratulationsLabel, gbc);
         gbc.gridy = 1;
         JPanel timePanel = new JPanel(new FlowLayout());
         timePanel.add(timeLabel);
-        add(timePanel, gbc);
+        container.add(timePanel, gbc);
         namePanel.add(nameLabel);
         namePanel.add(nameTextField);
         gbc.gridy = 2;
-        add(namePanel, gbc);
+        container.add(namePanel, gbc);
         gbc.gridy = 3;
+        gbc.insets = new Insets(12, 0,12,0);
+        add(container);
         add(confirmButton, gbc);
     }
 
@@ -102,6 +119,16 @@ public class LeaderboardNameInputScene extends JPanel {
             timeLabel.setText("YOU CLEARED IT IN: " + playerTime);
             this.revalidate();
             this.repaint();
+        }
+    }
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (bg != null) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2d.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
+            g2d.dispose();
         }
     }
 }
