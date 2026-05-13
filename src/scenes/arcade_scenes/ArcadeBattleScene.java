@@ -257,16 +257,17 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 );
                 topPanel.repaint();
 
-                if(gameWinner != 1){
-                    frame.getLevelSelect().decrementHeart();
-                }
-
                 JButton toNextLevelButton = Utility.createButton();
-                toNextLevelButton.setPreferredSize(new Dimension(360,45));
-                if(LevelManager.getCurrentLevelNumber() == LevelManager.getMaxLevels()){
+                if (gameWinner != 1) {
+                    frame.getLevelSelect().decrementHeart();
+                    toNextLevelButton.setVisible(false);
+                }
+                else toNextLevelButton.setVisible(true);
+                toNextLevelButton.setPreferredSize(new Dimension(360, 45));
+                if (LevelManager.getCurrentLevelNumber() == LevelManager.getMaxLevels()) {
                     toNextLevelButton.setText("Continue to Leaderboard");
                     toNextLevelButton.addActionListener(e -> {
-                        try(BufferedWriter writer = new BufferedWriter(new FileWriter("data/player_data.txt", true))){
+                        try (BufferedWriter writer = new BufferedWriter(new FileWriter("data/player_data.txt", true))) {
                             writer.write("," + Instant.now());
                         } catch (IOException ex) {
                             ex.printStackTrace();
@@ -274,8 +275,8 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                         frame.getLeaderboardNameInput().calculateTimeElapsed();
                         frame.showScreen(Scenes.ARCADE_NAME_INPUT);
                     });
-                }
-                else toNextLevelButton.setText("Continue to the Next Level?");
+                } else toNextLevelButton.setText("Continue to the Next Level?");
+
 
                 JPanel buttonWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
                 buttonWrapper.setOpaque(false);
