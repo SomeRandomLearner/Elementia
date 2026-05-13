@@ -5,6 +5,7 @@ import logic.BattleLogic;
 import logic.LevelManager;
 import scenes.Elementia;
 import scenes.Scenes;
+import utils.Utility;
 
 import javax.swing.*;
 import java.awt.*;
@@ -354,7 +355,7 @@ public class ArcadeCharacterSelectScene extends JPanel {
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 20));
         bottom.setOpaque(false);
 
-        JButton back = createStyledButton(
+        JButton back = Utility.createStyledButton(
                 "BACK",
                 new Color(60, 60, 120).brighter(),
                 new Color(40, 40, 80).darker()
@@ -362,7 +363,7 @@ public class ArcadeCharacterSelectScene extends JPanel {
 
         back.addActionListener(e -> frame.showScreen(Scenes.MODE_SELECT));
 
-        confirmButton = createStyledButton(
+        confirmButton = Utility.createStyledButton(
                 "CONFIRM",
                 new Color(60, 60, 120).brighter(),
                 new Color(40, 40, 80).darker()
@@ -391,116 +392,7 @@ public class ArcadeCharacterSelectScene extends JPanel {
         add(bottom, BorderLayout.SOUTH);
     }
 
-    private JButton createStyledButton(String text, Color topColor, Color bottomColor) {
 
-        JButton button = new JButton(text) {
-
-            private boolean hovered = false;
-
-            {
-                addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                        if (isEnabled()) {
-                            hovered = true;
-                            repaint();
-                        }
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                        hovered = false;
-                        repaint();
-                    }
-                });
-            }
-
-            @Override
-            protected void paintComponent(Graphics g) {
-
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON);
-
-                int shadow = hovered ? 10 : 6;
-
-                // Shadow
-                g2.setColor(new Color(0, 0, 0, 80));
-                g2.fillRoundRect(
-                        shadow / 2,
-                        shadow / 2,
-                        getWidth() - shadow,
-                        getHeight() - shadow,
-                        35,
-                        35
-                );
-
-                // Gradient
-                GradientPaint gp;
-
-                if (hovered && isEnabled()) {
-                    gp = new GradientPaint(
-                            0, 0, topColor.brighter(),
-                            0, getHeight(), bottomColor.brighter()
-                    );
-                } else {
-                    gp = new GradientPaint(
-                            0, 0, topColor,
-                            0, getHeight(), bottomColor
-                    );
-                }
-
-                g2.setPaint(gp);
-                g2.fillRoundRect(
-                        0,
-                        0,
-                        getWidth() - shadow,
-                        getHeight() - shadow,
-                        35,
-                        35
-                );
-
-                // Border glow
-                g2.setColor(new Color(255, 255, 255, hovered ? 180 : 100));
-                g2.setStroke(new BasicStroke(2));
-                g2.drawRoundRect(
-                        1,
-                        1,
-                        getWidth() - shadow - 2,
-                        getHeight() - shadow - 2,
-                        35,
-                        35
-                );
-
-                // Disabled overlay
-                if (!isEnabled()) {
-                    g2.setColor(new Color(0, 0, 0, 140));
-                    g2.fillRoundRect(
-                            0,
-                            0,
-                            getWidth() - shadow,
-                            getHeight() - shadow,
-                            35,
-                            35
-                    );
-                }
-
-                g2.dispose();
-                super.paintComponent(g);
-            }
-        };
-
-        button.setFont(new Font("Segoe UI Black", Font.BOLD, 20));
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setContentAreaFilled(false);
-        button.setOpaque(false);
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        button.setPreferredSize(new Dimension(260, 70));
-
-        return button;
-    }
 
     // ================= LOGIC =================
     private void updatePreview(GameCharacter c) {
