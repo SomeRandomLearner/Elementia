@@ -3,7 +3,7 @@ package logic;
 import java.util.HashMap;
 
 public class SkillRegistry {
-    public static HashMap<String, Skill> skillList = new HashMap<>();
+    private static HashMap<String, Skill> skillList = new HashMap<>();
 
     static {
         // Basic Skill: (id, name, manaCost, minDamage, maxDamage, cooldown)

@@ -18,8 +18,8 @@ public class PVPCharacterSelectScene extends JPanel {
     private boolean player1HasChosen = false;
     private boolean player2HasChosen = false;
 
-    JPanel main;
-    JPanel characterGrid;
+    private JPanel main;
+    private JPanel characterGrid;
 
     private JLabel titleLabel;
     private JButton confirmButton;

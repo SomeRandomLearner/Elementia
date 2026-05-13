@@ -16,9 +16,6 @@ public class MainMenuScene extends JPanel {
     private Image originalBackground;
     private int width = 620, height = 1000;
 
-
-    private int count = 3;
-
     public MainMenuScene(Elementia frame) {
         URL bgPath = getClass().getResource("/resources/ELEMENTIA.png");
         assert bgPath != null : "Menu Bar not found";

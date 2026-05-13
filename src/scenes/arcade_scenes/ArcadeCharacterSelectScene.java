@@ -16,8 +16,6 @@ public class ArcadeCharacterSelectScene extends JPanel {
 
     private GameCharacter selectedCharacter;
 
-    private boolean characterSelected = false;
-
     private JLabel titleLabel;
     private JButton confirmButton;
 
@@ -168,7 +166,6 @@ public class ArcadeCharacterSelectScene extends JPanel {
                 clearSelection(grid);
 
                 selectedCharacter = character;
-                characterSelected = true;
 
                 card.putClientProperty("selected", true);
                 card.repaint();

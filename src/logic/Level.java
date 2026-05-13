@@ -10,7 +10,7 @@ public class Level{
     private final ArrayList<GameCharacter> enemyTeam;
     private final ArrayList<GameCharacter> allyTeam;
 
-    public Level(){;
+    public Level(){
         this.levelNumber = ++LevelManager.levelCount;
         enemyTeam = new ArrayList<>();
         allyTeam = new ArrayList<>();

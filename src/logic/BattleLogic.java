@@ -226,22 +226,8 @@ public class BattleLogic {
         this.battleEventListener = battleEventListener;
     }
 
-    public int getCurrentPlayerTurn(){ return currentPlayerTurn;}
-
-    public GameCharacter getCurrentCharacter(){
-        return currentCharacter;
-    }
-
-    public Skill getSelectedSkill(){
-        return selectedSkill;
-    }
-
     public int getWinCount(int playerNumber){
         return (playerNumber == player1)? player1WinCount : player2WinCount;
-    }
-
-    public List<GameCharacter> getCurrentTeam(){
-        return currentTeam;
     }
 
     public List<GameCharacter> getOpposingTeam(){
@@ -250,13 +236,6 @@ public class BattleLogic {
 
     public void setSelectedSkill(Skill selectedSkill){
         this.selectedSkill = selectedSkill;
-    }
-
-    public List<GameCharacter> getPlayer1Team() {
-        return player1Team;
-    }
-    public List<GameCharacter> getPlayer2Team() {
-        return player2Team;
     }
 
     public List<GameCharacter> getActivePlayer1Team() {
@@ -269,9 +248,5 @@ public class BattleLogic {
     public void nextTurn(){
         currentCharacterTurn++;
         startTurn();
-    }
-
-    public boolean getIsPVP(){
-        return isPVP;
     }
 }
