@@ -2,9 +2,11 @@ package scenes;
 
 import utils.Utility;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -29,12 +31,28 @@ public class LeaderboardScene extends JPanel {
         leaderboardTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         leaderboardTable.setFillsViewportHeight(true);
 
+        BufferedImage loadedImage = null;
+        try (InputStream is = getClass().getResourceAsStream("/resources/LEADERB.png")) {
+            if (is == null) {
+                throw new IOException("Resource not found: /resources/LEADERB.png");
+            }
+            loadedImage = ImageIO.read(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        final BufferedImage bg = loadedImage;
+
         JPanel container = new JPanel(new GridBagLayout()) {
-            private final Image bg = new ImageIcon("imgs/LEADERB.png").getImage();
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
+                if (bg != null) {
+                    Graphics2D g2d = (Graphics2D) g.create();
+                    g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                    g2d.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
+                    g2d.dispose();
+                }
             }
         };
         container.setOpaque(true);
