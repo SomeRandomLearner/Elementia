@@ -11,6 +11,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.Instant;
 import java.util.Objects;
 
 public class ArcadeCharacterSelectScene extends JPanel {
@@ -372,9 +377,19 @@ public class ArcadeCharacterSelectScene extends JPanel {
         confirmButton.setEnabled(false);
 
         confirmButton.addActionListener(e -> {
-
             if (selectedCharacter == null) return;
 
+            File currentDataFile = new File("data/player_data.txt");
+            if(!currentDataFile.getParentFile().exists()){
+                currentDataFile.getParentFile().mkdirs();
+            }
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(currentDataFile, false),1024)){
+                Instant timeStarted = Instant.now();
+                writer.write(timeStarted.toString());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
 
             frame.getArcadeBattle().setBattleLogic(battleLogic);
             LevelManager.setCurrentPlayerCharacter(selectedCharacter);
