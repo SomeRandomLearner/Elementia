@@ -14,7 +14,7 @@ public class LeaderboardScene extends JPanel {
     private final DefaultTableModel tableModel;
     private final JTable leaderboardTable;
     private final File leaderboardDataFile = new File("data/leaderboard_data.txt");
-    private final int MAX_SCORE_DISPLAY = 25;
+    private final int MAX_SCORE_DISPLAY = 10;
     private final ArrayList<Object[]> sortedLeaderboard = new ArrayList<>();
 
     public LeaderboardScene(Elementia frame) {
@@ -29,6 +29,7 @@ public class LeaderboardScene extends JPanel {
         leaderboardTable.getColumnModel().getColumn(1).setPreferredWidth(200);
         leaderboardTable.getColumnModel().getColumn(2).setPreferredWidth(150);
         leaderboardTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+        leaderboardTable.setRowHeight(40);
         leaderboardTable.setFillsViewportHeight(true);
 
         BufferedImage loadedImage = null;
@@ -83,8 +84,12 @@ public class LeaderboardScene extends JPanel {
                 String name = String.valueOf(sortedLeaderboard.get(i)[0]);
                 Long totalTime = Long.parseLong((String) sortedLeaderboard.get(i)[1]);
                 String formattedTime = (totalTime / 60) + " minutes and " + (totalTime % 60) + " seconds";
-
-                tableModel.addRow(new Object[]{(i + 1), name, formattedTime});
+                switch(i){
+                    case 0 -> tableModel.addRow(new Object[]{("🥇"), name, formattedTime});
+                    case 1 -> tableModel.addRow(new Object[]{("\uD83E\uDD48"), name, formattedTime});
+                    case 2 -> tableModel.addRow(new Object[]{("\uD83E\uDD49"), name, formattedTime});
+                    default -> tableModel.addRow(new Object[]{(i + 1), name, formattedTime});
+                }
                 i++;
             }
         } catch (IOException e) {
