@@ -11,6 +11,7 @@ import java.net.URL;
 public class ModeSelectScene extends JPanel {
     private Image backgroundImage;
     private Image arcadeIcon;
+    private Image vsAIIcon;
     private Image pvpIcon;
 
     public ModeSelectScene(Elementia frame) {
@@ -25,16 +26,20 @@ public class ModeSelectScene extends JPanel {
 
         // Load icons
         URL arcadePath = getClass().getResource("/resources/Arcade.png");
+        URL vsAIPath = getClass().getResource("/resources/VSAI.png");
         URL pvpPath = getClass().getResource("/resources/PVP.png");
 
         if (arcadePath != null) {
             arcadeIcon = new ImageIcon(arcadePath).getImage();
         }
+        if (vsAIPath != null) {
+            vsAIIcon = new ImageIcon(vsAIPath).getImage(); // Fixed copy-paste error here
+        }
         if (pvpPath != null) {
             pvpIcon = new ImageIcon(pvpPath).getImage();
         }
 
-        // 🔥 SPECTACULAR TITLE
+        // TITLE
         JLabel modeSelectLabel = new JLabel("CHOOSE YOUR BATTLE MODE", SwingConstants.CENTER);
         modeSelectLabel.setFont(new Font("Arial Black", Font.BOLD, 64));
         modeSelectLabel.setForeground(new Color(255, 255, 255, 240));
@@ -44,7 +49,7 @@ public class ModeSelectScene extends JPanel {
         titlePanel.setOpaque(false);
         titlePanel.add(modeSelectLabel, BorderLayout.CENTER);
 
-        // 🔥 PREMIUM ICON PANEL
+        // ICON PANEL
         IconPanel iconPanel = new IconPanel(frame);
         iconPanel.setPreferredSize(new Dimension(1200, 600));
 
@@ -52,10 +57,10 @@ public class ModeSelectScene extends JPanel {
         centerPanel.setOpaque(false);
         centerPanel.add(iconPanel, BorderLayout.CENTER);
 
-        // 🔥 BACK BUTTON - LOWER LEFT CORNER
+        // BACK BUTTON
         JButton backButton = createPremiumBackButton(frame);
 
-        // 🔥 BOTTOM PANEL WITH BACK BUTTON POSITIONED LOWER LEFT
+        // BOTTOM PANEL
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setOpaque(false);
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 60, 40));
@@ -66,7 +71,6 @@ public class ModeSelectScene extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
-    // 🔥 PREMIUM BACK BUTTON
     private JButton createPremiumBackButton(Elementia frame) {
         JButton backBtn = new JButton("← BACK") {
             @Override
@@ -74,7 +78,6 @@ public class ModeSelectScene extends JPanel {
                 Graphics2D g2d = (Graphics2D) g.create();
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                // 🔥 GRADIENT BACKGROUND
                 GradientPaint gradient = new GradientPaint(
                         0, 0, new Color(60, 60, 120).brighter(),
                         0, getHeight(), new Color(40, 40, 80).darker()
@@ -82,12 +85,10 @@ public class ModeSelectScene extends JPanel {
                 g2d.setPaint(gradient);
                 g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
 
-                // 🔥 GLOW BORDER
                 g2d.setColor(new Color(100, 100, 200, 150));
                 g2d.setStroke(new BasicStroke(3));
                 g2d.drawRoundRect(2, 2, getWidth()-5, getHeight()-5, 22, 22);
 
-                // 🔥 INNER SHINE
                 g2d.setColor(new Color(255, 255, 255, 40));
                 g2d.fillRoundRect(4, 4, getWidth()-8, getHeight()-8, 20, 20);
 
@@ -116,12 +117,13 @@ public class ModeSelectScene extends JPanel {
         }
     }
 
-    // ENHANCED ICON PANEL WITH BETTER EFFECTS
     private class IconPanel extends JPanel {
         private Elementia frame;
         private Rectangle arcadeBounds;
+        private Rectangle vsAIBounds;
         private Rectangle pvpBounds;
         private boolean arcadeHovered = false;
+        private boolean vsAIHovered = false;
         private boolean pvpHovered = false;
 
         public IconPanel(Elementia frame) {
@@ -145,6 +147,7 @@ public class ModeSelectScene extends JPanel {
                 @Override
                 public void mouseExited(MouseEvent e) {
                     arcadeHovered = false;
+                    vsAIHovered = false;
                     pvpHovered = false;
                     setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                     repaint();
@@ -155,6 +158,8 @@ public class ModeSelectScene extends JPanel {
         private void checkClick(int x, int y) {
             if (arcadeBounds != null && arcadeBounds.contains(x, y)) {
                 frame.showScreen(Scenes.ARCADE_CHARACTER_SELECT);
+            } else if (vsAIBounds != null && vsAIBounds.contains(x, y)) {
+                frame.showScreen(Scenes.VS_AI_CHARACTER_SELECT);
             } else if (pvpBounds != null && pvpBounds.contains(x, y)) {
                 frame.showScreen(Scenes.PVP_CHARACTER_SELECT);
             }
@@ -162,18 +167,20 @@ public class ModeSelectScene extends JPanel {
 
         private void checkHover(int x, int y) {
             boolean wasArcadeHovered = arcadeHovered;
+            boolean wasVSAIHovered = vsAIHovered;
             boolean wasPvpHovered = pvpHovered;
 
             arcadeHovered = arcadeBounds != null && arcadeBounds.contains(x, y);
+            vsAIHovered = vsAIBounds != null && vsAIBounds.contains(x, y);
             pvpHovered = pvpBounds != null && pvpBounds.contains(x, y);
 
-            if (arcadeHovered || pvpHovered) {
+            if (arcadeHovered || vsAIHovered || pvpHovered) {
                 setCursor(new Cursor(Cursor.HAND_CURSOR));
             } else {
                 setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             }
 
-            if (wasArcadeHovered != arcadeHovered || wasPvpHovered != pvpHovered) {
+            if (wasArcadeHovered != arcadeHovered || wasVSAIHovered != vsAIHovered || wasPvpHovered != pvpHovered) {
                 repaint();
             }
         }
@@ -184,61 +191,78 @@ public class ModeSelectScene extends JPanel {
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            int iconSize = 450;
+            int iconSize = 350; // Scaled down to fit 3 icons within 1200 width
             int gapBetweenIcons = 50;
-            int startX = (getWidth() - (iconSize * 2 + gapBetweenIcons)) / 2;
+            int startX = (getWidth() - (iconSize * 3 + gapBetweenIcons * 2)) / 2;
             int y = (getHeight() - iconSize) / 2;
 
-            // ARCADE ICON WITH ENHANCED HOVER EFFECTS
+            // ARCADE ICON (Left)
             if (arcadeIcon != null) {
                 arcadeBounds = new Rectangle(startX, y, iconSize, iconSize);
 
-                // BACKGROUND GLOW ON HOVER
                 if (arcadeHovered) {
                     g2d.setColor(new Color(60, 40, 100, 100));
                     g2d.fillRoundRect(startX - 15, y - 15, iconSize + 30, iconSize + 30, 35, 35);
                 }
 
-                // SCALE & SHADOW EFFECT
                 float scale = arcadeHovered ? 1.05f : 1.0f;
                 int scaledSize = (int)(iconSize * scale);
                 int offsetX = startX + (iconSize - scaledSize) / 2;
                 int offsetY = y + (iconSize - scaledSize) / 2;
 
-                // Shadow
                 if (arcadeHovered) {
                     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
                     g2d.drawImage(arcadeIcon, offsetX + 8, offsetY + 8, scaledSize, scaledSize, this);
                 }
 
-                // Main icon
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, arcadeHovered ? 0.95f : 1.0f));
                 g2d.drawImage(arcadeIcon, offsetX, offsetY, scaledSize, scaledSize, this);
             }
 
-            //  PVP ICON WITH ENHANCED HOVER EFFECTS
-            if (pvpIcon != null) {
-                pvpBounds = new Rectangle(startX + iconSize + gapBetweenIcons, y, iconSize, iconSize);
+            // VS AI ICON (Middle)
+            if (vsAIIcon != null) {
+                int vsAIStartX = startX + iconSize + gapBetweenIcons;
+                vsAIBounds = new Rectangle(vsAIStartX, y, iconSize, iconSize);
 
-                // BACKGROUND GLOW ON HOVER
-                if (pvpHovered) {
-                    g2d.setColor(new Color(60, 40, 100, 100));// Red glow
-                    g2d.fillRoundRect(startX + iconSize + gapBetweenIcons - 15, y - 15, iconSize + 30, iconSize + 30, 35, 35);
+                if (vsAIHovered) {
+                    g2d.setColor(new Color(60, 40, 100, 100));
+                    g2d.fillRoundRect(vsAIStartX - 15, y - 15, iconSize + 30, iconSize + 30, 35, 35);
                 }
 
-                //  SCALE & SHADOW EFFECT
-                float scale = pvpHovered ? 1.05f : 1.0f;
+                float scale = vsAIHovered ? 1.05f : 1.0f;
                 int scaledSize = (int)(iconSize * scale);
-                int offsetX = startX + iconSize + gapBetweenIcons + (iconSize - scaledSize) / 2;
+                int offsetX = vsAIStartX + (iconSize - scaledSize) / 2;
                 int offsetY = y + (iconSize - scaledSize) / 2;
 
-                // Shadow
+                if (vsAIHovered) {
+                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+                    g2d.drawImage(vsAIIcon, offsetX + 8, offsetY + 8, scaledSize, scaledSize, this);
+                }
+
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, vsAIHovered ? 0.95f : 1.0f));
+                g2d.drawImage(vsAIIcon, offsetX, offsetY, scaledSize, scaledSize, this);
+            }
+
+            // PVP ICON (Right)
+            if (pvpIcon != null) {
+                int pvpStartX = startX + (iconSize + gapBetweenIcons) * 2;
+                pvpBounds = new Rectangle(pvpStartX, y, iconSize, iconSize);
+
+                if (pvpHovered) {
+                    g2d.setColor(new Color(60, 40, 100, 100));
+                    g2d.fillRoundRect(pvpStartX - 15, y - 15, iconSize + 30, iconSize + 30, 35, 35);
+                }
+
+                float scale = pvpHovered ? 1.05f : 1.0f;
+                int scaledSize = (int)(iconSize * scale);
+                int offsetX = pvpStartX + (iconSize - scaledSize) / 2;
+                int offsetY = y + (iconSize - scaledSize) / 2;
+
                 if (pvpHovered) {
                     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
                     g2d.drawImage(pvpIcon, offsetX + 8, offsetY + 8, scaledSize, scaledSize, this);
                 }
 
-                // Main icon
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pvpHovered ? 0.95f : 1.0f));
                 g2d.drawImage(pvpIcon, offsetX, offsetY, scaledSize, scaledSize, this);
             }

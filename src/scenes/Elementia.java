@@ -7,6 +7,9 @@ import scenes.arcade_scenes.LevelSelectScene;
 import scenes.pvp_scenes.PVPBattleScene;
 import scenes.pvp_scenes.PVPCharacterSelectScene;
 import scenes.pvp_scenes.PVPStageSelectScene;
+import scenes.vs_ai_scenes.VSAIBattleScene;
+import scenes.vs_ai_scenes.VSAICharacterSelectScene;
+import scenes.vs_ai_scenes.VSAIStageSelectScene;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +26,11 @@ public class Elementia extends JFrame{
     private LevelSelectScene levelSelect;
     private ArcadeBattleScene arcadeBattle;
     private GameOverScene gameOver;
+
+    // VS AI Mode
+    private VSAIBattleScene vsAIBattle;
+    private VSAICharacterSelectScene vsAICharacterSelectScene;
+    private VSAIStageSelectScene vsAIStageSelectScene;
 
     // PVP Mode
     private PVPCharacterSelectScene pvpCharacterSelect;
@@ -47,6 +55,9 @@ public class Elementia extends JFrame{
         levelSelect = new LevelSelectScene(this);
         arcadeBattle = new ArcadeBattleScene(this);
         gameOver = new GameOverScene(this);
+        vsAIBattle = new VSAIBattleScene(this);
+        vsAICharacterSelectScene = new VSAICharacterSelectScene(this);
+        vsAIStageSelectScene = new VSAIStageSelectScene(this);
         pvpCharacterSelect = new PVPCharacterSelectScene(this);
         pvpStageSelect = new PVPStageSelectScene(this);
         pvpBattle = new PVPBattleScene(this);
@@ -60,6 +71,9 @@ public class Elementia extends JFrame{
         container.add(arcadeBattle, "Battle");
         container.add(gameOver, "GameOver");
 
+        container.add(vsAICharacterSelectScene, "VSAICharacterSelect");
+        container.add(vsAIStageSelectScene, "VSAIStageSelect");
+        container.add(vsAIBattle, "VSAIBattle");
 
         container.add(pvpCharacterSelect, "PVPCharacterSelect");
         container.add(pvpStageSelect, "PVPStageSelect");
@@ -85,6 +99,9 @@ public class Elementia extends JFrame{
             case PVP_BATTLE -> "PVPBattle";
             case PVP_CHARACTER_SELECT -> "PVPCharacterSelect";
             case PVP_STAGE_SELECT -> "PVPStageSelect";
+            case VS_AI_BATTLE -> "VSAIBattle";
+            case VS_AI_CHARACTER_SELECT -> "VSAICharacterSelect";
+            case VS_AI_STAGE_SELECT -> "VSAIStageSelect";
             case MAIN_MENU -> "MainMenu";
             case MODE_SELECT -> "ModeSelect";
         };
@@ -102,6 +119,8 @@ public class Elementia extends JFrame{
     public PVPStageSelectScene getPVPStageSelect() { return pvpStageSelect; }
 
     public PVPBattleScene getPVPBattle() { return pvpBattle; }
+
+    public VSAIBattleScene getVSAIBattle() { return vsAIBattle; }
 
     public LeaderboardScene getLeaderboard() { return leaderboard; }
 
