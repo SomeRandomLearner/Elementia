@@ -166,7 +166,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                 rightPanel.repaint();
                 leftPanel.repaint();
 
-                timerCount = 4;
+                timerCount = 15;
                 timerLabel.setText(String.valueOf(timerCount));
 
                 if(currentPlayerTurn == 1) {

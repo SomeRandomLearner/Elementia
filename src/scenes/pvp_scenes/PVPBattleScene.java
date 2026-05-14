@@ -105,7 +105,7 @@ public class PVPBattleScene extends AbstractBattleScene {
                 rightPanel.repaint();
                 leftPanel.repaint();
 
-                timerCount = 4;
+                timerCount = 15;
                 timerLabel.setText(String.valueOf(timerCount));
                 if(currentPlayerTurn == 1) timerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
                 else timerPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
