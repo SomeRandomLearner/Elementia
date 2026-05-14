@@ -185,6 +185,11 @@ public class PVPBattleScene extends AbstractBattleScene {
                 player1SkillPanel.removeAll();
                 player2SkillPanel.removeAll();
 
+                winCounterLabel.setText(
+                        battleLogic.getWinCount(1) + " / " + battleLogic.getWinCount(2)
+                );
+                topPanel.repaint();
+
                 JButton rematchBtn = Utility.createStyledButton(
                         "REMATCH",
                         new Color(60, 60, 120).brighter(),
