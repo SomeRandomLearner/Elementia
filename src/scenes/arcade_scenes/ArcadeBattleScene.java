@@ -299,7 +299,7 @@ public class ArcadeBattleScene extends AbstractBattleScene {
                     bottomPanel.repaint();
                     hasGameEnded = false;
                     int currentLevel = LevelManager.getCurrentLevelNumber() + 1;
-                    if(currentLevel >= LevelManager.getMaxLevels()) return;
+                    if(currentLevel > LevelManager.getMaxLevels()) return;
                     LevelManager.setCurrentLevelNumber(currentLevel);
                     battleLogic.resetCharacterChoices();
                     battleLogic.addAllToTeam(1, LevelManager.getCurrentLevel().getAlliedTeam());

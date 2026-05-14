@@ -161,7 +161,7 @@ public class BattleLogic {
     }
 
     private void endGame(){
-        int gameWinner = (player1WinCount >= 3) ? player1 : player2;
+        int gameWinner = (player1WinCount >= 2) ? player1 : player2;
         hasGameEnded = true;
         battleEventListener.onGameEnded(gameWinner);
     }
