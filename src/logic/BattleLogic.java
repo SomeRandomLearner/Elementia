@@ -133,7 +133,7 @@ public class BattleLogic {
                     previousRoundWinner = player2;
                 }
 
-                if(player1WinCount >= 3 || player2WinCount >= 3){
+                if(player1WinCount >= 2 || player2WinCount >= 2){
                     endGame();
                     return;
                 }
