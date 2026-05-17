@@ -4,11 +4,13 @@ import utils.Utility;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class LeaderboardScene extends JPanel {
     private final DefaultTableModel tableModel;
@@ -16,6 +18,9 @@ public class LeaderboardScene extends JPanel {
     private final File leaderboardDataFile = new File("data/leaderboard_data.txt");
     private final int MAX_SCORE_DISPLAY = 10;
     private final ArrayList<Object[]> sortedLeaderboard = new ArrayList<>();
+    private final ImageIcon goldIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/leaderboard_medals/gold.png")));
+    private final ImageIcon silverIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/leaderboard_medals/silver.png")));
+    private final ImageIcon bronzeIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/leaderboard_medals/bronze.png")));
 
     public LeaderboardScene(Elementia frame) {
         setLayout(new BorderLayout());
@@ -25,6 +30,7 @@ public class LeaderboardScene extends JPanel {
         leaderboardTable = new JTable(tableModel);
         leaderboardTable.setDefaultEditor(Object.class, null);
         JScrollPane scrollPane = new JScrollPane(leaderboardTable);
+
         leaderboardTable.getColumnModel().getColumn(0).setPreferredWidth(50);
         leaderboardTable.getColumnModel().getColumn(1).setPreferredWidth(200);
         leaderboardTable.getColumnModel().getColumn(2).setPreferredWidth(150);
@@ -74,8 +80,26 @@ public class LeaderboardScene extends JPanel {
     void updateLeaderboard() {
         tableModel.setRowCount(0);
         sort();
+        DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (value instanceof ImageIcon) {
+                    setIcon((ImageIcon) value);
+                    setText("");
+                } else {
+                    setIcon(null);
+                    setText(value != null ? value.toString() : "");
+                }
+                setHorizontalAlignment(SwingConstants.CENTER);
+                return this;
+            }
+        };
+        int i = 0;
+        while(i < 3) leaderboardTable.getColumnModel().getColumn(i++).setCellRenderer(cellRenderer);
+
         try (BufferedReader reader = new BufferedReader(new FileReader(leaderboardDataFile))) {
-            int i = 0;
+            i = 0;
             String dataLine;
             while ((dataLine = reader.readLine()) != null && i < MAX_SCORE_DISPLAY) {
                 String[] dataLineSplit = dataLine.split(",");
@@ -85,9 +109,9 @@ public class LeaderboardScene extends JPanel {
                 Long totalTime = Long.parseLong((String) sortedLeaderboard.get(i)[1]);
                 String formattedTime = (totalTime / 60) + " minutes and " + (totalTime % 60) + " seconds";
                 switch(i){
-                    case 0 -> tableModel.addRow(new Object[]{("🥇"), name, formattedTime});
-                    case 1 -> tableModel.addRow(new Object[]{("\uD83E\uDD48"), name, formattedTime});
-                    case 2 -> tableModel.addRow(new Object[]{("\uD83E\uDD49"), name, formattedTime});
+                    case 0 -> tableModel.addRow(new Object[]{(goldIcon), name, formattedTime});
+                    case 1 -> tableModel.addRow(new Object[]{(silverIcon), name, formattedTime});
+                    case 2 -> tableModel.addRow(new Object[]{(bronzeIcon), name, formattedTime});
                     default -> tableModel.addRow(new Object[]{(i + 1), name, formattedTime});
                 }
                 i++;
